@@ -50,6 +50,7 @@ const TEMPLATES = [
 export default function LeadsApp() {
   const [auth, setAuth] = useState<"loading" | "out" | "in">("loading");
   const [sms, setSms] = useState(false);
+  const [config, setConfig] = useState<Config | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/session", { cache: "no-store" })
@@ -57,13 +58,14 @@ export default function LeadsApp() {
       .then((d) => {
         setAuth(d.admin ? "in" : "out");
         setSms(Boolean(d.sms));
+        setConfig(d.config || null);
       })
       .catch(() => setAuth("out"));
   }, []);
 
   if (auth === "loading") return <div className="grid min-h-dvh place-items-center text-muted">A carregar…</div>;
   if (auth === "out") return <Login onOk={() => location.reload()} />;
-  return <Dashboard sms={sms} onLogout={() => setAuth("out")} />;
+  return <Dashboard sms={sms} config={config} onLogout={() => setAuth("out")} />;
 }
 
 function Login({ onOk }: { onOk: () => void }) {
@@ -94,8 +96,15 @@ function Login({ onOk }: { onOk: () => void }) {
   );
 }
 
-function Dashboard({ sms, onLogout }: { sms: boolean; onLogout: () => void }) {
-  const [tab, setTab] = useState<"leads" | "lotes">("leads");
+type Config = {
+  email: { provider: string | null; from: string; notifyTo: string | null; customFrom: boolean };
+  meta: { pixelId: string; capi: boolean; testCode: boolean };
+  database: boolean;
+  siteUrl: string | null;
+};
+
+function Dashboard({ sms, config, onLogout }: { sms: boolean; config: Config | null; onLogout: () => void }) {
+  const [tab, setTab] = useState<"leads" | "lotes" | "definicoes">("leads");
   const [leads, setLeads] = useState<LeadListItem[] | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
   const [filter, setFilter] = useState<string>("todas");
@@ -158,9 +167,10 @@ function Dashboard({ sms, onLogout }: { sms: boolean; onLogout: () => void }) {
             <div className="text-[11px] text-muted">Centro de leads</div>
           </div>
           <div className="flex rounded-lg bg-soft p-0.5 text-sm">
-            {(["leads", "lotes"] as const).map((t) => (
-              <button key={t} onClick={() => setTab(t)} className={`rounded-md px-3 py-1.5 font-semibold capitalize ${tab === t ? "bg-white shadow-sm" : "text-muted"}`}>
-                {t}{t === "leads" && unread > 0 && <span className="ml-1.5 rounded-full bg-brand px-1.5 text-[11px] text-white">{unread}</span>}
+            {(["leads", "lotes", "definicoes"] as const).map((t) => (
+              <button key={t} onClick={() => setTab(t)} className={`rounded-md px-2.5 py-1.5 font-semibold sm:px-3 ${tab === t ? "bg-white shadow-sm" : "text-muted"}`}>
+                {t === "leads" ? "Leads" : t === "lotes" ? "Lotes" : <span title="Definições">⚙<span className="hidden sm:inline"> Definições</span></span>}
+                {t === "leads" && unread > 0 && <span className="ml-1.5 rounded-full bg-brand px-1.5 text-[11px] text-white">{unread}</span>}
               </button>
             ))}
           </div>
@@ -180,7 +190,9 @@ function Dashboard({ sms, onLogout }: { sms: boolean; onLogout: () => void }) {
         </div>
       </header>
 
-      {tab === "lotes" ? (
+      {tab === "definicoes" ? (
+        <Settings config={config} />
+      ) : tab === "lotes" ? (
         <LotsEditor />
       ) : (
         <div className="flex min-h-0 flex-1">
@@ -199,6 +211,11 @@ function Dashboard({ sms, onLogout }: { sms: boolean; onLogout: () => void }) {
                 </div>
               ))}
             </div>
+            {config && (!config.email.provider || !config.email.notifyTo) && (
+              <button onClick={() => setTab("definicoes")} className="border-b border-orange-200 bg-orange-50 px-3 py-2 text-left text-[12.5px] text-orange-800">
+                Os avisos de novas leads por email estão desligados. <u>Ver Definições</u>
+              </button>
+            )}
             <div className="space-y-2 border-b border-line p-3">
               <input className="field py-2 text-sm" placeholder="Procurar nome, telefone ou email" value={q} onChange={(e) => setQ(e.target.value)} />
               <div className="no-scrollbar flex gap-1.5 overflow-x-auto">
@@ -501,6 +518,66 @@ function LotsEditor() {
           ))}
         </div>
         {saved && <p className="mt-3 text-sm text-brand">{saved}</p>}
+      </div>
+    </div>
+  );
+}
+
+function StatusRow({ ok, label, detail }: { ok: boolean; label: string; detail: string }) {
+  return (
+    <div className="flex items-start gap-3 py-3">
+      <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full text-[12px] font-bold text-white ${ok ? "bg-emerald-600" : "bg-orange-500"}`}>{ok ? "✓" : "!"}</span>
+      <div className="min-w-0"><div className="font-semibold">{label}</div><div className="break-words text-[13px] text-muted">{detail}</div></div>
+    </div>
+  );
+}
+
+function Settings({ config }: { config: Config | null }) {
+  const [test, setTest] = useState<{ ok: boolean; error?: string; to?: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  if (!config) return <div className="grid flex-1 place-items-center text-muted">A carregar…</div>;
+  const e = config.email;
+  return (
+    <div className="flex-1 overflow-y-auto p-4 sm:p-8">
+      <div className="mx-auto max-w-xl space-y-4">
+        <div className="rounded-2xl border border-line bg-white p-5">
+          <h2 className="text-lg font-bold">Estado do site</h2>
+          <div className="divide-y divide-line text-[14px]">
+            <StatusRow ok={config.database} label="Base de dados" detail={config.database ? "Ligada. As leads ficam guardadas aqui." : "Falta DATABASE_URL na Vercel."} />
+            <StatusRow ok={Boolean(e.provider)} label="Envio de email" detail={e.provider ? `Ativo por ${e.provider === "resend" ? "Resend" : "SMTP"} · remetente: ${e.from}` : "Falta RESEND_API_KEY na Vercel."} />
+            <StatusRow ok={Boolean(e.notifyTo)} label="Email que recebe as leads" detail={e.notifyTo || "Falta LEADS_NOTIFY_EMAIL na Vercel."} />
+            <StatusRow ok={config.meta.capi} label="Meta Pixel + API de Conversões" detail={`Pixel ${config.meta.pixelId} · API ${config.meta.capi ? "ativa" : "desligada (falta META_CAPI_ACCESS_TOKEN)"}${config.meta.testCode ? " · ATENÇÃO: modo de teste ligado (apague META_TEST_EVENT_CODE)" : ""}`} />
+            <StatusRow ok={Boolean(config.siteUrl)} label="Endereço do site" detail={config.siteUrl || "NEXT_PUBLIC_SITE_URL não definido (usa o domínio da Vercel)."} />
+          </div>
+        </div>
+        <div className="rounded-2xl border border-line bg-white p-5">
+          <h2 className="text-lg font-bold">Testar email</h2>
+          <p className="mt-1 text-sm text-muted">Envia um email de teste para o endereço que recebe as leads e mostra o erro, se houver.</p>
+          <button
+            disabled={busy}
+            className="btn btn-primary mt-4"
+            onClick={async () => {
+              setBusy(true);
+              setTest(null);
+              const r = await fetch("/api/admin/email-test", { method: "POST" });
+              setTest(await r.json().catch(() => ({ ok: false, error: "Sem resposta do servidor." })));
+              setBusy(false);
+            }}
+          >
+            {busy ? "A enviar…" : "Enviar email de teste"}
+          </button>
+          {test && (
+            <div className={`mt-4 rounded-xl p-3 text-sm ${test.ok ? "bg-emerald-50 text-emerald-800" : "bg-orange-50 text-orange-800"}`}>
+              {test.ok ? `Enviado para ${test.to}. Veja a caixa de entrada (e o spam).` : test.error}
+              {!test.ok && /domain|verify|testing emails|own email/i.test(test.error || "") && (
+                <p className="mt-2">
+                  Isto significa que o domínio do remetente não está verificado no Resend. Em resend.com → Domains, adicione o domínio (ex.: verdemont.eu),
+                  copie os registos DNS para o seu fornecedor de domínio e carregue em Verify. Depois defina EMAIL_FROM com um endereço desse domínio.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

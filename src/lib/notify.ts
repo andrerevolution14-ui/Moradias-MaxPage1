@@ -24,8 +24,13 @@ function fromAddress() {
   return process.env.EMAIL_FROM || process.env.SMTP_FROM || `${PROJECT.name} <onboarding@resend.dev>`;
 }
 
-/** Envia email pelo Resend (RESEND_API_KEY) ou, em alternativa, por SMTP. Nunca lança erro. */
-export async function sendEmail(to: string, subject: string, html: string, replyTo?: string) {
+export function emailStatus() {
+  const provider = process.env.RESEND_API_KEY ? "resend" : process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS ? "smtp" : null;
+  return { provider, from: fromAddress(), notifyTo: process.env.LEADS_NOTIFY_EMAIL || null, customFrom: Boolean(process.env.EMAIL_FROM || process.env.SMTP_FROM) };
+}
+
+/** Envia email pelo Resend (RESEND_API_KEY) ou, em alternativa, por SMTP. Devolve o erro em texto. Nunca lança. */
+export async function sendEmailDetailed(to: string, subject: string, html: string, replyTo?: string): Promise<{ ok: boolean; error?: string }> {
   if (process.env.RESEND_API_KEY) {
     try {
       const res = await fetch("https://api.resend.com/emails", {
@@ -33,25 +38,47 @@ export async function sendEmail(to: string, subject: string, html: string, reply
         headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" },
         body: JSON.stringify({ from: fromAddress(), to: [to], subject, html, ...(replyTo ? { reply_to: replyTo } : {}) }),
       });
-      if (!res.ok) console.error("[email] Resend falhou", res.status, await res.text());
-      return res.ok;
+      if (res.ok) return { ok: true };
+      const text = await res.text();
+      console.error("[email] Resend falhou", res.status, text);
+      let msg = text;
+      try {
+        msg = JSON.parse(text).message || text;
+      } catch {}
+      return { ok: false, error: `Resend ${res.status}: ${msg}` };
     } catch (e) {
       console.error("[email] Resend erro", e);
-      return false;
+      return { ok: false, error: `Resend: ${(e as Error).message}` };
     }
   }
   const t = mailer();
   if (!t) {
     console.warn("[email] Email não configurado (RESEND_API_KEY ou SMTP_*) — não enviado:", subject);
-    return false;
+    return { ok: false, error: "Email não configurado: falta a variável RESEND_API_KEY na Vercel." };
   }
   try {
     await t.sendMail({ from: fromAddress(), to, subject, html, replyTo });
-    return true;
+    return { ok: true };
   } catch (e) {
     console.error("[email] SMTP falhou", e);
-    return false;
+    return { ok: false, error: `SMTP: ${(e as Error).message}` };
   }
+}
+
+export async function sendEmail(to: string, subject: string, html: string, replyTo?: string) {
+  return (await sendEmailDetailed(to, subject, html, replyTo)).ok;
+}
+
+/** Email de teste para o André (botão em /leads → Definições) */
+export async function sendTestEmail() {
+  const to = process.env.LEADS_NOTIFY_EMAIL;
+  if (!to) return { ok: false, error: "Falta a variável LEADS_NOTIFY_EMAIL na Vercel (o email onde quer receber as leads)." };
+  const r = await sendEmailDetailed(
+    to,
+    `Teste de email · ${PROJECT.name}`,
+    layout(`<h1 style="font-size:20px;margin:0 0 8px">Os avisos de leads estão a funcionar.</h1><p style="font-size:15px;line-height:1.6;margin:0">A partir de agora recebe aqui um email por cada nova mensagem no site.</p>`),
+  );
+  return { ...r, to };
 }
 
 function layout(inner: string) {
