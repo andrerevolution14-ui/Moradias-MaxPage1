@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { GALLERY } from "@/lib/config";
 import { trackOnce } from "@/lib/track";
-import { Icon360, IconArrowL, IconArrowR, IconCamera, IconPin, IconPlan } from "../icons";
+import { Icon360, IconArrowL, IconArrowR, IconPlan } from "../icons";
 import Lightbox from "./Lightbox";
 import Tour360Button from "./Tour360";
 
@@ -16,7 +16,6 @@ import Tour360Button from "./Tour360";
 export default function Gallery() {
   const track = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<number | null>(null);
-  const planIdx = GALLERY.findIndex((g) => g.plan);
 
   function onScroll() {
     if ((track.current?.scrollLeft || 0) > 40) trackOnce("gallery", "ViewContent", { content_name: "galeria", content_type: "home_listing" });
@@ -27,13 +26,13 @@ export default function Gallery() {
   }
 
   // Largura real a que cada foto é desenhada (object-cover corta, por isso pode ser maior que o mosaico).
-  // Mosaico: altura 340 / 420 / 520 px; linhas pequenas = (altura - 8) / 2.
+  // Mosaico: altura 300 / 420 / 520 px; linhas pequenas = (altura - 8) / 2.
   function sizesFor(g: (typeof GALLERY)[number]) {
     const a = g.w / g.h;
     const fit = (tileW: number, tileH: number) => Math.round(g.plan ? tileW : Math.max(tileW, tileH * a));
     const [lg, sm, xs] = g.big
-      ? [fit(620, 520), fit(0.6 * 900, 420), fit(0.84 * 430, 340)]
-      : [fit(300, 256), fit(0.3 * 900, 206), fit(0.42 * 430, 166)];
+      ? [fit(620, 520), fit(0.6 * 900, 420), fit(0.84 * 430, 300)]
+      : [fit(300, 256), fit(0.3 * 900, 206), fit(0.42 * 430, 146)];
     return `(min-width:1024px) ${lg}px, (min-width:640px) ${sm}px, ${xs}px`;
   }
 
@@ -54,7 +53,7 @@ export default function Gallery() {
         <div
           ref={track}
           onScroll={onScroll}
-          className="no-scrollbar grid h-[340px] snap-x snap-mandatory scroll-px-4 grid-flow-col grid-rows-2 gap-2 overflow-x-auto scroll-smooth px-4 sm:h-[420px] lg:h-[520px] lg:scroll-px-0 lg:px-0"
+          className="no-scrollbar grid h-[300px] snap-x snap-mandatory scroll-px-4 grid-flow-col grid-rows-2 gap-2 overflow-x-auto scroll-smooth px-4 sm:h-[420px] lg:h-[520px] lg:scroll-px-0 lg:px-0"
         >
           {items.map((it, k) => {
             if (it.kind === "tour") {
@@ -104,14 +103,6 @@ export default function Gallery() {
           <button onClick={() => step(-1)} className="grid h-10 w-10 place-items-center rounded-full bg-paper/95 shadow" aria-label="Anterior"><IconArrowL /></button>
           <button onClick={() => step(1)} className="grid h-10 w-10 place-items-center rounded-full bg-paper/95 shadow" aria-label="Seguinte"><IconArrowR /></button>
         </div>
-      </div>
-
-      {/* Atalhos por baixo das fotos */}
-      <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 pt-3 lg:px-0">
-        <button onClick={() => setOpen(0)} className="btn btn-ghost shrink-0 px-3 py-2 text-sm"><IconCamera size={16} /> {GALLERY.length} fotos</button>
-        <Tour360Button className="btn btn-ghost shrink-0 px-3 py-2 text-sm" label="Visita 360°" />
-        <button onClick={() => setOpen(planIdx)} className="btn btn-ghost shrink-0 px-3 py-2 text-sm"><IconPlan size={16} /> Plantas</button>
-        <a href="#localizacao" className="btn btn-ghost shrink-0 px-3 py-2 text-sm"><IconPin size={16} /> Localização</a>
       </div>
 
       {open !== null && <Lightbox pics={GALLERY} index={open} zoomable onClose={() => setOpen(null)} />}

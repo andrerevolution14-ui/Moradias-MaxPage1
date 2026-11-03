@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { PROJECT, PROMOTER, formatEUR } from "@/lib/config";
+import { PROMOTER } from "@/lib/config";
 import { track } from "@/lib/track";
 import { IconChat, IconPhone, IconWhatsApp, IconX } from "../icons";
 import Composer from "./Composer";
@@ -16,7 +16,7 @@ import { useLanding } from "./LandingProvider";
  * Fica sempre montada para não perder o que a pessoa escreveu ao fechar.
  */
 export default function ContactDialog() {
-  const { sheetOpen, closeSheet, openComposer, chat, available } = useLanding();
+  const { sheetOpen, closeSheet, openComposer, chat } = useLanding();
   const panel = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function ContactDialog() {
       {chat && !sheetOpen && (
         <Link
           href={`/conversa/${chat.token}`}
-          className="fixed bottom-[calc(84px+env(safe-area-inset-bottom))] right-3 z-40 flex items-center gap-2 rounded-full border border-line bg-white py-1.5 pl-1.5 pr-4 text-sm font-semibold shadow-lg lg:bottom-6 lg:right-6"
+          className="fixed bottom-[calc(72px+env(safe-area-inset-bottom))] right-3 z-40 flex items-center gap-2 rounded-full border border-line bg-white py-1.5 pl-1.5 pr-4 text-sm font-semibold shadow-lg lg:bottom-6 lg:right-6"
         >
           <Image src={PROMOTER.avatar} alt="" width={32} height={32} className="h-8 w-8 rounded-full object-cover" />
           A sua conversa com o André
@@ -49,10 +49,6 @@ export default function ContactDialog() {
 
       {/* Barra fixa no telemóvel */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper/95 px-3 pb-[max(env(safe-area-inset-bottom),10px)] pt-2.5 backdrop-blur lg:hidden">
-        <div className="mb-1.5 flex items-center justify-between px-0.5 text-[12px]">
-          <span className="font-semibold">{formatEUR(PROJECT.price)} · chave na mão</span>
-          <span className="font-semibold text-brand">{available > 0 ? `Restam ${available} de 3` : "Esgotado"}</span>
-        </div>
         <div className="grid grid-cols-[1fr_auto_auto] gap-2">
           <button className="btn btn-primary py-3" onClick={() => openComposer({ cta: "mobile_bar" })}>
             <IconChat size={18} /> Enviar mensagem

@@ -11,7 +11,7 @@ import LandingProvider from "@/components/landing/LandingProvider";
 import Gallery from "@/components/landing/Gallery";
 import DirectContact from "@/components/landing/DirectContact";
 import ContactDialog from "@/components/landing/ContactDialog";
-import LotsTable, { AvailabilityLine } from "@/components/landing/LotsTable";
+import LotsTable from "@/components/landing/LotsTable";
 import Simulator, { MonthlyFrom } from "@/components/landing/Simulator";
 import Ask from "@/components/landing/Ask";
 import SeenTracker from "@/components/landing/SeenTracker";
@@ -39,15 +39,15 @@ export default function Page() {
 
         <div className="mx-auto grid max-w-[1200px] gap-10 px-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:px-6">
           <div className="min-w-0">
-            <Summary />
-
-            <nav className="no-scrollbar sticky top-[60px] z-20 -mx-4 mt-6 flex gap-1 overflow-x-auto border-b border-line bg-paper/95 px-4 backdrop-blur lg:mx-0 lg:px-0">
+            <nav className="no-scrollbar sticky top-[60px] z-20 -mx-4 flex gap-1 overflow-x-auto border-b border-line bg-paper/95 px-4 backdrop-blur lg:mx-0 lg:px-0">
               {NAV.map(([id, label]) => (
                 <a key={id} href={`#${id}`} className="shrink-0 border-b-2 border-transparent px-2.5 py-3 text-[14px] font-medium text-muted hover:border-ink hover:text-ink">
                   {label}
                 </a>
               ))}
             </nav>
+            <Summary />
+
 
             <Description />
             <Location />
@@ -116,9 +116,8 @@ function Summary() {
     [IconClock, "10 meses", "de construção"],
   ] as const;
   return (
-    <section className="pt-5 lg:pt-7">
-      <AvailabilityLine />
-      <h1 className="mt-3 text-[26px] font-bold leading-tight tracking-tight [text-wrap:balance] sm:text-[32px]">
+    <section className="pt-4">
+      <h1 className="text-[23px] font-bold leading-tight tracking-tight [text-wrap:balance] sm:text-[32px]">
         Moradia T3 com jardim em Oliveirinha, Aveiro
       </h1>
       <p className="mt-1.5 flex items-start gap-1.5 text-[15px] text-muted">
@@ -126,9 +125,9 @@ function Summary() {
         <span>{PROJECT.address}, {PROJECT.postal} · <a href="#localizacao" className="underline">ver mapa</a></span>
       </p>
 
-      <div className="mt-5 flex flex-wrap items-end gap-x-6 gap-y-3">
+      <div className="mt-4 flex flex-wrap items-end gap-x-6 gap-y-3">
         <div>
-          <div className="text-[36px] font-extrabold leading-none tracking-tight tabular-nums sm:text-[42px]">{formatEUR(PROJECT.price)}</div>
+          <div className="text-[32px] font-extrabold leading-none tracking-tight tabular-nums sm:text-[42px]">{formatEUR(PROJECT.price)}</div>
           <div className="mt-1.5 text-[13.5px] font-semibold text-brand">IMT e Imposto de Selo incluídos · chave na mão</div>
         </div>
         <div className="border-l border-line pl-6 text-[14px] leading-relaxed text-muted">
@@ -138,11 +137,12 @@ function Summary() {
         </div>
       </div>
 
-      <div className="mt-5 flex items-start gap-3 rounded-xl bg-brand-soft px-4 py-3 text-[14px] leading-snug text-brand-ink">
-        <IconKey size={20} className="mt-0.5 shrink-0 text-brand" />
+
+      <div className="mt-5 flex items-center gap-3 rounded-xl bg-brand-soft px-4 py-3 text-[14px] leading-snug text-brand-ink">
+        <IconKey size={20} className="shrink-0 text-brand" />
         <p>
-          <b>Venda em planta, com possibilidade de crédito habitação.</b> O banco pode financiar até 90% e liberta o valor por fases,
-          à medida que a obra avança. <a href="#simulador" className="font-semibold underline">Simular prestação</a>
+          <b>Venda em planta, com possibilidade de crédito habitação.</b>{" "}
+          <a href="#simulador" className="font-semibold underline">Simular prestação</a>
         </p>
       </div>
 

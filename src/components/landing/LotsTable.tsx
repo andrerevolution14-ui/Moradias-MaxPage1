@@ -27,7 +27,7 @@ export default function LotsTable() {
               <th className="hidden px-3 py-2.5 font-semibold sm:table-cell">Área útil</th>
               <th className="hidden px-3 py-2.5 font-semibold md:table-cell">Jardim</th>
               <th className="px-3 py-2.5 font-semibold">Preço</th>
-              <th className="px-3 py-2.5 font-semibold">Estado</th>
+              <th className="hidden px-3 py-2.5 font-semibold sm:table-cell">Estado</th>
               <th className="px-3 py-2.5" />
             </tr>
           </thead>
@@ -39,19 +39,21 @@ export default function LotsTable() {
                 <tr key={l.id} className={`border-t border-line ${off ? "text-muted" : ""}`}>
                   <td className="px-3 py-3 font-semibold">
                     {l.label}
-                    <div className="text-[12px] font-normal text-muted sm:hidden">{LOT_SPEC.typology} · {LOT_SPEC.usefulArea}</div>
+                    <div className="mt-1 sm:hidden">
+                      <span className={`inline-flex rounded-full px-2 py-0.5 text-[11.5px] font-semibold ring-1 ${s.cls}`}>{s.label}</span>
+                    </div>
                   </td>
                   <td className="hidden px-3 py-3 sm:table-cell">{LOT_SPEC.typology}</td>
                   <td className="hidden px-3 py-3 sm:table-cell">{LOT_SPEC.usefulArea}</td>
                   <td className="hidden px-3 py-3 md:table-cell">{LOT_SPEC.garden}</td>
-                  <td className={`px-3 py-3 font-semibold tabular-nums ${off ? "line-through decoration-1" : ""}`}>{formatEUR(PROJECT.price)}</td>
-                  <td className="px-3 py-3">
+                  <td className={`whitespace-nowrap px-3 py-3 font-semibold tabular-nums ${off ? "line-through decoration-1" : ""}`}>{formatEUR(PROJECT.price)}</td>
+                  <td className="hidden px-3 py-3 sm:table-cell">
                     <span className={`inline-flex rounded-full px-2 py-0.5 text-[12px] font-semibold ring-1 ${s.cls}`}>{s.label}</span>
                   </td>
                   <td className="px-3 py-3 text-right">
                     {!off && (
                       <button
-                        className="rounded-lg border border-brand px-2.5 py-1.5 text-[13px] font-semibold text-brand hover:bg-brand-soft"
+                        className="whitespace-nowrap rounded-lg border border-brand px-2.5 py-1.5 text-[13px] font-semibold text-brand hover:bg-brand-soft"
                         onClick={() =>
                           openComposer({
                             lot: l.label,
@@ -61,7 +63,8 @@ export default function LotsTable() {
                           })
                         }
                       >
-                        Pedir info
+                        <span className="sm:hidden">Info</span>
+                        <span className="hidden sm:inline">Pedir info</span>
                       </button>
                     )}
                   </td>
@@ -73,15 +76,5 @@ export default function LotsTable() {
       </div>
       <p className="mt-2 text-[12px] text-muted">Preço chave na mão por moradia, com IMT e Imposto de Selo incluídos.</p>
     </div>
-  );
-}
-
-export function AvailabilityLine() {
-  const { available } = useLanding();
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-2.5 py-1 text-[12.5px] font-semibold text-brand-ink ring-1 ring-[#cfdae6]">
-      <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-      {available > 0 ? `Restam ${available} de 3 moradias` : "Todas reservadas"}
-    </span>
   );
 }
