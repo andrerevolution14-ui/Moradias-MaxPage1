@@ -423,7 +423,7 @@ function PromoterBlock() {
     <section className="mt-12 bg-soft">
       <div className="mx-auto flex max-w-[640px] flex-col items-center px-4 py-12 text-center lg:py-16">
         <div className="relative h-36 w-36 overflow-hidden rounded-full ring-4 ring-white shadow-[0_10px_30px_rgba(21,32,43,0.12)]">
-          <Image src={PROMOTER.portrait} alt={PROMOTER.name} fill sizes="144px" quality={60} className="object-cover object-top" />
+          <Image src={PROMOTER.portrait} alt={PROMOTER.name} fill sizes="144px" quality={85} className="object-cover object-top" />
         </div>
         <div className="eyebrow mt-6">Fale com quem desenvolve o projeto</div>
         <h2 className="mt-2 text-[28px] font-bold leading-tight tracking-tight sm:text-[34px]">{PROMOTER.name}</h2>

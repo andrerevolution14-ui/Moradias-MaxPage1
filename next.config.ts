@@ -4,10 +4,10 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   images: {
-    // AVIF primeiro (mais leve), WebP como alternativa; imagens otimizadas ficam em cache 1 ano
-    formats: ["image/avif", "image/webp"],
-    qualities: [60, 75],
-    deviceSizes: [480, 640, 828, 1080, 1440, 1920],
+    // WebP (o mesmo formato das originais, evita perder nitidez); imagens otimizadas ficam em cache 1 ano
+    formats: ["image/webp"],
+    qualities: [75, 85],
+    deviceSizes: [480, 640, 828, 1080, 1440, 1920, 2048],
     minimumCacheTTL: 31536000,
   },
   partialPrefetching: true,

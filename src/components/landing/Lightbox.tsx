@@ -69,7 +69,7 @@ export default function Lightbox({ pics, index, onClose, zoomable = false }: { p
             <img src={pic.src} alt={pic.alt} className="block h-auto w-full" />
           </div>
         ) : (
-          <Image key={pic.src} src={pic.src} alt={pic.alt} fill sizes="100vw" quality={75} className="object-contain" />
+          <Image key={pic.src} src={pic.src} alt={pic.alt} fill sizes="100vw" quality={85} className="object-contain" />
         )}
         {n > 1 && !zoomed && (
           <>

@@ -54,26 +54,26 @@ export const LOT_SPEC = {
 };
 
 // A primeira imagem é a capa (carrega com prioridade). As restantes carregam à medida que se desliza.
-export const GALLERY: { src: string; alt: string; big?: boolean; plan?: boolean }[] = [
+export const GALLERY: { src: string; w: number; h: number; alt: string; big?: boolean; plan?: boolean }[] = [
   // Capa
-  { src: "/images/exterior-noite.webp", alt: "Moradia Domaine XXV à noite", big: true },
+  { src: "/images/exterior-noite.webp", w: 766, h: 1024, alt: "Moradia Domaine XXV à noite", big: true },
   // Interior
-  { src: "/images/cozinha.webp", alt: "Cozinha open space equipada" },
-  { src: "/images/sala-de-jantar.webp", alt: "Sala de jantar e estar" },
-  { src: "/images/exterior-barbecue.webp", alt: "Jardim privativo com barbecue" },
-  { src: "/images/wc-f2.webp", alt: "Casa de banho completa" },
-  { src: "/images/quarto-cama.webp", alt: "Quarto suite principal" },
-  { src: "/images/quarto-varanda.webp", alt: "Quarto com varanda" },
-  { src: "/images/quarto-porta.webp", alt: "Zona dos quartos" },
-  { src: "/images/corredor-quartos.webp", alt: "Corredor do piso 1" },
-  { src: "/images/terceiro-andar.webp", alt: "Sótão amplo (~34 m² úteis)" },
+  { src: "/images/cozinha.webp", w: 1600, h: 901, alt: "Cozinha open space equipada" },
+  { src: "/images/sala-de-jantar.webp", w: 1600, h: 878, alt: "Sala de jantar e estar" },
+  { src: "/images/exterior-barbecue.webp", w: 1375, h: 768, alt: "Jardim privativo com barbecue" },
+  { src: "/images/wc-f2.webp", w: 1792, h: 2200, alt: "Casa de banho completa" },
+  { src: "/images/quarto-cama.webp", w: 1024, h: 1024, alt: "Quarto suite principal" },
+  { src: "/images/quarto-varanda.webp", w: 1600, h: 900, alt: "Quarto com varanda" },
+  { src: "/images/quarto-porta.webp", w: 1024, h: 1024, alt: "Zona dos quartos" },
+  { src: "/images/corredor-quartos.webp", w: 1024, h: 1024, alt: "Corredor do piso 1" },
+  { src: "/images/terceiro-andar.webp", w: 1600, h: 1600, alt: "Sótão amplo (~34 m² úteis)" },
   // Exterior
-  { src: "/images/exterior-traseiro-completo.webp", alt: "As 3 moradias com jardim privativo", big: true },
-  { src: "/images/exterior-capa.webp", alt: "Fachada principal e garagem" },
-  { src: "/images/exterior-traseiro.webp", alt: "Fachada traseira e jardim" },
+  { src: "/images/exterior-traseiro-completo.webp", w: 1365, h: 768, alt: "As 3 moradias com jardim privativo", big: true },
+  { src: "/images/exterior-capa.webp", w: 1600, h: 876, alt: "Fachada principal e garagem" },
+  { src: "/images/exterior-traseiro.webp", w: 1024, h: 576, alt: "Fachada traseira e jardim" },
   // Plantas
-  { src: "/images/planta-tecnica.webp", alt: "Planta técnica · R/C, piso 1 e sótão", big: true, plan: true },
-  { src: "/images/planta-3d.webp", alt: "Planta 3D", big: true, plan: true },
+  { src: "/images/planta-tecnica.webp", w: 1600, h: 1131, alt: "Planta técnica · R/C, piso 1 e sótão", big: true, plan: true },
+  { src: "/images/planta-3d.webp", w: 1600, h: 1131, alt: "Planta 3D", big: true, plan: true },
 ];
 
 export const PLANS = [

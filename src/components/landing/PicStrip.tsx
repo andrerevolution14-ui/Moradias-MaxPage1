@@ -12,7 +12,7 @@ export function WorksStrip({ pics }: { pics: (Pic & { tag: string })[] }) {
       <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 lg:mx-0 lg:px-0">
         {pics.map((p, i) => (
           <button key={p.src} onClick={() => setOpen(i)} className="relative aspect-[3/4] w-[46%] shrink-0 snap-start overflow-hidden rounded-xl sm:w-[30%] lg:w-[26%]">
-            <Image src={p.src} alt={p.alt} fill sizes="(min-width:1024px) 220px, 46vw" quality={60} className="object-cover" />
+            <Image src={p.src} alt={p.alt} fill sizes="(min-width:1024px) 220px, 46vw" quality={85} className="object-cover" />
             <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-3 pt-8 text-left text-white">
               <span className="block text-[11px] font-semibold uppercase tracking-wide text-white/80">{p.tag}</span>
               <span className="text-[14px] font-semibold">{p.alt}</span>
@@ -34,7 +34,7 @@ export function PlansGrid({ pics }: { pics: (Pic & { note: string })[] }) {
         {pics.map((p, i) => (
           <button key={p.src} onClick={() => setOpen(i)} className="group w-[85%] shrink-0 snap-start overflow-hidden rounded-xl border border-line bg-white text-left sm:w-auto">
             <div className="relative aspect-[1600/1131]">
-              <Image src={p.src} alt={p.alt} fill sizes="(min-width:640px) 420px, 85vw" quality={75} className="object-contain p-2" />
+              <Image src={p.src} alt={p.alt} fill sizes="(min-width:640px) 420px, 90vw" quality={85} className="object-contain p-2" />
             </div>
             <div className="flex items-center justify-between border-t border-line px-4 py-3">
               <div><div className="font-semibold">{p.alt}</div><div className="text-[13px] text-muted">{p.note}</div></div>

@@ -26,6 +26,17 @@ export default function Gallery() {
     if (el) el.scrollBy({ left: d * el.clientWidth * 0.8, behavior: "smooth" });
   }
 
+  // Largura real a que cada foto é desenhada (object-cover corta, por isso pode ser maior que o mosaico).
+  // Mosaico: altura 340 / 420 / 520 px; linhas pequenas = (altura - 8) / 2.
+  function sizesFor(g: (typeof GALLERY)[number]) {
+    const a = g.w / g.h;
+    const fit = (tileW: number, tileH: number) => Math.round(g.plan ? tileW : Math.max(tileW, tileH * a));
+    const [lg, sm, xs] = g.big
+      ? [fit(620, 520), fit(0.6 * 900, 420), fit(0.84 * 430, 340)]
+      : [fit(300, 256), fit(0.3 * 900, 206), fit(0.42 * 430, 166)];
+    return `(min-width:1024px) ${lg}px, (min-width:640px) ${sm}px, ${xs}px`;
+  }
+
   const tile = "relative overflow-hidden rounded-xl bg-soft snap-start";
   const big = "row-span-2 w-[84vw] sm:w-[60vw] lg:w-[620px]";
   const small = "w-[42vw] sm:w-[30vw] lg:w-[300px]";
@@ -49,7 +60,7 @@ export default function Gallery() {
             if (it.kind === "tour") {
               return (
                 <Tour360Button key="tour" className={`${tile} ${small} group text-left`}>
-                  <Image src="/images/corredor-quartos.webp" alt="" fill sizes="(min-width:1024px) 300px, 42vw" quality={60} className="object-cover" />
+                  <Image src="/images/corredor-quartos.webp" alt="" fill sizes="(min-width:1024px) 300px, (min-width:640px) 270px, 181px" quality={85} className="object-cover" />
                   <span className="absolute inset-0 bg-[#0f1822]/45 transition group-hover:bg-[#0f1822]/55" />
                   <span className="absolute inset-0 grid place-items-center">
                     <span className="grid h-12 w-12 place-items-center rounded-full bg-white/90 text-ink"><Icon360 size={24} /></span>
@@ -67,8 +78,8 @@ export default function Gallery() {
                   src={g.src}
                   alt={g.alt}
                   fill
-                  sizes={g.big ? "(min-width:1024px) 620px, 84vw" : "(min-width:1024px) 300px, 42vw"}
-                  quality={k === 0 ? 75 : 60}
+                  sizes={sizesFor(g)}
+                  quality={85}
                   priority={k === 0}
                   loading={k === 0 ? undefined : k < 5 ? "eager" : "lazy"}
                   className={g.plan ? "object-contain p-2" : "object-cover"}
