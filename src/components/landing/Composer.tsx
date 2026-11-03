@@ -10,6 +10,8 @@ import { useLanding } from "./LandingProvider";
 
 type Props = { variant: "card" | "sheet" | "inline"; id?: string };
 
+const ME_KEY = "dx_me";
+
 export default function Composer({ variant, id }: Props) {
   const { preset, presetKey, setChat } = useLanding();
   const [intent, setIntent] = useState<string | null>(null);
@@ -28,6 +30,15 @@ export default function Composer({ variant, id }: Props) {
 
   useEffect(() => {
     setWhen(responseWindow());
+    // Quem já escreveu antes não tem de voltar a preencher
+    try {
+      const me = JSON.parse(localStorage.getItem(ME_KEY) || "null");
+      if (me) {
+        setName(me.name || "");
+        setPhone(me.phone || "");
+        setEmail(me.email || "");
+      }
+    } catch {}
   }, []);
 
   // Pré-preenchimento vindo de outros botões da página
@@ -89,6 +100,9 @@ export default function Composer({ variant, id }: Props) {
       track("Lead", { content_name: "Domaine XXV", content_category: intent || "mensagem" }, eventId);
       if (intent === "visita") track("Schedule", { content_name: "visita_terreno" });
       saveChat(data.token, data.firstName);
+      try {
+        localStorage.setItem(ME_KEY, JSON.stringify({ name, phone, email }));
+      } catch {}
       setChat({ token: data.token, firstName: data.firstName });
       setDone({ firstName: data.firstName, token: data.token, phone, hasEmail: data.hasEmail });
     } catch {
@@ -177,19 +191,19 @@ export default function Composer({ variant, id }: Props) {
       <div className={`mt-3 grid gap-2.5 ${variant === "inline" ? "sm:grid-cols-2" : ""}`}>
         <label className="block">
           <span className="mb-1 block text-[13px] font-semibold">Nome</span>
-          <input className="field" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} aria-invalid={error?.field === "name"} placeholder="O seu nome" />
+          <input className="field" id={`nome-${variant}`} name="name" autoComplete="name" autoCapitalize="words" enterKeyHint="next" value={name} onChange={(e) => setName(e.target.value)} aria-invalid={error?.field === "name"} placeholder="O seu nome" />
         </label>
         <label className="block">
           <span className="mb-1 block text-[13px] font-semibold">Telemóvel</span>
-          <input className="field" type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} aria-invalid={error?.field === "phone"} placeholder="912 345 678" />
+          <input className="field" id={`tel-${variant}`} name="tel" type="tel" inputMode="tel" autoComplete="tel" enterKeyHint="next" value={phone} onChange={(e) => setPhone(e.target.value)} aria-invalid={error?.field === "phone"} placeholder="912 345 678" />
         </label>
         <label className={`block ${variant === "inline" ? "sm:col-span-2" : ""}`}>
           <span className="mb-1 flex items-baseline justify-between text-[13px] font-semibold">
             Email <span className="font-normal text-muted">opcional</span>
           </span>
-          <input className="field" type="email" inputMode="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} aria-invalid={error?.field === "email"} placeholder="Para receber a resposta por escrito" />
+          <input className="field" id={`email-${variant}`} name="email" type="email" inputMode="email" autoComplete="email" autoCapitalize="off" enterKeyHint="send" value={email} onChange={(e) => setEmail(e.target.value)} aria-invalid={error?.field === "email"} placeholder="Para receber a resposta por escrito" />
         </label>
-        <input tabIndex={-1} autoComplete="off" className="hidden" value={hp} onChange={(e) => setHp(e.target.value)} name="website" aria-hidden />
+        <input tabIndex={-1} autoComplete="off" className="hidden" value={hp} onChange={(e) => setHp(e.target.value)} name="website_hp" aria-hidden />
       </div>
 
       {error && <p className="mt-3 rounded-lg bg-orange-50 px-3 py-2 text-sm text-orange-800" role="alert">{error.msg}</p>}

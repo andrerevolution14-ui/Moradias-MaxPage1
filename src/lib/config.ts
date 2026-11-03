@@ -7,8 +7,7 @@ export const PROJECT = {
   postal: "3810-843 Oliveirinha · Aveiro",
   coords: `40°34'59.2"N 8°37'02.2"W`,
   mapEmbed:
-    "https://maps.google.com/maps?q=R.+Ac%C3%A1cio+Sim%C3%B5es+Vieira,+3810-843+Oliveirinha&t=m&z=15&output=embed",
-  mapLink: "https://maps.google.com/?q=R.+Ac%C3%A1cio+Sim%C3%B5es+Vieira,+3810-843+Oliveirinha",
+    "https://www.google.com/maps?q=R.+Ac%C3%A1cio+Sim%C3%B5es+Vieira,+3810-843+Oliveirinha&t=m&z=13&output=embed",
   tour360: "https://visita3dmoradia-vvtu.vercel.app/",
   price: 335000,
   downPaymentPct: 0.1,
@@ -45,6 +44,7 @@ export const DEFAULT_LOTS: Lot[] = [
 
 export const LOT_SPEC = {
   typology: "T3 (opção T4)",
+  t4Note: "opção T4 no rés-do-chão",
   usefulArea: "146,34 m²",
   grossPrivate: "~180 m²",
   dependentArea: "77,65 m²",
@@ -53,22 +53,33 @@ export const LOT_SPEC = {
   floors: "R/C + Piso 1 + Sótão",
 };
 
+// A primeira imagem é a capa (carrega com prioridade). As restantes carregam à medida que se desliza.
 export const GALLERY = [
-  { src: "/images/exterior-capa.webp", alt: "Fachada principal das 3 moradias Domaine XXV", w: 1600, h: 876 },
-  { src: "/images/exterior-traseiro-completo.webp", alt: "Jardim e fachada traseira", w: 1600, h: 900 },
-  { src: "/images/cozinha.webp", alt: "Cozinha open space equipada", w: 1600, h: 901 },
-  { src: "/images/sala-de-jantar.webp", alt: "Sala de jantar e estar", w: 1600, h: 900 },
-  { src: "/images/quarto-cama.webp", alt: "Quarto suite principal", w: 1600, h: 900 },
-  { src: "/images/exterior-barbecue.webp", alt: "Área exterior com barbecue", w: 1375, h: 768 },
-  { src: "/images/quarto-varanda.webp", alt: "Quarto com varanda", w: 1600, h: 900 },
-  { src: "/images/quarto-porta.webp", alt: "Zona dos quartos", w: 1600, h: 900 },
-  { src: "/images/corredor-quartos.webp", alt: "Corredor do piso 1", w: 1024, h: 1024 },
-  { src: "/images/terceiro-andar.webp", alt: "Sótão amplo (~34 m² úteis)", w: 1600, h: 900 },
-  { src: "/images/wc-f2.webp", alt: "Casa de banho completa", w: 1600, h: 900 },
-  { src: "/images/exterior-traseiro.webp", alt: "Jardim privativo de ~82 m²", w: 1600, h: 900 },
-  { src: "/images/exterior-noite.webp", alt: "Moradia à noite", w: 766, h: 1024 },
-  { src: "/images/planta-tecnica.webp", alt: "Planta técnica de arquitetura", w: 1600, h: 1131 },
-  { src: "/images/planta-3d.webp", alt: "Planta 3D humanizada", w: 1600, h: 1131 },
+  { src: "/images/exterior-traseiro-completo.webp", alt: "As 3 moradias com jardim privativo ao pôr do sol" },
+  { src: "/images/exterior-barbecue.webp", alt: "Jardim com zona de barbecue" },
+  { src: "/images/exterior-capa.webp", alt: "Fachada principal e garagem" },
+  { src: "/images/cozinha.webp", alt: "Cozinha open space equipada" },
+  { src: "/images/sala-de-jantar.webp", alt: "Sala de jantar e estar" },
+  { src: "/images/quarto-cama.webp", alt: "Quarto suite principal" },
+  { src: "/images/quarto-varanda.webp", alt: "Quarto com varanda" },
+  { src: "/images/wc-f2.webp", alt: "Casa de banho completa" },
+  { src: "/images/quarto-porta.webp", alt: "Zona dos quartos" },
+  { src: "/images/corredor-quartos.webp", alt: "Corredor do piso 1" },
+  { src: "/images/terceiro-andar.webp", alt: "Sótão amplo (~34 m² úteis)" },
+  { src: "/images/exterior-traseiro.webp", alt: "Fachada traseira e jardim" },
+  { src: "/images/exterior-noite.webp", alt: "Moradia à noite" },
+];
+
+export const PLANS = [
+  { src: "/images/planta-tecnica.webp", alt: "Planta técnica", note: "Piso 0 + Piso 1 + Sótão" },
+  { src: "/images/planta-3d.webp", alt: "Planta 3D", note: "Distribuição e enquadramento exterior" },
+];
+
+export const WORKS = [
+  { src: "/obras/wc.webp", alt: "Casas de banho", tag: "Obra concluída" },
+  { src: "/obras/quarto.webp", alt: "Quartos e pavimentos", tag: "Obra concluída" },
+  { src: "/obras/alvenaria.webp", alt: "Estrutura e alvenarias", tag: "Em execução" },
+  { src: "/obras/redes.webp", alt: "Instalações técnicas", tag: "Em execução" },
 ];
 
 export const ROOMS = [
@@ -134,7 +145,7 @@ export const FAQ = [
   ["Posso visitar o terreno antes de decidir?",
     "Sim. A visita ao lote em Oliveirinha é gratuita e sem compromisso. Envie uma mensagem com o melhor horário e o André liga-lhe para combinar o dia."],
   ["Posso personalizar a moradia?",
-    "Sim. Cozinha, acabamentos e climatização podem ser ajustados ao seu gosto, e existe a opção de converter a moradia em T4 sem alteração de preço."],
+    "Sim. Cozinha, acabamentos e climatização podem ser ajustados ao seu gosto, e existe a opção de T4 no rés-do-chão sem alteração de preço."],
 ];
 
 export const QUICK_INTENTS = [

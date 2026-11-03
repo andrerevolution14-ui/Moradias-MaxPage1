@@ -1,113 +1,75 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
-import { GALLERY, PROJECT } from "@/lib/config";
+import { useRef, useState } from "react";
+import { GALLERY } from "@/lib/config";
 import { trackOnce } from "@/lib/track";
-import { Icon360, IconArrowL, IconArrowR, IconCamera, IconPlan, IconPlay, IconX } from "../icons";
+import { IconArrowL, IconArrowR, IconCamera } from "../icons";
+import Lightbox from "./Lightbox";
+import Tour360Button from "./Tour360";
 
+/** Fotos que se deslizam para o lado sem abrir. Tocar abre em ecrã inteiro. */
 export default function Gallery() {
+  const track = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<number | null>(null);
-  const total = GALLERY.length;
+  const [cur, setCur] = useState(0);
 
-  const show = useCallback((i: number) => {
-    setOpen(i);
-    trackOnce("gallery", "ViewContent", { content_name: "galeria", content_type: "home_listing" });
-  }, []);
-  const go = useCallback((d: number) => setOpen((i) => (i === null ? i : (i + d + total) % total)), [total]);
-
-  useEffect(() => {
-    if (open === null) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(null);
-      if (e.key === "ArrowRight") go(1);
-      if (e.key === "ArrowLeft") go(-1);
-    };
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open, go]);
-
-  const planIdx = GALLERY.findIndex((g) => g.src.includes("planta-tecnica"));
+  function onScroll() {
+    const el = track.current;
+    if (!el) return;
+    const w = (el.firstElementChild as HTMLElement | null)?.offsetWidth || el.clientWidth;
+    setCur(Math.min(GALLERY.length - 1, Math.round(el.scrollLeft / (w + 8))));
+    if (el.scrollLeft > 40) trackOnce("gallery", "ViewContent", { content_name: "galeria", content_type: "home_listing" });
+  }
+  function step(d: number) {
+    const el = track.current;
+    if (!el) return;
+    const w = (el.firstElementChild as HTMLElement | null)?.offsetWidth || el.clientWidth;
+    el.scrollBy({ left: d * (w + 8), behavior: "smooth" });
+  }
 
   return (
-    <>
-      {/* Telemóvel: carrossel deslizante */}
-      <div className="relative lg:hidden">
-        <div className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto">
-          {GALLERY.slice(0, 12).map((g, i) => (
-            <button key={g.src} className="relative aspect-[4/3] w-full shrink-0 snap-center" onClick={() => show(i)}>
-              <Image src={g.src} alt={g.alt} fill sizes="100vw" className="object-cover" priority={i === 0} />
-            </button>
-          ))}
-        </div>
-        <Badges />
-        <div className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-md bg-black/65 px-2 py-1 text-xs font-semibold text-white">
-          <IconCamera size={14} /> {total} fotos
-        </div>
-      </div>
-
-      {/* Desktop: mosaico estilo portal */}
-      <div className="relative hidden h-[520px] grid-cols-4 grid-rows-2 gap-2 overflow-hidden rounded-2xl lg:grid">
-        {GALLERY.slice(0, 5).map((g, i) => (
+    <div className="relative">
+      <div
+        ref={track}
+        onScroll={onScroll}
+        className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth lg:rounded-2xl"
+      >
+        {GALLERY.map((g, i) => (
           <button
             key={g.src}
-            onClick={() => show(i)}
-            className={`group relative overflow-hidden ${i === 0 ? "col-span-2 row-span-2" : ""}`}
+            onClick={() => setOpen(i)}
+            className="relative aspect-[4/3] w-[88%] shrink-0 snap-center overflow-hidden first:ml-0 sm:w-[70%] lg:aspect-auto lg:h-[540px] lg:w-[62%] lg:snap-start lg:rounded-xl"
+            aria-label={`Ver foto: ${g.alt}`}
           >
-            <Image src={g.src} alt={g.alt} fill sizes={i === 0 ? "50vw" : "25vw"} priority={i === 0} className="object-cover transition duration-500 group-hover:scale-[1.03]" />
+            <Image
+              src={g.src}
+              alt={g.alt}
+              fill
+              sizes="(min-width:1024px) 760px, (min-width:640px) 70vw, 100vw"
+              quality={i === 0 ? 75 : 60}
+              priority={i === 0}
+              loading={i === 0 ? undefined : i < 3 ? "eager" : "lazy"}
+              className="object-cover"
+            />
           </button>
         ))}
-        <Badges />
-        <div className="absolute bottom-4 right-4 flex gap-2">
-          <button onClick={() => show(0)} className="btn btn-ghost bg-white/95 px-3 py-2 text-sm shadow"><IconCamera size={16} /> Ver {total} fotos</button>
-          <a href="#video" className="btn btn-ghost bg-white/95 px-3 py-2 text-sm shadow"><IconPlay size={14} /> Vídeo</a>
-          <a href={PROJECT.tour360} target="_blank" rel="noopener" className="btn btn-ghost bg-white/95 px-3 py-2 text-sm shadow"><Icon360 size={16} /> Visita 360°</a>
-          <button onClick={() => show(planIdx)} className="btn btn-ghost bg-white/95 px-3 py-2 text-sm shadow"><IconPlan size={16} /> Plantas</button>
-        </div>
       </div>
 
-      {/* Atalhos no telemóvel */}
-      <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 pt-3 lg:hidden">
-        <button onClick={() => show(0)} className="btn btn-ghost shrink-0 px-3 py-2 text-sm"><IconCamera size={16} /> Fotos</button>
-        <a href="#video" className="btn btn-ghost shrink-0 px-3 py-2 text-sm"><IconPlay size={14} /> Vídeo</a>
-        <a href={PROJECT.tour360} target="_blank" rel="noopener" className="btn btn-ghost shrink-0 px-3 py-2 text-sm"><Icon360 size={16} /> Visita 360°</a>
-        <button onClick={() => show(planIdx)} className="btn btn-ghost shrink-0 px-3 py-2 text-sm"><IconPlan size={16} /> Plantas</button>
+      <div className="pointer-events-none absolute left-3 top-3 flex flex-wrap gap-1.5 lg:left-4 lg:top-4">
+        <span className="rounded-md bg-cta px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-paper">Venda em planta</span>
+        <span className="rounded-md bg-paper px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-ink">Projeto aprovado</span>
+      </div>
+      <div className="pointer-events-none absolute bottom-3 left-3 flex items-center gap-1.5 rounded-md bg-black/60 px-2 py-1 text-xs font-semibold text-white">
+        <IconCamera size={14} /> {cur + 1} / {GALLERY.length}
+      </div>
+      <div className="absolute bottom-3 right-3 flex items-center gap-2">
+        <Tour360Button className="btn bg-paper/95 px-3 py-2 text-sm text-ink shadow" />
+        <button onClick={() => step(-1)} className="hidden h-10 w-10 place-items-center rounded-full bg-paper/95 shadow lg:grid" aria-label="Anterior"><IconArrowL /></button>
+        <button onClick={() => step(1)} className="hidden h-10 w-10 place-items-center rounded-full bg-paper/95 shadow lg:grid" aria-label="Seguinte"><IconArrowR /></button>
       </div>
 
-      {open !== null && (
-        <div className="fade-in fixed inset-0 z-[60] flex flex-col bg-black/95" role="dialog" aria-modal="true" aria-label="Galeria">
-          <div className="flex items-center justify-between px-4 py-3 text-sm text-white/80">
-            <span>{open + 1} / {total} · {GALLERY[open].alt}</span>
-            <button onClick={() => setOpen(null)} className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white" aria-label="Fechar"><IconX /></button>
-          </div>
-          <div className="relative flex-1">
-            <Image src={GALLERY[open].src} alt={GALLERY[open].alt} fill sizes="100vw" className="object-contain" />
-            <button onClick={() => go(-1)} className="absolute left-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/15 text-white" aria-label="Anterior"><IconArrowL /></button>
-            <button onClick={() => go(1)} className="absolute right-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/15 text-white" aria-label="Seguinte"><IconArrowR /></button>
-          </div>
-          <div className="no-scrollbar flex gap-1.5 overflow-x-auto p-3">
-            {GALLERY.map((g, i) => (
-              <button key={g.src} onClick={() => setOpen(i)} className={`relative h-14 w-20 shrink-0 overflow-hidden rounded ${i === open ? "ring-2 ring-white" : "opacity-60"}`}>
-                <Image src={g.src} alt="" fill sizes="80px" className="object-cover" />
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-
-function Badges() {
-  return (
-    <div className="pointer-events-none absolute left-3 top-3 flex flex-wrap gap-1.5 lg:left-4 lg:top-4">
-      <span className="rounded-md bg-brand px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-white">Venda em planta</span>
-      <span className="rounded-md bg-white px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-ink">Projeto aprovado</span>
+      {open !== null && <Lightbox pics={GALLERY} index={open} onClose={() => setOpen(null)} />}
     </div>
   );
 }
