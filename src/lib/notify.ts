@@ -50,7 +50,7 @@ function layout(inner: string) {
   </div></body></html>`;
 }
 
-function button(href: string, label: string, bg = "#3a3029") {
+function button(href: string, label: string, bg = "#1b3048") {
   return `<a href="${href}" style="display:inline-block;background:${bg};color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:600;margin:4px 6px 4px 0">${label}</a>`;
 }
 
@@ -64,7 +64,7 @@ export async function notifyAdminNewLead(lead: LeadInfo, message: string, base: 
   const src = lead.source || {};
   const srcLine = [src.utm_source, src.utm_campaign, src.utm_content, src.variant && `variante ${src.variant}`].filter(Boolean).join(" · ");
   const html = layout(`
-    <div style="font-size:13px;color:#3a3029;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Nova lead</div>
+    <div style="font-size:13px;color:#1b3048;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Nova lead</div>
     <h1 style="font-size:22px;margin:6px 0 2px">${escapeHtml(lead.name)}</h1>
     <div style="font-size:16px;margin-bottom:14px"><a href="tel:+${lead.phone}" style="color:#1c1c1c">${formatPhone(lead.phone)}</a>${lead.email ? ` · ${escapeHtml(lead.email)}` : ""}</div>
     <div style="background:#f4f4f2;border-radius:10px;padding:14px 16px;white-space:pre-wrap;font-size:15px;line-height:1.5">${escapeHtml(message)}</div>
@@ -83,7 +83,7 @@ export async function notifyAdminLeadReply(lead: LeadInfo, message: string, base
   const to = process.env.LEADS_NOTIFY_EMAIL;
   if (!to) return false;
   const html = layout(`
-    <div style="font-size:13px;color:#3a3029;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Nova mensagem</div>
+    <div style="font-size:13px;color:#1b3048;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Nova mensagem</div>
     <h1 style="font-size:20px;margin:6px 0 12px">${escapeHtml(lead.name)} respondeu</h1>
     <div style="background:#f4f4f2;border-radius:10px;padding:14px 16px;white-space:pre-wrap;font-size:15px;line-height:1.5">${escapeHtml(message)}</div>
     <div style="margin-top:18px">${button(`${base}/leads?id=${lead.id}`, "Responder")}${button(`tel:+${lead.phone}`, "Ligar", "#1c1c1c")}</div>`);

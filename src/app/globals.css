@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  /* Paleta bege: papel quente, areia, espresso e bronze */
-  --ink: #2b2621;
-  --muted: #7a6f63;
-  --line: #e6ddd0;
-  --soft: #f3ece2;
-  --paper: #fbf8f3;
-  --brand: #8a6a48;      /* bronze: ícones, destaques, texto de marca */
-  --brand-ink: #5a4430;
-  --brand-soft: #efe5d7;
-  --cta: #3a3029;        /* espresso: botões principais */
-  --cta-hover: #251e19;
-  --sand: #b8924a;
+  /* Azul ria (confiança) + marfim (calor) + latão (detalhe premium) */
+  --ink: #15202b;
+  --muted: #5d6874;
+  --line: #e2ddd3;
+  --soft: #f1eee7;
+  --paper: #faf8f4;
+  --brand: #24476b;      /* azul ria: ícones, destaques */
+  --brand-ink: #152a40;
+  --brand-soft: #e6ecf2;
+  --cta: #1b3048;        /* botões principais */
+  --cta-hover: #111f30;
+  --sand: #b08d57;       /* latão */
   --wa: #1fae5b;
   --danger: #b4441c;
 }
@@ -100,13 +100,13 @@ body {
   border: 1px solid var(--line);
 }
 .btn-ghost:hover {
-  border-color: #d3c7b5;
+  border-color: #cdc6b9;
   background: var(--soft);
 }
 
 .field {
   width: 100%;
-  border: 1px solid #ddd3c4;
+  border: 1px solid #d9d4ca;
   background: #fff;
   border-radius: 10px;
   padding: 0.72rem 0.85rem;
@@ -116,7 +116,7 @@ body {
 }
 .field:focus {
   border-color: var(--brand);
-  box-shadow: 0 0 0 3px rgba(138, 106, 72, 0.18);
+  box-shadow: 0 0 0 3px rgba(36, 71, 107, 0.16);
 }
 .field[aria-invalid="true"] {
   border-color: var(--danger);

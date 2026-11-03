@@ -9,9 +9,8 @@ import {
 } from "@/components/icons";
 import LandingProvider from "@/components/landing/LandingProvider";
 import Gallery from "@/components/landing/Gallery";
-import Composer from "@/components/landing/Composer";
 import DirectContact from "@/components/landing/DirectContact";
-import MobileContact from "@/components/landing/MobileContact";
+import ContactDialog from "@/components/landing/ContactDialog";
 import LotsTable, { AvailabilityLine } from "@/components/landing/LotsTable";
 import Simulator, { MonthlyFrom } from "@/components/landing/Simulator";
 import Ask from "@/components/landing/Ask";
@@ -75,11 +74,7 @@ export default function Page() {
 
           <aside className="hidden lg:block">
             <div className="sticky top-[76px] pt-6">
-              <div id="contacto" className="rounded-2xl border border-line bg-white p-5 shadow-[0_10px_30px_rgba(58,48,41,0.07)]">
-                <Composer variant="card" />
-                <div className="my-4 flex items-center gap-3 text-[12px] text-muted"><span className="h-px flex-1 bg-line" />ou fale já<span className="h-px flex-1 bg-line" /></div>
-                <DirectContact cta="sidebar" />
-              </div>
+              <ContactCard />
             </div>
           </aside>
         </div>
@@ -88,7 +83,7 @@ export default function Page() {
         <Footer />
       </main>
 
-      <MobileContact />
+      <ContactDialog />
       <SeenTracker ids={["unidades", "condicoes", "simulador", "plantas", "localizacao"]} />
     </LandingProvider>
   );
@@ -171,7 +166,7 @@ function Summary() {
 function Description() {
   return (
     <section id="descricao" className="sec border-t-0">
-      <div className="max-w-[64ch] space-y-4 text-[16px] leading-[1.75] text-[#3b342d]">
+      <div className="max-w-[64ch] space-y-4 text-[16px] leading-[1.75] text-[#2b3540]">
         <p className="font-serif text-[22px] leading-snug text-ink [text-wrap:balance]">
           Em Aveiro, quase sempre se escolhe dois: espaço, localização ou preço. Aqui não tem de abdicar de nenhum.
         </p>
@@ -394,6 +389,35 @@ function Faq() {
   );
 }
 
+/** Cartão fixo (computador): quem responde + botões. A mensagem abre numa janela. */
+function ContactCard() {
+  return (
+    <div className="rounded-2xl border border-line bg-white p-5 shadow-[0_10px_30px_rgba(21,32,43,0.08)]">
+      <div className="flex items-center gap-3.5">
+        <Image src={PROMOTER.avatar} alt={PROMOTER.name} width={64} height={64} className="h-16 w-16 rounded-full object-cover" />
+        <div className="min-w-0 leading-tight">
+          <div className="text-[17px] font-bold">{PROMOTER.name}</div>
+          <div className="text-[13px] text-muted">Promotor do projeto · Domaine XXV</div>
+          <div className="mt-1 flex items-center gap-1.5 text-[12.5px] font-medium text-brand">
+            <span className="h-2 w-2 rounded-full bg-[#2fa863]" /> Responde no próprio dia
+          </div>
+        </div>
+      </div>
+      <div className="mt-4 rounded-xl bg-soft px-4 py-3">
+        <div className="text-[13px] text-muted">Preço chave na mão</div>
+        <div className="text-[22px] font-extrabold tabular-nums">{formatEUR(PROJECT.price)}</div>
+        <div className="text-[12.5px] text-muted">Entrada de 10%: {formatEUR(PROJECT.price * PROJECT.downPaymentPct)}</div>
+      </div>
+      <div className="mt-4 grid gap-2">
+        <Ask className="btn btn-primary w-full py-3.5 text-[15px]" preset={{ cta: "sidebar" }}>Enviar mensagem</Ask>
+        <Ask className="btn btn-ghost w-full" preset={{ cta: "sidebar_visita", intent: "visita" }}>Marcar visita ao terreno</Ask>
+        <DirectContact cta="sidebar" />
+      </div>
+      <p className="mt-3 text-center text-[12px] text-muted">Sem compromisso · {PROMOTER.phoneDisplay}</p>
+    </div>
+  );
+}
+
 function PromoterBlock() {
   return (
     <section className="mt-12 bg-soft">
@@ -408,10 +432,10 @@ function PromoterBlock() {
           <p className="mt-4 max-w-[58ch] text-[16px] leading-relaxed">
             Sem call center nem intermediários. Quem lhe responde é quem acompanha o projeto, da reserva às chaves. Respondo no próprio dia.
           </p>
-          <div className="mt-6 max-w-[560px] rounded-2xl border border-line bg-white p-5">
-            <Composer variant="inline" />
+          <div className="mt-6 grid max-w-[460px] gap-2">
+            <Ask className="btn btn-primary w-full py-3.5 text-[15px]" preset={{ cta: "promoter_block" }}>Enviar mensagem ao André</Ask>
+            <DirectContact cta="promoter_block" />
           </div>
-          <div className="mt-3 max-w-[560px]"><DirectContact cta="promoter_block" /></div>
         </div>
       </div>
     </section>

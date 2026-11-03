@@ -44,13 +44,7 @@ export default function LandingProvider({ children }: { children: ReactNode }) {
   const openComposer = useCallback((p?: ComposerPreset) => {
     setPreset(p || null);
     setPresetKey((k) => k + 1);
-    const desktop = window.matchMedia("(min-width: 1024px)").matches;
-    if (desktop) {
-      document.getElementById("contacto")?.scrollIntoView({ behavior: "smooth", block: "center" });
-      setTimeout(() => document.querySelector<HTMLTextAreaElement>("#contacto textarea")?.focus({ preventScroll: true }), 450);
-    } else {
-      setSheetOpen(true);
-    }
+    setSheetOpen(true);
   }, []);
 
   const value = useMemo<Ctx>(

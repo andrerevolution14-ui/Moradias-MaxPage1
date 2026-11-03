@@ -37,7 +37,7 @@ export default function Lightbox({ pics, index, onClose, zoomable = false }: { p
   const zoomed = zoom > 1;
 
   return (
-    <div className="fade-in fixed inset-0 z-[60] flex flex-col bg-[#1c1814]" role="dialog" aria-modal="true" aria-label={pic.alt}>
+    <div className="fade-in fixed inset-0 z-[60] flex flex-col bg-[#0f1822]" role="dialog" aria-modal="true" aria-label={pic.alt}>
       <div className="flex items-center justify-between gap-3 px-4 pb-2 pt-[max(env(safe-area-inset-top),12px)] text-sm text-white/80">
         <span className="truncate">{n > 1 && `${i + 1} / ${n} · `}{pic.alt}</span>
         <div className="flex shrink-0 items-center gap-2">
