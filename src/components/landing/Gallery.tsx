@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { GALLERY } from "@/lib/config";
 import { trackOnce } from "@/lib/track";
-import { IconArrowL, IconArrowR, IconCamera } from "../icons";
+import { IconArrowL, IconArrowR, IconCamera, IconPin, IconPlan } from "../icons";
 import Lightbox from "./Lightbox";
 import Tour360Button from "./Tour360";
 
@@ -13,6 +13,7 @@ export default function Gallery() {
   const track = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<number | null>(null);
   const [cur, setCur] = useState(0);
+  const planIdx = GALLERY.findIndex((g) => g.src.includes("planta"));
 
   function onScroll() {
     const el = track.current;
@@ -29,7 +30,8 @@ export default function Gallery() {
   }
 
   return (
-    <div className="relative">
+    <div>
+     <div className="relative">
       <div
         ref={track}
         onScroll={onScroll}
@@ -64,12 +66,20 @@ export default function Gallery() {
         <IconCamera size={14} /> {cur + 1} / {GALLERY.length}
       </div>
       <div className="absolute bottom-3 right-3 flex items-center gap-2">
-        <Tour360Button className="btn bg-paper/95 px-3 py-2 text-sm text-ink shadow" />
         <button onClick={() => step(-1)} className="hidden h-10 w-10 place-items-center rounded-full bg-paper/95 shadow lg:grid" aria-label="Anterior"><IconArrowL /></button>
         <button onClick={() => step(1)} className="hidden h-10 w-10 place-items-center rounded-full bg-paper/95 shadow lg:grid" aria-label="Seguinte"><IconArrowR /></button>
       </div>
+     </div>
 
-      {open !== null && <Lightbox pics={GALLERY} index={open} onClose={() => setOpen(null)} />}
+      {/* Atalhos por baixo das fotos */}
+      <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 pt-3 lg:px-0">
+        <button onClick={() => setOpen(0)} className="btn btn-ghost shrink-0 px-3 py-2 text-sm"><IconCamera size={16} /> {GALLERY.length} fotos</button>
+        <Tour360Button className="btn btn-ghost shrink-0 px-3 py-2 text-sm" label="Visita 360°" />
+        <button onClick={() => setOpen(planIdx)} className="btn btn-ghost shrink-0 px-3 py-2 text-sm"><IconPlan size={16} /> Plantas</button>
+        <a href="#localizacao" className="btn btn-ghost shrink-0 px-3 py-2 text-sm"><IconPin size={16} /> Localização</a>
+      </div>
+
+      {open !== null && <Lightbox pics={GALLERY} index={open} zoomable onClose={() => setOpen(null)} />}
     </div>
   );
 }
