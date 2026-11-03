@@ -7,7 +7,11 @@ import "./globals.css";
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], weight: ["400", "600"] });
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+// Endereço público do site (imagem de partilha no WhatsApp/Facebook). Na Vercel, se NEXT_PUBLIC_SITE_URL
+// não estiver definido, usa o domínio de produção que a própria Vercel indica.
+const SITE =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),

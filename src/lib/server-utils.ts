@@ -41,6 +41,7 @@ export function clientIp(req: NextRequest) {
 export function siteUrl(req?: NextRequest) {
   const env = process.env.NEXT_PUBLIC_SITE_URL;
   if (env) return env.replace(/\/$/, "");
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
   if (req) return req.nextUrl.origin;
   return "http://localhost:3000";
 }
