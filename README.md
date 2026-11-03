@@ -37,11 +37,14 @@ O estado dos lotes muda-se sem código em `/leads → Lotes`.
 4. **Variáveis de ambiente** — copie de `.env.example` para *Settings → Environment Variables* e preencha.
 5. **Domínio** — *Settings → Domains*. Atualize `NEXT_PUBLIC_SITE_URL` para o domínio final e faça *Redeploy*.
 
-### Email
-- **Recomendado: Resend** (grátis até 3.000 emails/mês) com o domínio do site verificado.
-  Assim os emails para os clientes saem de `andre@o-seu-dominio.pt` e o seu Gmail pessoal nunca fica público.
-  `SMTP_HOST=smtp.resend.com`, `SMTP_PORT=465`, `SMTP_USER=resend`, `SMTP_PASS=<API key>`.
-- Alternativa rápida: Gmail com *palavra-passe de aplicação* (`smtp.gmail.com`, porta 465). Funciona, mas os clientes veem o endereço Gmail.
+### Email (Resend)
+1. Crie conta em **resend.com** → *API Keys* → *Create API Key* → copie para `RESEND_API_KEY`.
+2. *Domains* → *Add Domain* (o domínio do site) → adicione os registos DNS que o Resend mostra → *Verify*.
+3. `EMAIL_FROM="André Queirós · Domaine XXV <andre@o-seu-dominio.pt>"` (endereço do domínio verificado) e
+   `LEADS_NOTIFY_EMAIL=andrerevolution14@gmail.com`.
+
+Enquanto o domínio não estiver verificado, o Resend só entrega ao email com que criou a conta Resend
+(se for o mesmo Gmail, já recebe os avisos de leads; os emails para os clientes só funcionam com o domínio verificado).
 
 ### Meta
 - O Pixel `979841341182458` já está no código (é público). Não precisa de variável.

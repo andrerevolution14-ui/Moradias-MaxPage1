@@ -11,7 +11,8 @@ declare global {
 
 function client() {
   if (!globalThis.__dx_sql) {
-    const url = process.env.DATABASE_URL;
+    // A integração Neon da Vercel cria DATABASE_URL (e também POSTGRES_URL).
+    const url = process.env.DATABASE_URL || process.env.POSTGRES_URL;
     if (!url) throw new Error("DATABASE_URL não está definido");
     const isLocal = /localhost|127\.0\.0\.1/.test(url);
     globalThis.__dx_sql = postgres(url, {

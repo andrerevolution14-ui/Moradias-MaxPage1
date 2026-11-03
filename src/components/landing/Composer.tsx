@@ -24,7 +24,7 @@ export default function Composer({ variant, id }: Props) {
   const [cta, setCta] = useState<string>(variant);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<{ msg: string; field?: string } | null>(null);
-  const [done, setDone] = useState<{ firstName: string; token: string; phone: string; hasEmail: boolean } | null>(null);
+  const [done, setDone] = useState<{ firstName: string; token: string | null; phone: string; hasEmail: boolean } | null>(null);
   const [when, setWhen] = useState("ainda hoje");
   const started = useRef(false);
 
@@ -99,11 +99,11 @@ export default function Composer({ variant, id }: Props) {
       }
       track("Lead", { content_name: "Domaine XXV", content_category: intent || "mensagem", ...META_LEAD_VALUE }, eventId);
       if (intent === "visita") track("Schedule", { content_name: "visita_terreno" });
-      saveChat(data.token, data.firstName);
+      if (data.token) saveChat(data.token, data.firstName);
       try {
         localStorage.setItem(ME_KEY, JSON.stringify({ name, phone, email }));
       } catch {}
-      setChat({ token: data.token, firstName: data.firstName });
+      if (data.token) setChat({ token: data.token, firstName: data.firstName });
       setDone({ firstName: data.firstName, token: data.token, phone, hasEmail: data.hasEmail });
     } catch {
       setError({ msg: "Sem ligação. Verifique a internet ou fale connosco por WhatsApp." });
@@ -130,12 +130,14 @@ export default function Composer({ variant, id }: Props) {
           {d.firstName}, o {PROMOTER.name} vai ligar-lhe <b>{when}</b> para o <b>{d.phone}</b>, ou responder-lhe por escrito.
           Não precisa de fazer mais nada.
         </p>
-        <div className="mt-4 rounded-xl bg-soft p-4 text-sm leading-relaxed">
-          <b>Não precisa de guardar o site.</b> A sua conversa fica disponível num link privado
-          {d.hasEmail ? " — enviámos-lho também por email" : ""}. Se voltar a esta página, encontra-a no canto do ecrã.
-        </div>
+        {d.token && (
+          <div className="mt-4 rounded-xl bg-soft p-4 text-sm leading-relaxed">
+            <b>Não precisa de guardar o site.</b> A sua conversa fica disponível num link privado
+            {d.hasEmail ? " — enviámos-lho também por email" : ""}. Se voltar a esta página, encontra-a no canto do ecrã.
+          </div>
+        )}
         <div className="mt-4 grid gap-2">
-          <Link href={`/conversa/${d.token}`} className="btn btn-primary w-full">Abrir a minha conversa</Link>
+          {d.token && <Link href={`/conversa/${d.token}`} className="btn btn-primary w-full">Abrir a minha conversa</Link>}
           <a href={waHref} target="_blank" rel="noopener" onClick={() => track("Contact", { method: "whatsapp", cta: "after_lead" })} className="btn btn-ghost w-full">
             <IconWhatsApp size={18} className="text-wa" /> Prefiro adiantar no WhatsApp
           </a>

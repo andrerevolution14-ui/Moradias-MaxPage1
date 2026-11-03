@@ -41,60 +41,77 @@ export async function POST(req: NextRequest) {
 
   const ip = clientIp(req);
   const ua = clip(req.headers.get("user-agent"), 400);
-  const sql = await db();
-
-  // Limite simples: 6 envios por IP por hora
-  if (ip) {
-    const [{ n }] = await sql<{ n: number }[]>`SELECT count(*)::int AS n FROM leads WHERE ip = ${ip} AND created_at > now() - interval '1 hour'`;
-    if (n >= 6) return NextResponse.json({ error: "Recebemos várias mensagens deste dispositivo. Por favor contacte-nos por WhatsApp." }, { status: 429 });
-  }
-
-  // Mesma pessoa (mesmo telemóvel nos últimos 60 dias) → junta à conversa existente
-  const existing = await sql<LeadRow[]>`
-    SELECT * FROM leads WHERE phone = ${phone} AND created_at > now() - interval '60 days'
-    ORDER BY created_at DESC LIMIT 1`;
+  const base = siteUrl(req);
+  const eventIdIn = clip(body.eventId, 80);
+  const capiLead = (externalId: string, leadType: string) =>
+    sendCapiEvent(req, {
+      eventName: "Lead",
+      eventId: eventIdIn || `lead-${externalId}-${Date.now()}`,
+      eventSourceUrl: source.page,
+      user: { phone, email, name, externalId },
+      fbp: clip(body.fbp, 200) || null,
+      fbc: clip(body.fbc, 400) || null,
+      customData: { content_name: "Domaine XXV", content_category: intent || "mensagem", lead_type: leadType, ...META_LEAD_VALUE },
+    });
 
   let lead: LeadRow;
   let isNew = true;
-  if (existing.length) {
-    isNew = false;
-    [lead] = await sql<LeadRow[]>`
-      UPDATE leads SET
-        name = ${name},
-        email = COALESCE(${email}, email),
-        intent = COALESCE(${intent}, intent),
-        lot = COALESCE(${lot}, lot),
-        unread = TRUE,
-        updated_at = now(),
-        last_message_at = now()
-      WHERE id = ${existing[0].id}
-      RETURNING *`;
-  } else {
-    [lead] = await sql<LeadRow[]>`
-      INSERT INTO leads (token, name, phone, email, intent, lot, source, ip, user_agent)
-      VALUES (${newToken()}, ${name}, ${phone}, ${email}, ${intent}, ${lot}, ${sql.json(source)}, ${ip}, ${ua})
-      RETURNING *`;
-  }
-  await sql`INSERT INTO messages (lead_id, sender, body) VALUES (${lead.id}, 'lead', ${message})`;
+  try {
+    const sql = await db();
 
-  const base = siteUrl(req);
+    // Limite simples: 6 envios por IP por hora
+    if (ip) {
+      const [{ n }] = await sql<{ n: number }[]>`SELECT count(*)::int AS n FROM leads WHERE ip = ${ip} AND created_at > now() - interval '1 hour'`;
+      if (n >= 6) return NextResponse.json({ error: "Recebemos várias mensagens deste dispositivo. Por favor contacte-nos por WhatsApp." }, { status: 429 });
+    }
+
+    // Mesma pessoa (mesmo telemóvel nos últimos 60 dias) → junta à conversa existente
+    const existing = await sql<LeadRow[]>`
+      SELECT * FROM leads WHERE phone = ${phone} AND created_at > now() - interval '60 days'
+      ORDER BY created_at DESC LIMIT 1`;
+
+    if (existing.length) {
+      isNew = false;
+      [lead] = await sql<LeadRow[]>`
+        UPDATE leads SET
+          name = ${name},
+          email = COALESCE(${email}, email),
+          intent = COALESCE(${intent}, intent),
+          lot = COALESCE(${lot}, lot),
+          unread = TRUE,
+          updated_at = now(),
+          last_message_at = now()
+        WHERE id = ${existing[0].id}
+        RETURNING *`;
+    } else {
+      [lead] = await sql<LeadRow[]>`
+        INSERT INTO leads (token, name, phone, email, intent, lot, source, ip, user_agent)
+        VALUES (${newToken()}, ${name}, ${phone}, ${email}, ${intent}, ${lot}, ${sql.json(source)}, ${ip}, ${ua})
+        RETURNING *`;
+    }
+    await sql`INSERT INTO messages (lead_id, sender, body) VALUES (${lead.id}, 'lead', ${message})`;
+  } catch (e) {
+    // Base de dados indisponível (ou DATABASE_URL em falta): a lead NÃO se perde, vai por email para o André.
+    console.error("[leads] base de dados indisponível, lead enviada só por email", e);
+    const fallback = { id: 0, token: "", name, phone, email, intent, lot, source } as unknown as LeadRow;
+    const [mail] = await Promise.allSettled([
+      notifyAdminNewLead(fallback, `${message}\n\n(Atenção: esta lead não ficou guardada no centro de leads porque a base de dados não respondeu. Contacte diretamente.)`, base),
+      capiLead(phone, "new"),
+    ]);
+    if (!(mail.status === "fulfilled" && mail.value)) {
+      return NextResponse.json({ error: "Não foi possível enviar agora. Fale connosco por WhatsApp ou telefone." }, { status: 503 });
+    }
+    return NextResponse.json({ ok: true, token: null, firstName: name.split(" ")[0], hasEmail: false });
+  }
+
   const chatUrl = `${base}/conversa/${lead.token}`;
-  const eventId = clip(body.eventId, 80) || `lead-${lead.id}-${Date.now()}`;
 
   // Notificações e Conversions API em paralelo (o email para o André é o mais importante)
   await Promise.allSettled([
     isNew ? notifyAdminNewLead(lead, message, base) : notifyAdminLeadReply(lead, message, base),
     isNew ? emailLeadConfirmation(lead, chatUrl) : Promise.resolve(false),
     isNew ? smsLeadConfirmation(lead, chatUrl) : Promise.resolve(false),
-    sendCapiEvent(req, {
-      eventName: "Lead",
-      eventId,
-      eventSourceUrl: source.page,
-      user: { phone, email, name, externalId: String(lead.id) },
-      fbp: clip(body.fbp, 200) || null,
-      fbc: clip(body.fbc, 400) || null,
-      customData: { content_name: "Domaine XXV", content_category: intent || "mensagem", lead_type: isNew ? "new" : "returning", ...META_LEAD_VALUE },
-    }),
+    capiLead(String(lead.id), isNew ? "new" : "returning"),
   ]);
 
   return NextResponse.json({ ok: true, token: lead.token, firstName: name.split(" ")[0], hasEmail: Boolean(lead.email) });

@@ -62,7 +62,7 @@ export default function Page() {
             <BuyInPlan />
 
             <section id="simulador" className="sec">
-              <h2 className="sec-title">Simulador de crédito</h2>
+              <h2 className="sec-title">Simulador de crédito habitação</h2>
               <p className="-mt-2 mb-4 text-[15px] text-muted">Quanto ficaria a pagar por mês, com a entrada fixa de 10%.</p>
               <Simulator />
             </section>
@@ -134,11 +134,19 @@ function Summary() {
         <div className="border-l border-line pl-6 text-[14px] leading-relaxed text-muted">
           Entrada de 10%: <b className="text-ink">{formatEUR(PROJECT.price * PROJECT.downPaymentPct)}</b>
           <br />
-          ou cerca de <a href="#simulador" className="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-2"><MonthlyFrom />/mês</a>*
+          Prestação de cerca de <a href="#simulador" className="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-2"><MonthlyFrom />/mês</a>*
         </div>
       </div>
 
-      <ul className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3">
+      <div className="mt-5 flex items-start gap-3 rounded-xl bg-brand-soft px-4 py-3 text-[14px] leading-snug text-brand-ink">
+        <IconKey size={20} className="mt-0.5 shrink-0 text-brand" />
+        <p>
+          <b>Venda em planta, com possibilidade de crédito habitação.</b> O banco pode financiar até 90% e liberta o valor por fases,
+          à medida que a obra avança. <a href="#simulador" className="font-semibold underline">Simular prestação</a>
+        </p>
+      </div>
+
+      <ul className="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3">
         {facts.map(([Icon, v, l]) => (
           <li key={l} className="flex items-center gap-3 bg-white px-3.5 py-3">
             <Icon size={22} className="shrink-0 text-brand" />
@@ -242,6 +250,7 @@ function Details() {
     ["Jardim privativo", "~82 m²"],
     ["Pisos", "R/C + 1.º piso + sótão"],
     ["Estado", "Venda em planta · projeto aprovado"],
+    ["Financiamento", "Crédito habitação até 90%"],
     ["Construtora", BUILDER.name],
   ];
   const features = [
@@ -287,7 +296,8 @@ function BuyInPlan() {
     <section id="condicoes" className="sec">
       <h2 className="sec-title">Como funciona a compra em planta</h2>
       <p className="-mt-2 mb-5 max-w-[62ch] text-[15px] leading-relaxed text-muted">
-        Garante hoje o preço de uma casa que vai ser construída. O projeto já está aprovado e o terreno fica em seu nome desde o primeiro dia.
+        É uma venda em planta, com possibilidade de crédito habitação: garante hoje o preço de uma casa que vai ser construída e o banco
+        financia até 90%. O projeto já está aprovado e o terreno fica em seu nome desde o primeiro dia.
       </p>
       <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {steps.map(([Icon, t, d], i) => (

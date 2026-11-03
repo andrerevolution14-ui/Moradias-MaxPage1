@@ -143,6 +143,8 @@ export const TESTIMONIALS = [
 export const FAQ = [
   ["O que significa comprar em planta?",
     "Significa que reserva a moradia antes de estar construída, ao preço de hoje. O projeto já está aprovado pela Câmara Municipal de Aveiro, o terreno fica escriturado em seu nome logo no início e a construção arranca de imediato, com entrega prevista em 10 meses."],
+  ["Posso comprar com crédito habitação?",
+    "Sim. Apesar de ser uma venda em planta, pode financiar até 90% com crédito habitação, na modalidade de construção: o banco liberta o dinheiro por fases, à medida que a obra avança. O estudo de viabilidade bancária é gratuito."],
   ["E se a obra demorar anos a arrancar?",
     "O projeto já está aprovado na Câmara Municipal. Não há espera por licenças nem burocracias pendentes. A construção arranca imediatamente após a escritura do terreno."],
   ["O valor pode sofrer alterações durante a construção?",

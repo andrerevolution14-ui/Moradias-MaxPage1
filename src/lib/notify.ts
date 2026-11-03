@@ -3,7 +3,7 @@ import nodemailer, { type Transporter } from "nodemailer";
 import { escapeHtml, formatPhone } from "./server-utils";
 import { PROMOTER, PROJECT } from "./config";
 
-// ---------------- EMAIL (SMTP: Gmail, Resend, Brevo, etc.) ----------------
+// ---------------- EMAIL (Resend por API; SMTP como alternativa) ----------------
 
 let transporter: Transporter | null = null;
 function mailer() {
@@ -20,23 +20,36 @@ function mailer() {
   return transporter;
 }
 
+function fromAddress() {
+  return process.env.EMAIL_FROM || process.env.SMTP_FROM || `${PROJECT.name} <onboarding@resend.dev>`;
+}
+
+/** Envia email pelo Resend (RESEND_API_KEY) ou, em alternativa, por SMTP. Nunca lança erro. */
 export async function sendEmail(to: string, subject: string, html: string, replyTo?: string) {
+  if (process.env.RESEND_API_KEY) {
+    try {
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ from: fromAddress(), to: [to], subject, html, ...(replyTo ? { reply_to: replyTo } : {}) }),
+      });
+      if (!res.ok) console.error("[email] Resend falhou", res.status, await res.text());
+      return res.ok;
+    } catch (e) {
+      console.error("[email] Resend erro", e);
+      return false;
+    }
+  }
   const t = mailer();
   if (!t) {
-    console.warn("[email] SMTP não configurado — email não enviado:", subject);
+    console.warn("[email] Email não configurado (RESEND_API_KEY ou SMTP_*) — não enviado:", subject);
     return false;
   }
   try {
-    await t.sendMail({
-      from: process.env.SMTP_FROM || `${PROJECT.name} <${process.env.SMTP_USER}>`,
-      to,
-      subject,
-      html,
-      replyTo,
-    });
+    await t.sendMail({ from: fromAddress(), to, subject, html, replyTo });
     return true;
   } catch (e) {
-    console.error("[email] falhou", e);
+    console.error("[email] SMTP falhou", e);
     return false;
   }
 }
