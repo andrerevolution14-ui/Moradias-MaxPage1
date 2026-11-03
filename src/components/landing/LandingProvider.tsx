@@ -46,6 +46,7 @@ export default function LandingProvider({ children }: { children: ReactNode }) {
     setPresetKey((k) => k + 1);
     setSheetOpen(true);
   }, []);
+  const closeSheet = useCallback(() => setSheetOpen(false), []);
 
   const value = useMemo<Ctx>(
     () => ({
@@ -55,11 +56,11 @@ export default function LandingProvider({ children }: { children: ReactNode }) {
       preset,
       presetKey,
       openComposer,
-      closeSheet: () => setSheetOpen(false),
+      closeSheet,
       chat,
       setChat,
     }),
-    [lots, sheetOpen, preset, presetKey, openComposer, chat],
+    [lots, sheetOpen, preset, presetKey, openComposer, closeSheet, chat],
   );
 
   return <LandingCtx.Provider value={value}>{children}</LandingCtx.Provider>;

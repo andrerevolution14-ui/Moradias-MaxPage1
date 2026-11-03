@@ -1,6 +1,7 @@
 import "server-only";
 import type { NextRequest } from "next/server";
 import { clientIp, sha256 } from "./server-utils";
+import { META_PIXEL_ID } from "./config";
 
 // Meta Conversions API (servidor). Deduplica com o Pixel do browser via event_id.
 
@@ -22,7 +23,7 @@ export type CapiEvent = {
 };
 
 export function capiEnabled() {
-  return Boolean(process.env.META_PIXEL_ID || process.env.NEXT_PUBLIC_META_PIXEL_ID) && Boolean(process.env.META_CAPI_ACCESS_TOKEN);
+  return Boolean(META_PIXEL_ID) && Boolean(process.env.META_CAPI_ACCESS_TOKEN);
 }
 
 function norm(v: string) {
@@ -31,7 +32,7 @@ function norm(v: string) {
 
 export async function sendCapiEvent(req: NextRequest, ev: CapiEvent) {
   if (!capiEnabled()) return { skipped: true };
-  const pixelId = process.env.META_PIXEL_ID || process.env.NEXT_PUBLIC_META_PIXEL_ID;
+  const pixelId = process.env.META_PIXEL_ID || META_PIXEL_ID;
   const version = process.env.META_GRAPH_VERSION || "v24.0";
 
   const user_data: Record<string, unknown> = {

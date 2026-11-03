@@ -3,8 +3,9 @@
 import Script from "next/script";
 import { useEffect } from "react";
 import { captureSource, track } from "@/lib/track";
+import { META_PIXEL_ID } from "@/lib/config";
 
-const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+const PIXEL_ID = META_PIXEL_ID;
 
 export default function MetaPixel() {
   useEffect(() => {

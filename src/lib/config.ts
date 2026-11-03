@@ -14,6 +14,13 @@ export const PROJECT = {
   buildMonths: 10,
 } as const;
 
+// Meta: o ID do Pixel é público (aparece no código de qualquer página). O token da API de Conversões é secreto
+// e vai SÓ para a variável de ambiente META_CAPI_ACCESS_TOKEN (nunca para o código).
+export const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "979841341182458";
+
+/** Valor enviado com cada Lead (o mais alto do funil: o preço da moradia). Outros eventos vão sem valor. */
+export const META_LEAD_VALUE = { value: 335000, currency: "EUR" } as const;
+
 export const PROMOTER = {
   name: "André Queirós",
   role: "Promotor do projeto",

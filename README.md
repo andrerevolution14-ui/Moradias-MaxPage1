@@ -44,8 +44,12 @@ O estado dos lotes muda-se sem código em `/leads → Lotes`.
 - Alternativa rápida: Gmail com *palavra-passe de aplicação* (`smtp.gmail.com`, porta 465). Funciona, mas os clientes veem o endereço Gmail.
 
 ### Meta
-- `NEXT_PUBLIC_META_PIXEL_ID` e `META_CAPI_ACCESS_TOKEN` (Events Manager → Definições → API de Conversões → Gerar token).
-- Para testar: defina `META_TEST_EVENT_CODE`, abra o site e veja em *Testar eventos*. Remova depois.
+- O Pixel `979841341182458` já está no código (é público). Não precisa de variável.
+- **`META_CAPI_ACCESS_TOKEN`**: token da API de Conversões. **Só na Vercel**, nunca no código.
+- O `Lead` (mensagem enviada) vai com `value: 335000`, `currency: EUR` — o valor mais alto do funil. Os outros eventos vão sem valor.
+- Para testar: Events Manager → *Testar eventos* → copie o código (ex.: `TEST12345`), ponha-o em `META_TEST_EVENT_CODE`,
+  faça *Redeploy*, envie uma mensagem no site e confirme que aparecem `PageView` e `Lead` com “Navegador” e “Servidor”
+  (deduplicados). No fim apague `META_TEST_EVENT_CODE` e faça *Redeploy*.
 
 ### SMS (opcional)
 Twilio: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM`. Sem isto, a opção “Avisar por SMS” fica desligada no centro de leads.

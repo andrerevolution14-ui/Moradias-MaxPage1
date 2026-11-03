@@ -3,6 +3,7 @@ import { db, type LeadRow } from "@/lib/db";
 import { clientIp, clip, isEmail, newToken, normalizePhone, siteUrl } from "@/lib/server-utils";
 import { emailLeadConfirmation, notifyAdminNewLead, notifyAdminLeadReply, smsLeadConfirmation } from "@/lib/notify";
 import { sendCapiEvent } from "@/lib/meta";
+import { META_LEAD_VALUE } from "@/lib/config";
 
 const SOURCE_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid", "variant", "page", "referrer", "cta"];
 
@@ -92,7 +93,7 @@ export async function POST(req: NextRequest) {
       user: { phone, email, name, externalId: String(lead.id) },
       fbp: clip(body.fbp, 200) || null,
       fbc: clip(body.fbc, 400) || null,
-      customData: { content_name: "Domaine XXV", content_category: intent || "mensagem", lead_type: isNew ? "new" : "returning" },
+      customData: { content_name: "Domaine XXV", content_category: intent || "mensagem", lead_type: isNew ? "new" : "returning", ...META_LEAD_VALUE },
     }),
   ]);
 
