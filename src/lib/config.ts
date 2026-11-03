@@ -54,9 +54,9 @@ export const LOT_SPEC = {
 };
 
 // A primeira imagem é a capa (carrega com prioridade). As restantes carregam à medida que se desliza.
-export const GALLERY = [
+export const GALLERY: { src: string; alt: string; big?: boolean; plan?: boolean }[] = [
   // Capa
-  { src: "/images/exterior-noite.webp", alt: "Moradia Domaine XXV à noite" },
+  { src: "/images/exterior-noite.webp", alt: "Moradia Domaine XXV à noite", big: true },
   // Interior
   { src: "/images/cozinha.webp", alt: "Cozinha open space equipada" },
   { src: "/images/sala-de-jantar.webp", alt: "Sala de jantar e estar" },
@@ -68,12 +68,12 @@ export const GALLERY = [
   { src: "/images/corredor-quartos.webp", alt: "Corredor do piso 1" },
   { src: "/images/terceiro-andar.webp", alt: "Sótão amplo (~34 m² úteis)" },
   // Exterior
-  { src: "/images/exterior-traseiro-completo.webp", alt: "As 3 moradias com jardim privativo" },
+  { src: "/images/exterior-traseiro-completo.webp", alt: "As 3 moradias com jardim privativo", big: true },
   { src: "/images/exterior-capa.webp", alt: "Fachada principal e garagem" },
   { src: "/images/exterior-traseiro.webp", alt: "Fachada traseira e jardim" },
   // Plantas
-  { src: "/images/planta-tecnica.webp", alt: "Planta técnica · R/C, piso 1 e sótão" },
-  { src: "/images/planta-3d.webp", alt: "Planta 3D" },
+  { src: "/images/planta-tecnica.webp", alt: "Planta técnica · R/C, piso 1 e sótão", big: true, plan: true },
+  { src: "/images/planta-3d.webp", alt: "Planta 3D", big: true, plan: true },
 ];
 
 export const PLANS = [

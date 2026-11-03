@@ -6,7 +6,7 @@ import { trackOnce } from "@/lib/track";
 import { Icon360, IconX } from "../icons";
 
 /** Abre a visita virtual 360° dentro da página (sem sair do site) */
-export default function Tour360Button({ className, label = "Visita 360°" }: { className?: string; label?: string }) {
+export default function Tour360Button({ className, label = "Visita 360°", children }: { className?: string; label?: string; children?: React.ReactNode }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function Tour360Button({ className, label = "Visita 360°" }: { c
           trackOnce("tour360", "ViewContent", { content_name: "visita_360" });
         }}
       >
-        <Icon360 size={16} /> {label}
+        {children ?? (<><Icon360 size={16} /> {label}</>)}
       </button>
       {open && (
         <div className="fade-in fixed inset-0 z-[60] flex flex-col bg-[#0f1822]" role="dialog" aria-modal="true" aria-label="Visita virtual 360°">
