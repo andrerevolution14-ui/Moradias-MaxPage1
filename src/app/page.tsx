@@ -421,21 +421,19 @@ function ContactCard() {
 function PromoterBlock() {
   return (
     <section className="mt-12 bg-soft">
-      <div className="mx-auto grid max-w-[1200px] items-start gap-8 px-4 py-12 md:grid-cols-[300px_1fr] lg:px-6 lg:py-16">
-        <div className="relative mx-auto aspect-[4/5] w-full max-w-[300px] overflow-hidden rounded-2xl">
-          <Image src={PROMOTER.portrait} alt={PROMOTER.name} fill sizes="300px" quality={60} className="object-cover" />
+      <div className="mx-auto flex max-w-[640px] flex-col items-center px-4 py-12 text-center lg:py-16">
+        <div className="relative h-36 w-36 overflow-hidden rounded-full ring-4 ring-white shadow-[0_10px_30px_rgba(21,32,43,0.12)]">
+          <Image src={PROMOTER.portrait} alt={PROMOTER.name} fill sizes="144px" quality={60} className="object-cover object-top" />
         </div>
-        <div className="min-w-0">
-          <div className="eyebrow">Fale com quem desenvolve o projeto</div>
-          <h2 className="mt-2 text-[28px] font-bold leading-tight tracking-tight sm:text-[34px]">{PROMOTER.name}</h2>
-          <p className="mt-1 text-muted">Promotor do Domaine XXV · em parceria com o {BUILDER.name}</p>
-          <p className="mt-4 max-w-[58ch] text-[16px] leading-relaxed">
-            Sem call center nem intermediários. Quem lhe responde é quem acompanha o projeto, da reserva às chaves. Respondo no próprio dia.
-          </p>
-          <div className="mt-6 grid max-w-[460px] gap-2">
-            <Ask className="btn btn-primary w-full py-3.5 text-[15px]" preset={{ cta: "promoter_block" }}>Enviar mensagem ao André</Ask>
-            <DirectContact cta="promoter_block" />
-          </div>
+        <div className="eyebrow mt-6">Fale com quem desenvolve o projeto</div>
+        <h2 className="mt-2 text-[28px] font-bold leading-tight tracking-tight sm:text-[34px]">{PROMOTER.name}</h2>
+        <p className="mt-1 text-muted">Promotor do Domaine XXV · em parceria com o {BUILDER.name}</p>
+        <p className="mt-4 max-w-[52ch] text-[16px] leading-relaxed [text-wrap:balance]">
+          Sem call center nem intermediários. Quem lhe responde é quem acompanha o projeto, da reserva às chaves. Respondo no próprio dia.
+        </p>
+        <div className="mt-6 grid w-full max-w-[420px] gap-2">
+          <Ask className="btn btn-primary w-full py-3.5 text-[15px]" preset={{ cta: "promoter_block" }}>Enviar mensagem ao André</Ask>
+          <DirectContact cta="promoter_block" />
         </div>
       </div>
     </section>

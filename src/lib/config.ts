@@ -55,7 +55,8 @@ export const LOT_SPEC = {
 
 // A primeira imagem é a capa (carrega com prioridade). As restantes carregam à medida que se desliza.
 export const GALLERY = [
-  { src: "/images/exterior-traseiro-completo.webp", alt: "As 3 moradias com jardim privativo ao pôr do sol" },
+  { src: "/images/exterior-noite.webp", alt: "Moradia Domaine XXV à noite" },
+  { src: "/images/exterior-traseiro-completo.webp", alt: "As 3 moradias com jardim privativo" },
   { src: "/images/exterior-barbecue.webp", alt: "Jardim com zona de barbecue" },
   { src: "/images/exterior-capa.webp", alt: "Fachada principal e garagem" },
   { src: "/images/cozinha.webp", alt: "Cozinha open space equipada" },
@@ -67,7 +68,6 @@ export const GALLERY = [
   { src: "/images/corredor-quartos.webp", alt: "Corredor do piso 1" },
   { src: "/images/terceiro-andar.webp", alt: "Sótão amplo (~34 m² úteis)" },
   { src: "/images/exterior-traseiro.webp", alt: "Fachada traseira e jardim" },
-  { src: "/images/exterior-noite.webp", alt: "Moradia à noite" },
 ];
 
 export const PLANS = [

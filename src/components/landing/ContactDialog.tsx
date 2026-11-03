@@ -81,7 +81,7 @@ export default function ContactDialog() {
               <div className="min-w-0 pr-8">
                 <div className="text-[19px] font-bold leading-tight">{PROMOTER.name}</div>
                 <div className="text-[13.5px] text-white/75">Promotor do projeto · Domaine XXV</div>
-                <div className="mt-1 flex items-center gap-1.5 text-[12.5px] font-medium text-[#d9c49e]">
+                <div className="mt-1 flex items-center gap-1.5 text-[12.5px] font-medium text-white/85">
                   <span className="h-2 w-2 rounded-full bg-[#7ed39b]" /> Responde no próprio dia
                 </div>
               </div>

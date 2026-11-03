@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  /* Azul ria (confiança) + marfim (calor) + latão (detalhe premium) */
-  --ink: #15202b;
-  --muted: #5d6874;
-  --line: #e2ddd3;
-  --soft: #f1eee7;
-  --paper: #faf8f4;
+  /* Azul ria (confiança) sobre branco puro e cinzentos frios */
+  --ink: #14202c;
+  --muted: #5b6672;
+  --line: #e2e6eb;
+  --soft: #f3f5f8;
+  --paper: #ffffff;
   --brand: #24476b;      /* azul ria: ícones, destaques */
   --brand-ink: #152a40;
-  --brand-soft: #e6ecf2;
+  --brand-soft: #e8eef5;
   --cta: #1b3048;        /* botões principais */
   --cta-hover: #111f30;
-  --sand: #b08d57;       /* latão */
+  --sand: #c49a3c;       /* dourado das estrelas */
   --wa: #1fae5b;
   --danger: #b4441c;
 }
@@ -100,13 +100,13 @@ body {
   border: 1px solid var(--line);
 }
 .btn-ghost:hover {
-  border-color: #cdc6b9;
+  border-color: #c9d1db;
   background: var(--soft);
 }
 
 .field {
   width: 100%;
-  border: 1px solid #d9d4ca;
+  border: 1px solid #d5dbe2;
   background: #fff;
   border-radius: 10px;
   padding: 0.72rem 0.85rem;
