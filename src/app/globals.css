@@ -1,26 +1,174 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #1b1d1c;
+  --muted: #62655f;
+  --line: #e7e5e0;
+  --soft: #f6f5f1;
+  --paper: #ffffff;
+  --brand: #24584c;
+  --brand-ink: #173c34;
+  --brand-soft: #e8f0ed;
+  --sand: #b8924a;
+  --wa: #1fae5b;
+  --danger: #c2410c;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-soft: var(--soft);
+  --color-paper: var(--paper);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+  --color-sand: var(--sand);
+  --color-wa: var(--wa);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 76px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+/* Secção da ficha do imóvel */
+.sec {
+  padding-block: 2.25rem;
+  border-top: 1px solid var(--line);
+}
+.sec-title {
+  font-size: 1.35rem;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+}
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 10px;
+  font-weight: 650;
+  padding: 0.8rem 1.1rem;
+  transition: background 0.15s, transform 0.05s, box-shadow 0.15s;
+  text-align: center;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn-primary {
+  background: var(--brand);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--brand-ink);
+}
+.btn-wa {
+  background: var(--wa);
+  color: #fff;
+}
+.btn-wa:hover {
+  background: #178f4a;
+}
+.btn-ghost {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn-ghost:hover {
+  border-color: #cfcac0;
+  background: var(--soft);
+}
+
+.field {
+  width: 100%;
+  border: 1px solid #d9d6cf;
+  background: #fff;
+  border-radius: 10px;
+  padding: 0.72rem 0.85rem;
+  font-size: 16px; /* evita zoom no iOS */
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.field:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(36, 88, 76, 0.15);
+}
+.field[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 999px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 550;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.chip[aria-pressed="true"] {
+  background: var(--brand-soft);
+  border-color: var(--brand);
+  color: var(--brand-ink);
+}
+
+details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .chev {
+  transform: rotate(180deg);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+}
+
+input[type="range"] {
+  accent-color: var(--brand);
+}
+
+@keyframes sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.sheet-in {
+  animation: sheet-in 0.25s ease-out;
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.fade-in {
+  animation: fade-in 0.2s ease-out;
 }
