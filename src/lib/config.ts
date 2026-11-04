@@ -64,17 +64,17 @@ export const LOT_SPEC = {
 // Ordem pensada para impacto. O mosaico enche coluna a coluna (cima, baixo), por isso as pequenas vão aos PARES:
 // cada divisão fica em cima e o seu detalhe logo por baixo, na mesma coluna.
 // Só renders novos. Grandes (big) ocupam a coluna inteira; entre duas grandes tem de haver um número PAR de pequenas
-// (contando o mosaico da visita 360°, que entra a seguir ao jardim — ver Gallery.tsx).
+// (contando o mosaico da visita 360°, que entra logo a seguir à capa — ver Gallery.tsx).
 export const GALLERY: { src: string; w: number; h: number; alt: string; big?: boolean; plan?: boolean }[] = [
   // Capa
   { src: "/images/fachada-principal.webp", w: 1254, h: 1254, alt: "As 3 moradias Domaine XXV vistas da rua", big: true },
+  // [Visita 360° entra aqui, em cima] + sala de estar por baixo
+  { src: "/images/sala-de-estar.webp", w: 1254, h: 1254, alt: "Sala de estar aberta para a cozinha" },
   // Cozinha + detalhe
   { src: "/images/cozinha-open-space.webp", w: 1254, h: 1254, alt: "Cozinha open space com zona de refeições" },
   { src: "/images/cozinha-detalhe.webp", w: 1254, h: 1254, alt: "Detalhe da cozinha equipada" },
-  // Salas
-  { src: "/images/sala-de-estar.webp", w: 1254, h: 1254, alt: "Sala de estar aberta para a cozinha" },
+  // Sala de jantar + jardim
   { src: "/images/sala-de-jantar.webp", w: 1254, h: 1254, alt: "Sala de jantar" },
-  // Jardim + visita 360°
   { src: "/images/jardim-privativo.webp", w: 1254, h: 1254, alt: "Jardim privativo de ~82 m²" },
   // Piso 1: hall + quarto
   { src: "/images/hall-piso-1.webp", w: 1254, h: 1254, alt: "Hall do 1.º piso com acesso aos quartos" },

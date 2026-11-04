@@ -48,8 +48,8 @@ export default function Gallery() {
   const items: ({ kind: "pic"; i: number } | { kind: "tour" })[] = [];
   GALLERY.forEach((_, i) => {
     items.push({ kind: "pic", i });
-    // A 360° fica por baixo do jardim (as pequenas vão aos pares: divisão em cima, detalhe por baixo)
-    if (GALLERY[i].src.includes("jardim-privativo")) items.push({ kind: "tour" });
+    // A 360° vem logo a seguir à capa (em cima na 2.ª coluna). As pequenas vão aos pares: divisão em cima, detalhe por baixo.
+    if (i === 0) items.push({ kind: "tour" });
   });
 
   return (
