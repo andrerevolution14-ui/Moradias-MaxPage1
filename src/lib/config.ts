@@ -44,9 +44,9 @@ export type Lot = { id: string; label: string; status: LotStatus };
 
 // Estado por omissão (o André pode alterar em /leads → Lotes, sem mexer no código).
 export const DEFAULT_LOTS: Lot[] = [
-  { id: "25", label: "Lote 25", status: "vendido" },
+  { id: "25", label: "Lote 25", status: "disponivel" },
   { id: "26", label: "Lote 26", status: "disponivel" },
-  { id: "27", label: "Lote 27", status: "disponivel" },
+  { id: "27", label: "Lote 27", status: "vendido" },
 ];
 
 export const LOT_SPEC = {
