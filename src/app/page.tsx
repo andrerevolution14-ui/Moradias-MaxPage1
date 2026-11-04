@@ -250,12 +250,13 @@ function Details() {
     ["Jardim privativo", "~82 m²"],
     ["Pisos", "R/C + 1.º piso + sótão"],
     ["Estado", "Venda em planta · projeto aprovado"],
+    ["Estrutura", "Aço leve (LSF)"],
     ["Financiamento", "Crédito habitação até 90%"],
     ["Construtora", BUILDER.name],
   ];
   const features = [
     "Cozinha totalmente equipada", "Ar condicionado multi-split", "Bomba de calor A+", "Corte térmico e vidro duplo",
-    "Jardim com barbecue", "Garagem coberta", "Anexo / arrumos", "Suite", "Acabamentos à escolha",
+    "Jardim privativo", "Garagem coberta", "Anexo / arrumos", "Suite", "Acabamentos à escolha", "Fiscalização independente",
   ];
   return (
     <section id="detalhes" className="sec">
@@ -281,16 +282,10 @@ function Details() {
 
 function BuyInPlan() {
   const steps = [
-    [IconDoc, "Reserva e CPCV", `Entrada de 10% (${formatEUR(PROJECT.price * PROJECT.downPaymentPct)}), devolvida a 100% se o banco não aprovar.`],
+    [IconDoc, "Reserva e CPCV", `Entrada única de 10% (${formatEUR(PROJECT.price * PROJECT.downPaymentPct)}), imputada ao preço total.`],
     [IconKey, "Terreno em seu nome", "Escritura do lote logo no início, antes de a obra começar."],
-    [IconHammer, "Construção por fases", "O banco liberta cada tranche só depois de vistoriar a obra."],
+    [IconHammer, "Construção por fases", "O crédito é libertado por etapas, segundo as condições e avaliações do banco."],
     [IconCheck, "Chave na mão", "Moradia concluída em 10 meses, ao preço fechado."],
-  ] as const;
-  const guarantees = [
-    [IconShield, "Sinal salvaguardado"],
-    [IconLock, "Preço fechado em contrato"],
-    [IconClock, "Penalização por atraso"],
-    [IconStar, "Relatório semanal da obra"],
   ] as const;
   return (
     <section id="condicoes" className="sec">
@@ -311,14 +306,49 @@ function BuyInPlan() {
           </li>
         ))}
       </ol>
-      <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {guarantees.map(([Icon, t]) => (
-          <li key={t} className="flex items-center gap-2 rounded-xl bg-brand-soft px-3 py-2.5 text-[13.5px] font-semibold text-brand-ink">
-            <Icon size={18} className="shrink-0 text-brand" /> {t}
-          </li>
-        ))}
-      </ul>
+      <Safety />
     </section>
+  );
+}
+
+/** Segurança da compra: pontos curtos, fechados por defeito (abrem com um toque). */
+function Safety() {
+  const items = [
+    [IconKey, "O terreno fica em seu nome", "Compra o lote por escritura antes de a obra começar. Desde aí, é o proprietário do terreno."],
+    [IconDoc, "Uma única entrada de 33.500 €", "10% do preço, imputados ao valor total. O contrato define as condições de devolução, incluindo se o crédito não for aprovado."],
+    [IconHammer, "Construção em aço leve (LSF)", "Estrutura em Light Steel Framing, executada pelo Grupo Freitas Renovações segundo o projeto e o caderno de encargos."],
+    [IconShield, "A obra não depende só do banco", "O crédito é libertado por fases. A construtora tem capacidade própria para manter a obra perante atrasos pontuais nos desembolsos."],
+    [IconLock, "Retenção de boa execução", "Cerca de 33.500 € do preço só são pagos na fase final prevista no contrato. Não é um custo adicional."],
+    [IconClock, "Prazo e penalizações em contrato", "10 meses a partir do início definido no contrato, com penalizações por atrasos imputáveis à construtora."],
+    [IconCheck, "Fiscalização independente", "Pode levar o seu engenheiro para acompanhar a obra, com agendamento e regras de segurança."],
+    [IconStar, "Documentação antes de decidir", "Projeto, licenciamento, caderno de encargos e minutas dos contratos, para analisar antes de assinar."],
+  ] as const;
+  return (
+    <div className="mt-8">
+      <h3 className="font-semibold">Segurança da compra</h3>
+      <p className="mt-1 text-[14px] text-muted">Compromissos definidos por contrato.</p>
+      <div className="mt-3 divide-y divide-line rounded-xl border border-line bg-white">
+        {items.map(([Icon, t, d]) => (
+          <details key={t} className="group px-4">
+            <summary className="flex items-center gap-3 py-3.5 text-[15px] font-medium">
+              <Icon size={18} className="shrink-0 text-brand" />
+              <span className="flex-1">{t}</span>
+              <IconChevron size={16} className="chev shrink-0 text-muted transition" />
+            </summary>
+            <p className="-mt-1 pb-3.5 pl-[30px] text-[14px] leading-relaxed text-muted">{d}</p>
+          </details>
+        ))}
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+        <Ask
+          className="text-[14px] font-semibold text-brand underline underline-offset-2"
+          preset={{ cta: "dossier", intent: "plantas", text: "Olá André, gostava de receber o dossier completo do projeto Domaine XXV (técnico e contratual)." }}
+        >
+          Pedir dossier completo
+        </Ask>
+        <span className="text-[12px] text-muted">As condições aplicáveis são as dos contratos assinados.</span>
+      </div>
+    </div>
   );
 }
 

@@ -30,7 +30,7 @@ export default function Simulator() {
         <div className="p-5 sm:p-6">
           <dl className="space-y-3 text-[15px]">
             <Row label="Preço final chave na mão" value={formatEUR(price)} hint="IMT e Imposto de Selo já incluídos" />
-            <Row label="Entrada (10%) — paga no CPCV" value={formatEUR(down)} hint="Devolvida a 100% se o banco não aprovar" />
+            <Row label="Entrada (10%) — paga no CPCV" value={formatEUR(down)} hint="Imputada ao preço total" />
             <Row label="Financiamento (90%)" value={formatEUR(loan)} strong />
           </dl>
 
@@ -69,8 +69,8 @@ export default function Simulator() {
         </div>
       </div>
       <p className="border-t border-line bg-soft px-5 py-3 text-[11.5px] leading-relaxed text-muted">
-        Simulação meramente indicativa e não vinculativa, calculada pelo método de prestações constantes. A entrada de 10% é calculada sobre o valor final de {formatEUR(price)}, que já inclui IMT e Imposto de Selo
-        da compra. Não inclui seguros, comissões bancárias, Imposto de Selo do crédito nem custos de escritura do financiamento. A taxa (TAN) e a aprovação dependem do banco e do seu perfil.
+        Simulação meramente indicativa e não vinculativa, calculada pelo método de prestações constantes. A entrada de 10% é calculada sobre o valor final de {formatEUR(price)}, que inclui os impostos de aquisição
+        e os encargos bancários previstos, discriminados no contrato. A prestação depende da TAN, do prazo e das condições do banco, incluindo eventuais seguros periódicos. Crédito sujeito a aprovação bancária.
       </p>
     </div>
   );
