@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Moradia T3 com jardim a 8 min de Aveiro · 335.000€ chave na mão",
     description: "Venda em planta · Projeto aprovado · Entrega em 10 meses · Restam 2 de 3 moradias.",
-    images: [{ url: "/images/og.jpg", width: 1200, height: 657 }],
+    images: [{ url: "/images/og.jpg", width: 1200, height: 630 }],
     locale: "pt_PT",
     type: "website",
   },

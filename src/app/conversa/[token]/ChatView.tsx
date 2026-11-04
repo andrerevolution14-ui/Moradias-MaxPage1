@@ -100,7 +100,7 @@ export default function ChatView() {
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-2xl space-y-3 px-3 py-4">
           <Link href="/" className="flex items-center gap-3 rounded-xl border border-line bg-white p-2.5">
-            <Image src="/images/exterior-capa.webp" alt="" width={84} height={56} className="h-14 w-[84px] rounded-lg object-cover" />
+            <Image src="/images/fachada-principal.webp" alt="" width={84} height={56} className="h-14 w-[84px] rounded-lg object-cover" />
             <div className="min-w-0 text-[13.5px] leading-tight">
               <div className="font-semibold">Moradia T3 com jardim · Oliveirinha</div>
               <div className="text-muted">{formatEUR(PROJECT.price)} chave na mão · ver imóvel</div>

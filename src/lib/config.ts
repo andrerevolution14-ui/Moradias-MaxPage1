@@ -65,11 +65,11 @@ export const LOT_SPEC = {
 // Grandes (big) ocupam 2 linhas; entre duas grandes tem de haver um número PAR de pequenas (contando o mosaico 360°).
 export const GALLERY: { src: string; w: number; h: number; alt: string; big?: boolean; plan?: boolean }[] = [
   // Capa
-  { src: "/images/exterior-noite.webp", w: 766, h: 1024, alt: "Moradia Domaine XXV à noite", big: true },
+  { src: "/images/fachada-principal.webp", w: 1254, h: 1254, alt: "As 3 moradias Domaine XXV vistas da rua", big: true },
   // Zona social
   { src: "/images/cozinha-open-space.webp", w: 1254, h: 1254, alt: "Cozinha open space com zona de refeições" },
   { src: "/images/cozinha-detalhe.webp", w: 1254, h: 1254, alt: "Detalhe da cozinha equipada" },
-  { src: "/images/sala-de-jantar.webp", w: 1600, h: 878, alt: "Sala de jantar e estar" },
+  { src: "/images/sala-de-jantar.webp", w: 1254, h: 1254, alt: "Sala de jantar" },
   { src: "/images/exterior-barbecue.webp", w: 1375, h: 768, alt: "Jardim privativo com barbecue" },
   // Quartos
   { src: "/images/quarto-suite-varanda.webp", w: 1254, h: 1254, alt: "Quarto suite com varanda" },
@@ -83,9 +83,9 @@ export const GALLERY: { src: string; w: number; h: number; alt: string; big?: bo
   { src: "/images/casa-de-banho-servico.webp", w: 1254, h: 1254, alt: "Casa de banho de serviço (rés-do-chão)" },
   { src: "/images/terceiro-andar.webp", w: 1600, h: 1600, alt: "Sótão amplo (~34 m² úteis)" },
   // Exterior
-  { src: "/images/exterior-traseiro-completo.webp", w: 1365, h: 768, alt: "As 3 moradias com jardim privativo", big: true },
-  { src: "/images/exterior-capa.webp", w: 1600, h: 876, alt: "Fachada principal e garagem" },
-  { src: "/images/exterior-traseiro.webp", w: 1024, h: 576, alt: "Fachada traseira e jardim" },
+  { src: "/images/exterior-traseiro-jardim.webp", w: 1254, h: 1254, alt: "Traseiras com jardim privativo ao fim do dia", big: true },
+  { src: "/images/exterior-noite.webp", w: 766, h: 1024, alt: "Moradia à noite" },
+  { src: "/images/exterior-traseiro-completo.webp", w: 1365, h: 768, alt: "As 3 moradias com jardim privativo" },
   // Plantas
   { src: "/images/planta-tecnica.webp", w: 1600, h: 1131, alt: "Planta técnica · R/C, piso 1 e sótão", big: true, plan: true },
   { src: "/images/planta-3d.webp", w: 1600, h: 1131, alt: "Planta 3D", big: true, plan: true },
