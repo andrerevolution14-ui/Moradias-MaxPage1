@@ -41,11 +41,12 @@ export default function Gallery() {
   const big = "row-span-2 w-[84vw] sm:w-[60vw] lg:w-[620px]";
   const small = "w-[42vw] sm:w-[30vw] lg:w-[300px]";
 
-  // Mosaico da visita 360° logo a seguir à capa (como o "Visita Virtual" dos portais)
+  // Mosaico da visita 360° na 2.ª coluna (como o "Visita Virtual" dos portais)
   const items: ({ kind: "pic"; i: number } | { kind: "tour" })[] = [];
   GALLERY.forEach((_, i) => {
     items.push({ kind: "pic", i });
-    if (i === 0) items.push({ kind: "tour" });
+    // A 360° fica por baixo da 1.ª foto do interior (a mais forte fica em cima, logo a seguir à capa)
+    if (i === 1) items.push({ kind: "tour" });
   });
 
   return (
@@ -65,7 +66,7 @@ export default function Gallery() {
                   <span className="absolute inset-0 grid place-items-center">
                     <span className="grid h-12 w-12 place-items-center rounded-full bg-white/90 text-ink"><Icon360 size={24} /></span>
                   </span>
-                  <span className="absolute bottom-2 left-2 inline-flex items-center gap-1.5 rounded-md bg-[#0f1822]/80 px-2 py-1 text-[12px] font-semibold text-white">
+                  <span className="absolute left-2 top-2 inline-flex items-center gap-1.5 rounded-md bg-[#0f1822]/80 px-2 py-1 text-[12px] font-semibold text-white">
                     <Icon360 size={14} /> Visita 360°
                   </span>
                 </Tour360Button>
