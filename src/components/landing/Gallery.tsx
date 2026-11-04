@@ -17,9 +17,12 @@ export default function Gallery() {
   const track = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<number | null>(null);
   const planIdx = GALLERY.findIndex((g) => g.plan);
+  const [atStart, setAtStart] = useState(true);
 
   function onScroll() {
-    if ((track.current?.scrollLeft || 0) > 40) trackOnce("gallery", "ViewContent", { content_name: "galeria", content_type: "home_listing" });
+    const x = track.current?.scrollLeft || 0;
+    setAtStart(x < 40);
+    if (x > 40) trackOnce("gallery", "ViewContent", { content_name: "galeria", content_type: "home_listing" });
   }
   function step(d: number) {
     const el = track.current;
@@ -101,8 +104,11 @@ export default function Gallery() {
           })}
         </div>
 
-        {/* Atalhos sobre as fotos: não ocupam altura, ficam sempre visíveis no primeiro ecrã */}
-        <div className="absolute bottom-3 left-7 flex gap-1.5 lg:left-3">
+        {/* Atalhos só sobre a 1.ª foto: desaparecem ao deslizar para as outras se verem inteiras */}
+        <div
+          className={`absolute bottom-3 left-7 flex gap-1.5 transition-opacity duration-200 lg:left-3 ${atStart ? "opacity-100" : "pointer-events-none opacity-0"}`}
+          aria-hidden={!atStart}
+        >
           <button onClick={() => setOpen(0)} className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[13px] font-semibold text-ink shadow-md">
             <IconCamera size={15} /> {GALLERY.length}
           </button>
