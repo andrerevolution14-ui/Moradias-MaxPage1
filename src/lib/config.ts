@@ -67,13 +67,15 @@ export const GALLERY: { src: string; w: number; h: number; alt: string; big?: bo
   // Capa
   { src: "/images/exterior-noite.webp", w: 766, h: 1024, alt: "Moradia Domaine XXV à noite", big: true },
   // Zona social
-  { src: "/images/cozinha.webp", w: 1600, h: 901, alt: "Cozinha open space equipada" },
+  { src: "/images/cozinha-open-space.webp", w: 1254, h: 1254, alt: "Cozinha open space com zona de refeições" },
+  { src: "/images/cozinha-detalhe.webp", w: 1254, h: 1254, alt: "Detalhe da cozinha equipada" },
   { src: "/images/sala-de-jantar.webp", w: 1600, h: 878, alt: "Sala de jantar e estar" },
   { src: "/images/exterior-barbecue.webp", w: 1375, h: 768, alt: "Jardim privativo com barbecue" },
   // Quartos
   { src: "/images/quarto-suite-varanda.webp", w: 1254, h: 1254, alt: "Quarto suite com varanda" },
-  { src: "/images/quarto-cama.webp", w: 1024, h: 1024, alt: "Quarto" },
-  { src: "/images/quarto-porta.webp", w: 1024, h: 1024, alt: "Zona dos quartos" },
+  { src: "/images/quarto-suite-detalhe.webp", w: 1254, h: 1254, alt: "Detalhe da suite" },
+  { src: "/images/quarto-escritorio.webp", w: 1254, h: 1254, alt: "Quarto com zona de escritório" },
+  { src: "/images/quarto-escritorio-detalhe.webp", w: 1254, h: 1254, alt: "Detalhe da zona de escritório" },
   // Casas de banho
   { src: "/images/casa-de-banho-suite.webp", w: 1254, h: 1254, alt: "Casa de banho da suite" },
   { src: "/images/casa-de-banho-completa.webp", w: 1254, h: 1254, alt: "Casa de banho completa" },
