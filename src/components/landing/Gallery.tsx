@@ -64,7 +64,7 @@ export default function Gallery() {
             if (it.kind === "tour") {
               return (
                 <Tour360Button key="tour" className={`${tile} ${small} group text-left`}>
-                  <Image src="/images/sala-de-estar.webp" alt="" fill sizes="(min-width:1024px) 300px, (min-width:640px) 270px, 181px" quality={85} className="object-cover" />
+                  <Image src="/images/sotao.webp" alt="" fill sizes="(min-width:1024px) 300px, (min-width:640px) 270px, 181px" quality={85} className="object-cover" />
                   <span className="absolute inset-0 bg-[#0f1822]/45 transition group-hover:bg-[#0f1822]/55" />
                   <span className="absolute inset-0 grid place-items-center">
                     <span className="grid h-12 w-12 place-items-center rounded-full bg-white/90 text-ink"><Icon360 size={24} /></span>
