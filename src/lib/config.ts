@@ -73,7 +73,8 @@ export const GALLERY: { src: string; w: number; h: number; alt: string; big?: bo
   { src: "/images/sala-de-jantar.webp", w: 1254, h: 1254, alt: "Sala de jantar" },
   { src: "/images/cozinha-detalhe.webp", w: 1254, h: 1254, alt: "Detalhe da cozinha equipada" },
   { src: "/images/jardim-privativo.webp", w: 1254, h: 1254, alt: "Jardim privativo de ~82 m²" },
-  // Quartos
+  // Piso 1: hall e quartos
+  { src: "/images/hall-piso-1.webp", w: 1254, h: 1254, alt: "Hall do 1.º piso com acesso aos quartos" },
   { src: "/images/quarto-suite-varanda.webp", w: 1254, h: 1254, alt: "Quarto suite com varanda" },
   { src: "/images/quarto-suite-detalhe.webp", w: 1254, h: 1254, alt: "Detalhe da suite" },
   { src: "/images/quarto-com-roupeiro.webp", w: 1254, h: 1254, alt: "Quarto com roupeiro e varanda" },
@@ -87,7 +88,7 @@ export const GALLERY: { src: string; w: number; h: number; alt: string; big?: bo
   // Sótão
   { src: "/images/sotao.webp", w: 1254, h: 1254, alt: "Sótão de ~34 m² (sala de jogos, escritório ou arrumação)" },
   // Exterior
-  { src: "/images/exterior-traseiro-jardim.webp", w: 1254, h: 1254, alt: "Traseiras com jardim privativo ao fim do dia", big: true },
+  { src: "/images/exterior-traseiro-jardim.webp", w: 1254, h: 1254, alt: "Traseiras com jardim privativo ao fim do dia" },
   // Plantas
   { src: "/images/planta-tecnica.webp", w: 1600, h: 1131, alt: "Planta técnica · R/C, piso 1 e sótão", big: true, plan: true },
   { src: "/images/planta-3d.webp", w: 1600, h: 1131, alt: "Planta 3D", big: true, plan: true },
