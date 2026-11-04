@@ -44,12 +44,12 @@ export default function Gallery() {
   const big = "row-span-2 w-[84vw] sm:w-[60vw] lg:w-[620px]";
   const small = "w-[42vw] sm:w-[30vw] lg:w-[300px]";
 
-  // Mosaico da visita 360° na 2.ª coluna (como o "Visita Virtual" dos portais)
+  // Mosaico da visita 360° (como o "Visita Virtual" dos portais)
   const items: ({ kind: "pic"; i: number } | { kind: "tour" })[] = [];
   GALLERY.forEach((_, i) => {
     items.push({ kind: "pic", i });
-    // A 360° fica por baixo da 1.ª foto do interior (a mais forte fica em cima, logo a seguir à capa)
-    if (i === 1) items.push({ kind: "tour" });
+    // A 360° fica por baixo do jardim (as pequenas vão aos pares: divisão em cima, detalhe por baixo)
+    if (GALLERY[i].src.includes("jardim-privativo")) items.push({ kind: "tour" });
   });
 
   return (

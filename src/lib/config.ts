@@ -61,33 +61,38 @@ export const LOT_SPEC = {
 };
 
 // A primeira imagem é a capa (carrega com prioridade). As restantes carregam à medida que se desliza.
-// Ordem pensada para impacto: capa forte → zona social → quartos → casas de banho → sótão → exterior → plantas.
-// Só renders novos. Grandes (big) ocupam 2 linhas; entre duas grandes tem de haver um número PAR de pequenas
-// (contando o mosaico da visita 360°, que entra a seguir à 1.ª foto do interior).
+// Ordem pensada para impacto. O mosaico enche coluna a coluna (cima, baixo), por isso as pequenas vão aos PARES:
+// cada divisão fica em cima e o seu detalhe logo por baixo, na mesma coluna.
+// Só renders novos. Grandes (big) ocupam a coluna inteira; entre duas grandes tem de haver um número PAR de pequenas
+// (contando o mosaico da visita 360°, que entra a seguir ao jardim — ver Gallery.tsx).
 export const GALLERY: { src: string; w: number; h: number; alt: string; big?: boolean; plan?: boolean }[] = [
   // Capa
   { src: "/images/fachada-principal.webp", w: 1254, h: 1254, alt: "As 3 moradias Domaine XXV vistas da rua", big: true },
-  // Zona social e jardim
+  // Cozinha + detalhe
   { src: "/images/cozinha-open-space.webp", w: 1254, h: 1254, alt: "Cozinha open space com zona de refeições" },
+  { src: "/images/cozinha-detalhe.webp", w: 1254, h: 1254, alt: "Detalhe da cozinha equipada" },
+  // Salas
   { src: "/images/sala-de-estar.webp", w: 1254, h: 1254, alt: "Sala de estar aberta para a cozinha" },
   { src: "/images/sala-de-jantar.webp", w: 1254, h: 1254, alt: "Sala de jantar" },
-  { src: "/images/cozinha-detalhe.webp", w: 1254, h: 1254, alt: "Detalhe da cozinha equipada" },
+  // Jardim + visita 360°
   { src: "/images/jardim-privativo.webp", w: 1254, h: 1254, alt: "Jardim privativo de ~82 m²" },
-  // Piso 1: hall e quartos
+  // Piso 1: hall + quarto
   { src: "/images/hall-piso-1.webp", w: 1254, h: 1254, alt: "Hall do 1.º piso com acesso aos quartos" },
+  { src: "/images/quarto-com-roupeiro.webp", w: 1254, h: 1254, alt: "Quarto com roupeiro e varanda" },
+  // Suite + detalhe
   { src: "/images/quarto-suite-varanda.webp", w: 1254, h: 1254, alt: "Quarto suite com varanda" },
   { src: "/images/quarto-suite-detalhe.webp", w: 1254, h: 1254, alt: "Detalhe da suite" },
-  { src: "/images/quarto-com-roupeiro.webp", w: 1254, h: 1254, alt: "Quarto com roupeiro e varanda" },
+  // Quarto com escritório + detalhe
   { src: "/images/quarto-escritorio.webp", w: 1254, h: 1254, alt: "Quarto com zona de escritório" },
   { src: "/images/quarto-escritorio-detalhe.webp", w: 1254, h: 1254, alt: "Detalhe da zona de escritório" },
-  // Casas de banho
-  { src: "/images/casa-de-banho-suite.webp", w: 1254, h: 1254, alt: "Casa de banho da suite" },
+  // Casa de banho completa + detalhe do duche
   { src: "/images/casa-de-banho-completa.webp", w: 1254, h: 1254, alt: "Casa de banho completa" },
-  { src: "/images/casa-de-banho-detalhe-duche.webp", w: 1254, h: 1254, alt: "Duche com nicho iluminado" },
+  { src: "/images/casa-de-banho-detalhe-duche.webp", w: 1254, h: 1254, alt: "Detalhe do duche com nicho iluminado" },
+  // Casa de banho da suite + de serviço
+  { src: "/images/casa-de-banho-suite.webp", w: 1254, h: 1254, alt: "Casa de banho da suite" },
   { src: "/images/casa-de-banho-servico.webp", w: 1254, h: 1254, alt: "Casa de banho de serviço (rés-do-chão)" },
-  // Sótão
+  // Sótão + traseiras
   { src: "/images/sotao.webp", w: 1254, h: 1254, alt: "Sótão de ~34 m² (sala de jogos, escritório ou arrumação)" },
-  // Exterior
   { src: "/images/exterior-traseiro-jardim.webp", w: 1254, h: 1254, alt: "Traseiras com jardim privativo ao fim do dia" },
   // Plantas
   { src: "/images/planta-tecnica.webp", w: 1600, h: 1131, alt: "Planta técnica · R/C, piso 1 e sótão", big: true, plan: true },
