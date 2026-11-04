@@ -61,18 +61,24 @@ export const LOT_SPEC = {
 };
 
 // A primeira imagem é a capa (carrega com prioridade). As restantes carregam à medida que se desliza.
+// Ordem pensada para impacto: capa forte → interior (social → quartos → casas de banho) → exterior → plantas.
+// Grandes (big) ocupam 2 linhas; entre duas grandes tem de haver um número PAR de pequenas (contando o mosaico 360°).
 export const GALLERY: { src: string; w: number; h: number; alt: string; big?: boolean; plan?: boolean }[] = [
   // Capa
   { src: "/images/exterior-noite.webp", w: 766, h: 1024, alt: "Moradia Domaine XXV à noite", big: true },
-  // Interior
+  // Zona social
   { src: "/images/cozinha.webp", w: 1600, h: 901, alt: "Cozinha open space equipada" },
   { src: "/images/sala-de-jantar.webp", w: 1600, h: 878, alt: "Sala de jantar e estar" },
   { src: "/images/exterior-barbecue.webp", w: 1375, h: 768, alt: "Jardim privativo com barbecue" },
-  { src: "/images/wc-f2.webp", w: 1792, h: 2200, alt: "Casa de banho completa" },
-  { src: "/images/quarto-cama.webp", w: 1024, h: 1024, alt: "Quarto suite principal" },
-  { src: "/images/quarto-varanda.webp", w: 1600, h: 900, alt: "Quarto com varanda" },
+  // Quartos
+  { src: "/images/quarto-suite-varanda.webp", w: 1254, h: 1254, alt: "Quarto suite com varanda" },
+  { src: "/images/quarto-cama.webp", w: 1024, h: 1024, alt: "Quarto" },
   { src: "/images/quarto-porta.webp", w: 1024, h: 1024, alt: "Zona dos quartos" },
-  { src: "/images/corredor-quartos.webp", w: 1024, h: 1024, alt: "Corredor do piso 1" },
+  // Casas de banho
+  { src: "/images/casa-de-banho-suite.webp", w: 1254, h: 1254, alt: "Casa de banho da suite" },
+  { src: "/images/casa-de-banho-completa.webp", w: 1254, h: 1254, alt: "Casa de banho completa" },
+  { src: "/images/casa-de-banho-detalhe-duche.webp", w: 1254, h: 1254, alt: "Duche com nicho iluminado" },
+  { src: "/images/casa-de-banho-servico.webp", w: 1254, h: 1254, alt: "Casa de banho de serviço (rés-do-chão)" },
   { src: "/images/terceiro-andar.webp", w: 1600, h: 1600, alt: "Sótão amplo (~34 m² úteis)" },
   // Exterior
   { src: "/images/exterior-traseiro-completo.webp", w: 1365, h: 768, alt: "As 3 moradias com jardim privativo", big: true },

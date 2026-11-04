@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { GALLERY } from "@/lib/config";
 import { trackOnce } from "@/lib/track";
-import { Icon360, IconArrowL, IconArrowR, IconPlan } from "../icons";
+import { Icon360, IconArrowL, IconArrowR, IconCamera, IconPlan } from "../icons";
 import Lightbox from "./Lightbox";
 import Tour360Button from "./Tour360";
 
@@ -16,6 +16,7 @@ import Tour360Button from "./Tour360";
 export default function Gallery() {
   const track = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<number | null>(null);
+  const planIdx = GALLERY.findIndex((g) => g.plan);
 
   function onScroll() {
     if ((track.current?.scrollLeft || 0) > 40) trackOnce("gallery", "ViewContent", { content_name: "galeria", content_type: "home_listing" });
@@ -99,6 +100,16 @@ export default function Gallery() {
           })}
         </div>
 
+        {/* Atalhos sobre as fotos: não ocupam altura, ficam sempre visíveis no primeiro ecrã */}
+        <div className="absolute bottom-3 left-7 flex gap-1.5 lg:left-3">
+          <button onClick={() => setOpen(0)} className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[13px] font-semibold text-ink shadow-md">
+            <IconCamera size={15} /> {GALLERY.length}
+          </button>
+          <Tour360Button className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[13px] font-semibold text-ink shadow-md" label="360°" />
+          <button onClick={() => setOpen(planIdx)} className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[13px] font-semibold text-ink shadow-md">
+            <IconPlan size={15} /> Plantas
+          </button>
+        </div>
         <div className="absolute bottom-3 right-3 hidden items-center gap-2 lg:flex">
           <button onClick={() => step(-1)} className="grid h-10 w-10 place-items-center rounded-full bg-paper/95 shadow" aria-label="Anterior"><IconArrowL /></button>
           <button onClick={() => step(1)} className="grid h-10 w-10 place-items-center rounded-full bg-paper/95 shadow" aria-label="Seguinte"><IconArrowR /></button>

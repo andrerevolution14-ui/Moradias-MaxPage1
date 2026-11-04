@@ -39,7 +39,7 @@ export default function Page() {
 
         <div className="mx-auto grid max-w-[1200px] gap-10 px-4 lg:grid-cols-[minmax(0,1fr)_380px] lg:px-6">
           <div className="min-w-0">
-            <nav className="no-scrollbar sticky top-[60px] z-20 -mx-4 flex gap-1 overflow-x-auto border-b border-line bg-paper/95 px-4 backdrop-blur lg:mx-0 lg:px-0">
+            <nav className="no-scrollbar sticky top-[61px] z-20 -mx-4 flex gap-1 overflow-x-auto border-b border-line bg-paper px-4 [transform:translateZ(0)] lg:mx-0 lg:px-0">
               {NAV.map(([id, label]) => (
                 <a key={id} href={`#${id}`} className="shrink-0 border-b-2 border-transparent px-2.5 py-3 text-[14px] font-medium text-muted hover:border-ink hover:text-ink">
                   {label}
@@ -93,7 +93,7 @@ export default function Page() {
 
 function Header() {
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-paper/95 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-line bg-paper [transform:translateZ(0)]">
       <div className="mx-auto flex h-[60px] max-w-[1200px] items-center justify-between gap-4 px-4 lg:px-6">
         <Link href="/" className="flex items-baseline gap-2">
           <span className="font-serif text-[22px] font-semibold tracking-wide">Domaine XXV</span>

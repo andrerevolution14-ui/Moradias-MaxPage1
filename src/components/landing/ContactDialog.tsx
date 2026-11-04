@@ -48,7 +48,7 @@ export default function ContactDialog() {
       )}
 
       {/* Barra fixa no telemóvel */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper/95 px-3 pb-[max(env(safe-area-inset-bottom),10px)] pt-2.5 backdrop-blur lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper px-3 pb-[max(env(safe-area-inset-bottom),10px)] pt-2.5 [transform:translateZ(0)] lg:hidden">
         <div className="grid grid-cols-[1fr_auto_auto] gap-2">
           <button className="btn btn-primary py-3" onClick={() => openComposer({ cta: "mobile_bar" })}>
             <IconChat size={18} /> Enviar mensagem
