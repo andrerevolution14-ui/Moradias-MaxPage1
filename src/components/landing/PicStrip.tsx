@@ -11,7 +11,7 @@ export function WorksStrip({ pics }: { pics: (Pic & { tag: string })[] }) {
     <>
       <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 lg:mx-0 lg:px-0">
         {pics.map((p, i) => (
-          <button key={p.src} onClick={() => setOpen(i)} className="relative aspect-[3/4] w-[46%] shrink-0 snap-start overflow-hidden rounded-xl sm:w-[30%] lg:w-[26%]">
+          <button key={p.src} onClick={() => setOpen(i)} className="relative aspect-[3/4] w-[46%] shrink-0 snap-start overflow-hidden rounded-md sm:w-[30%] lg:w-[26%]">
             <Image src={p.src} alt={p.alt} fill sizes="(min-width:1024px) 220px, 46vw" quality={85} className="object-cover" />
             <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-3 pt-8 text-left text-white">
               <span className="block text-[11px] font-semibold uppercase tracking-wide text-white/80">{p.tag}</span>
@@ -32,7 +32,7 @@ export function PlansGrid({ pics }: { pics: (Pic & { note: string })[] }) {
     <>
       <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:px-0">
         {pics.map((p, i) => (
-          <button key={p.src} onClick={() => setOpen(i)} className="group w-[85%] shrink-0 snap-start overflow-hidden rounded-xl border border-line bg-white text-left sm:w-auto">
+          <button key={p.src} onClick={() => setOpen(i)} className="group w-[85%] shrink-0 snap-start overflow-hidden rounded-md border border-line bg-white text-left sm:w-auto">
             <div className="relative aspect-[1600/1131]">
               <Image src={p.src} alt={p.alt} fill sizes="(min-width:640px) 420px, 90vw" quality={85} className="object-contain p-2" />
             </div>

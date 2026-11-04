@@ -37,7 +37,7 @@ export default function Gallery() {
     return `(min-width:1024px) ${lg}px, (min-width:640px) ${sm}px, ${xs}px`;
   }
 
-  const tile = "relative overflow-hidden rounded-xl bg-soft snap-start";
+  const tile = "relative overflow-hidden rounded-md bg-soft snap-start";
   const big = "row-span-2 w-[84vw] sm:w-[60vw] lg:w-[620px]";
   const small = "w-[42vw] sm:w-[30vw] lg:w-[300px]";
 
