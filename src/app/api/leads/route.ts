@@ -16,7 +16,8 @@ export async function POST(req: NextRequest) {
   }
 
   // Honeypot anti-spam: campo invisível que só bots preenchem
-  if (clip(body.website, 200)) return NextResponse.json({ ok: true, token: "ok" });
+  // (bots preenchem o campo invisível: respondemos "ok" mas NÃO conta como lead nem dispara eventos)
+  if (clip(body.website, 200) || clip(body.website_hp, 200)) return NextResponse.json({ ok: true, token: null, countLead: false });
 
   const name = clip(body.name, 80);
   const phone = normalizePhone(clip(body.phone, 30));
@@ -96,12 +97,12 @@ export async function POST(req: NextRequest) {
     const fallback = { id: 0, token: "", name, phone, email, intent, lot, source } as unknown as LeadRow;
     const [mail] = await Promise.allSettled([
       notifyAdminNewLead(fallback, `${message}\n\n(Atenção: esta lead não ficou guardada no centro de leads porque a base de dados não respondeu. Contacte diretamente.)`, base),
-      capiLead(phone, "new"),
+      capiLead(phone, "new"),  // sem base de dados não sabemos se é repetida; conta como nova
     ]);
     if (!(mail.status === "fulfilled" && mail.value)) {
       return NextResponse.json({ error: "Não foi possível enviar agora. Fale connosco por WhatsApp ou telefone." }, { status: 503 });
     }
-    return NextResponse.json({ ok: true, token: null, firstName: name.split(" ")[0], hasEmail: false });
+    return NextResponse.json({ ok: true, token: null, firstName: name.split(" ")[0], hasEmail: false, countLead: true });
   }
 
   const chatUrl = `${base}/conversa/${lead.token}`;
@@ -111,8 +112,9 @@ export async function POST(req: NextRequest) {
     isNew ? notifyAdminNewLead(lead, message, base) : notifyAdminLeadReply(lead, message, base),
     isNew ? emailLeadConfirmation(lead, chatUrl) : Promise.resolve(false),
     isNew ? smsLeadConfirmation(lead, chatUrl) : Promise.resolve(false),
-    capiLead(String(lead.id), isNew ? "new" : "returning"),
+    // Só a 1.ª mensagem de cada pessoa é um Lead para o Meta (as seguintes são conversa)
+    isNew ? capiLead(String(lead.id), "new") : Promise.resolve(null),
   ]);
 
-  return NextResponse.json({ ok: true, token: lead.token, firstName: name.split(" ")[0], hasEmail: Boolean(lead.email) });
+  return NextResponse.json({ ok: true, token: lead.token, firstName: name.split(" ")[0], hasEmail: Boolean(lead.email), countLead: isNew });
 }

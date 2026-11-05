@@ -104,6 +104,13 @@ export const PLANS = [
   { src: "/images/planta-3d.webp", alt: "Planta 3D", note: "Distribuição e enquadramento exterior" },
 ];
 
+// Fotografias reais do terreno, hoje (contorno dos lotes indicativo)
+export const TERRAIN = [
+  { src: "/images/terreno-vista-aerea.webp", alt: "Vista aérea: os 3 lotes" },
+  { src: "/images/terreno-rua.webp", alt: "O terreno visto da rua" },
+  { src: "/images/terreno-lote.webp", alt: "Um dos lotes, de perto" },
+];
+
 export const WORKS = [
   { src: "/obras/wc.webp", alt: "Casas de banho", tag: "Obra concluída" },
   { src: "/obras/quarto.webp", alt: "Quartos e pavimentos", tag: "Obra concluída" },

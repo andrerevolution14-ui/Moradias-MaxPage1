@@ -30,12 +30,43 @@ export function getFbc() {
   return undefined;
 }
 
+/** O Pixel só corre no site publicado: nunca em localhost nem em pré-visualizações *.vercel.app. */
+export function trackingAllowed() {
+  if (typeof location === "undefined") return false;
+  const h = location.hostname.replace(/^www\./, "");
+  if (h === "localhost" || h === "::1" || /^127\.|^192\.168\.|^10\./.test(h)) return false;
+  try {
+    const site = process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL).hostname.replace(/^www\./, "") : "";
+    if (site) return h === site;
+  } catch {}
+  return !h.endsWith(".vercel.app");
+}
+
+const LEAD_KEY = "dx_lead_sent";
+function phoneKey(p: string) {
+  return p.replace(/\D/g, "").slice(-9);
+}
+export function leadAlreadySent(phone: string) {
+  try {
+    return (JSON.parse(localStorage.getItem(LEAD_KEY) || "[]") as string[]).includes(phoneKey(phone));
+  } catch {
+    return false;
+  }
+}
+export function markLeadSent(phone: string) {
+  try {
+    const list = JSON.parse(localStorage.getItem(LEAD_KEY) || "[]") as string[];
+    localStorage.setItem(LEAD_KEY, JSON.stringify([...new Set([...list, phoneKey(phone)])].slice(-20)));
+  } catch {}
+}
+
 export function track(
   event: string,
   customData?: Record<string, unknown>,
   eventId = newEventId(event.toLowerCase()),
   serverOnly = false,
 ) {
+  if (!trackingAllowed()) return eventId;
   try {
     if (window.fbq && !serverOnly) {
       const standard = ["PageView", "ViewContent", "Contact", "Lead", "Schedule", "CustomizeProduct", "FindLocation"];

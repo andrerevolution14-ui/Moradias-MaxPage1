@@ -30,8 +30,20 @@ function norm(v: string) {
   return v.trim().toLowerCase();
 }
 
+function productionRequest(req: NextRequest) {
+  if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production") return false; // pré-visualizações
+  const host = (req.headers.get("x-forwarded-host") || req.headers.get("host") || "").split(":")[0].replace(/^www\./, "");
+  if (!host || host === "localhost" || /^127\./.test(host)) return false;
+  try {
+    const site = process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL).hostname.replace(/^www\./, "") : "";
+    if (site) return host === site;
+  } catch {}
+  return !host.endsWith(".vercel.app");
+}
+
 export async function sendCapiEvent(req: NextRequest, ev: CapiEvent) {
   if (!capiEnabled()) return { skipped: true };
+  if (!productionRequest(req)) return { skipped: true, reason: "not-production" };
   const pixelId = process.env.META_PIXEL_ID || META_PIXEL_ID;
   const version = process.env.META_GRAPH_VERSION || "v24.0";
 

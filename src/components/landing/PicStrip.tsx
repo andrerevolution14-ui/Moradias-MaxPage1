@@ -25,6 +25,24 @@ export function WorksStrip({ pics }: { pics: (Pic & { tag: string })[] }) {
   );
 }
 
+/** Fotos reais do terreno: deslizam para o lado; tocar amplia com zoom */
+export function TerrainStrip({ pics }: { pics: Pic[] }) {
+  const [open, setOpen] = useState<number | null>(null);
+  return (
+    <>
+      <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 lg:mx-0 lg:px-0">
+        {pics.map((p, i) => (
+          <button key={p.src} onClick={() => setOpen(i)} className="relative aspect-[4/3] w-[78%] shrink-0 snap-start overflow-hidden rounded-md bg-soft sm:w-[46%] lg:w-[40%]" aria-label={`Ver foto: ${p.alt}`}>
+            <Image src={p.src} alt={p.alt} fill sizes="(min-width:1024px) 360px, (min-width:640px) 46vw, 78vw" quality={85} className="object-cover" />
+            <span className="absolute bottom-2 left-2 rounded bg-black/55 px-2 py-0.5 text-[12px] font-medium text-white">{p.alt}</span>
+          </button>
+        ))}
+      </div>
+      {open !== null && <Lightbox pics={pics} index={open} zoomable onClose={() => setOpen(null)} />}
+    </>
+  );
+}
+
 /** Plantas com zoom dentro da página */
 export function PlansGrid({ pics }: { pics: (Pic & { note: string })[] }) {
   const [open, setOpen] = useState<number | null>(null);

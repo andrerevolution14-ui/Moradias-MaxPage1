@@ -1,15 +1,20 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect } from "react";
-import { captureSource, track } from "@/lib/track";
+import { useEffect, useState } from "react";
+import { captureSource, track, trackingAllowed } from "@/lib/track";
 import { META_PIXEL_ID } from "@/lib/config";
 
 const PIXEL_ID = META_PIXEL_ID;
 
 export default function MetaPixel() {
+  const [allowed, setAllowed] = useState(false);
   useEffect(() => {
     captureSource();
+    setAllowed(trackingAllowed());
+  }, []);
+  useEffect(() => {
+    if (!allowed) return;
     if (!PIXEL_ID) return;
     // O PageView do browser é disparado no script abaixo; aqui espelhamos no servidor com o mesmo event_id.
     let tries = 0;
@@ -21,9 +26,9 @@ export default function MetaPixel() {
       }
     }, 100);
     return () => clearInterval(iv);
-  }, []);
+  }, [allowed]);
 
-  if (!PIXEL_ID) return null;
+  if (!PIXEL_ID || !allowed) return null;
   return (
     <Script id="meta-pixel" strategy="afterInteractive">
       {`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
