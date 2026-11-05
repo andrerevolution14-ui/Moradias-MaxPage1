@@ -65,7 +65,7 @@ export const LOT_SPEC = {
 // cada divisão fica em cima e o seu detalhe logo por baixo, na mesma coluna.
 // Só renders novos. Grandes (big) ocupam a coluna inteira; entre duas grandes tem de haver um número PAR de pequenas
 // (contando o mosaico da visita 360°, que entra logo a seguir à capa — ver Gallery.tsx).
-export const GALLERY: { src: string; w: number; h: number; alt: string; big?: boolean; plan?: boolean }[] = [
+export const GALLERY: { src: string; w: number; h: number; alt: string; big?: boolean; plan?: boolean; real?: boolean; pos?: string }[] = [
   // Capa
   { src: "/images/fachada-principal.webp", w: 1254, h: 1254, alt: "As 3 moradias Domaine XXV vistas da rua", big: true },
   // [Visita 360° entra aqui, em cima] + sala de estar por baixo
@@ -94,6 +94,10 @@ export const GALLERY: { src: string; w: number; h: number; alt: string; big?: bo
   // Sótão + traseiras
   { src: "/images/sotao.webp", w: 1254, h: 1254, alt: "Sótão de ~34 m² (sala de jogos, escritório ou arrumação)" },
   { src: "/images/exterior-traseiro-jardim.webp", w: 1254, h: 1254, alt: "Traseiras com jardim privativo ao fim do dia" },
+  // O terreno hoje (fotografias reais; contorno dos lotes indicativo)
+  { src: "/images/terreno-vista-aerea.webp", w: 2000, h: 851, alt: "O terreno hoje: vista aérea dos 3 lotes (contorno indicativo)", big: true, real: true, pos: "62% 50%" },
+  { src: "/images/terreno-rua.webp", w: 1280, h: 958, alt: "O terreno hoje, visto da rua (contorno indicativo)", real: true },
+  { src: "/images/terreno-lote.webp", w: 2000, h: 1497, alt: "O terreno hoje: um dos lotes (contorno indicativo)", real: true },
   // Plantas
   { src: "/images/planta-tecnica.webp", w: 1600, h: 1131, alt: "Planta técnica · R/C, piso 1 e sótão", big: true, plan: true },
   { src: "/images/planta-3d.webp", w: 1600, h: 1131, alt: "Planta 3D", big: true, plan: true },
@@ -102,13 +106,6 @@ export const GALLERY: { src: string; w: number; h: number; alt: string; big?: bo
 export const PLANS = [
   { src: "/images/planta-tecnica.webp", alt: "Planta técnica", note: "Piso 0 + Piso 1 + Sótão" },
   { src: "/images/planta-3d.webp", alt: "Planta 3D", note: "Distribuição e enquadramento exterior" },
-];
-
-// Fotografias reais do terreno, hoje (contorno dos lotes indicativo)
-export const TERRAIN = [
-  { src: "/images/terreno-vista-aerea.webp", alt: "Vista aérea: os 3 lotes" },
-  { src: "/images/terreno-rua.webp", alt: "O terreno visto da rua" },
-  { src: "/images/terreno-lote.webp", alt: "Um dos lotes, de perto" },
 ];
 
 export const WORKS = [

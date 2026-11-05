@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  BUILDER, DISTANCES, FAQ, LOT_SPEC, PLANS, PROJECT, PROMOTER, ROOMS, TERRAIN, TESTIMONIALS, WORKS, formatEUR,
+  BUILDER, DISTANCES, FAQ, LOT_SPEC, PLANS, PROJECT, PROMOTER, ROOMS, TESTIMONIALS, WORKS, formatEUR,
 } from "@/lib/config";
 import {
   IconArea, IconBath, IconBed, IconCar, IconCheck, IconChevron, IconClock, IconDoc, IconHammer, IconKey,
@@ -16,7 +16,7 @@ import Simulator, { MonthlyFrom } from "@/components/landing/Simulator";
 import Ask from "@/components/landing/Ask";
 import SeenTracker from "@/components/landing/SeenTracker";
 import Tour360Button from "@/components/landing/Tour360";
-import { PlansGrid, TerrainStrip, WorksStrip } from "@/components/landing/PicStrip";
+import { PlansGrid, WorksStrip } from "@/components/landing/PicStrip";
 
 const NAV = [
   ["localizacao", "Localização"],
@@ -212,9 +212,6 @@ function Location() {
           </li>
         ))}
       </ul>
-      <h3 className="mb-1 mt-6 font-semibold">O terreno hoje</h3>
-      <p className="mb-3 text-[13px] text-muted">Fotografias atuais. Contorno dos lotes indicativo.</p>
-      <TerrainStrip pics={TERRAIN} />
     </section>
   );
 }

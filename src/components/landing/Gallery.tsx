@@ -87,11 +87,17 @@ export default function Gallery() {
                   priority={k === 0}
                   loading={k === 0 ? undefined : k < 5 ? "eager" : "lazy"}
                   className={g.plan ? "object-contain p-2" : "object-cover"}
+                  style={g.pos ? { objectPosition: g.pos } : undefined}
                 />
                 {k === 0 && (
                   <span className="pointer-events-none absolute left-3 top-3 flex flex-wrap gap-1.5">
                     <span className="rounded-md bg-cta px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-paper">Venda em planta</span>
                     <span className="rounded-md bg-paper px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-ink">Projeto aprovado</span>
+                  </span>
+                )}
+                {g.real && (
+                  <span className="pointer-events-none absolute left-2 top-2 rounded-md bg-[#0f1822]/80 px-2 py-1 text-[12px] font-semibold text-white">
+                    Terreno hoje
                   </span>
                 )}
                 {g.plan && (
