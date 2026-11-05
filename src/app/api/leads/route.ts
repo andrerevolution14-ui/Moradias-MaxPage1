@@ -3,7 +3,7 @@ import { db, type LeadRow } from "@/lib/db";
 import { clientIp, clip, isEmail, newToken, normalizePhone, siteUrl } from "@/lib/server-utils";
 import { emailLeadConfirmation, notifyAdminNewLead, notifyAdminLeadReply, smsLeadConfirmation } from "@/lib/notify";
 import { sendCapiEvent } from "@/lib/meta";
-import { META_LEAD_VALUE } from "@/lib/config";
+import { META_LEAD_VALUE, PROMOTER } from "@/lib/config";
 
 const SOURCE_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid", "variant", "page", "referrer", "cta"];
 
@@ -44,15 +44,28 @@ export async function POST(req: NextRequest) {
   const ua = clip(req.headers.get("user-agent"), 400);
   const base = siteUrl(req);
   const eventIdIn = clip(body.eventId, 80);
-  const capiLead = (externalId: string, leadType: string) =>
+  // Números que nunca contam no Meta (o do André e os de teste em META_EXCLUDE_PHONES, separados por vírgulas)
+  const excluded = new Set(
+    [PROMOTER.whatsapp, ...(process.env.META_EXCLUDE_PHONES || "").split(",")].map((p) => normalizePhone(p.trim())).filter(Boolean),
+  );
+  const countsForMeta = !excluded.has(phone);
+
+  /** Lead no Meta: enviado SÓ pelo servidor, SÓ quando a mensagem de uma pessoa nova ficou recebida. */
+  const capiLead = async (externalId: string) => {
+    if (!countsForMeta) return null;
+    const r = await capiEvent("Lead", externalId, { ...META_LEAD_VALUE });
+    if (intent === "visita") await capiEvent("Schedule", externalId, {});
+    return r;
+  };
+  const capiEvent = (eventName: string, externalId: string, extra: Record<string, unknown>) =>
     sendCapiEvent(req, {
-      eventName: "Lead",
-      eventId: eventIdIn || `lead-${externalId}-${Date.now()}`,
+      eventName,
+      eventId: `${eventName.toLowerCase()}-${externalId}-${eventIdIn || Date.now()}`,
       eventSourceUrl: source.page,
       user: { phone, email, name, externalId },
       fbp: clip(body.fbp, 200) || null,
       fbc: clip(body.fbc, 400) || null,
-      customData: { content_name: "Domaine XXV", content_category: intent || "mensagem", lead_type: leadType, ...META_LEAD_VALUE },
+      customData: { content_name: "Domaine XXV", content_category: intent || "mensagem", ...extra },
     });
 
   let lead: LeadRow;
@@ -95,13 +108,11 @@ export async function POST(req: NextRequest) {
     // Base de dados indisponível (ou DATABASE_URL em falta): a lead NÃO se perde, vai por email para o André.
     console.error("[leads] base de dados indisponível, lead enviada só por email", e);
     const fallback = { id: 0, token: "", name, phone, email, intent, lot, source } as unknown as LeadRow;
-    const [mail] = await Promise.allSettled([
-      notifyAdminNewLead(fallback, `${message}\n\n(Atenção: esta lead não ficou guardada no centro de leads porque a base de dados não respondeu. Contacte diretamente.)`, base),
-      capiLead(phone, "new"),  // sem base de dados não sabemos se é repetida; conta como nova
-    ]);
-    if (!(mail.status === "fulfilled" && mail.value)) {
+    const mailed = await notifyAdminNewLead(fallback, `${message}\n\n(Atenção: esta lead não ficou guardada no centro de leads porque a base de dados não respondeu. Contacte diretamente.)`, base).catch(() => false);
+    if (!mailed) {
       return NextResponse.json({ error: "Não foi possível enviar agora. Fale connosco por WhatsApp ou telefone." }, { status: 503 });
     }
+    await capiLead(phone).catch(() => null); // a mensagem chegou ao André por email: conta
     return NextResponse.json({ ok: true, token: null, firstName: name.split(" ")[0], hasEmail: false, countLead: true });
   }
 
@@ -112,8 +123,8 @@ export async function POST(req: NextRequest) {
     isNew ? notifyAdminNewLead(lead, message, base) : notifyAdminLeadReply(lead, message, base),
     isNew ? emailLeadConfirmation(lead, chatUrl) : Promise.resolve(false),
     isNew ? smsLeadConfirmation(lead, chatUrl) : Promise.resolve(false),
-    // Só a 1.ª mensagem de cada pessoa é um Lead para o Meta (as seguintes são conversa)
-    isNew ? capiLead(String(lead.id), "new") : Promise.resolve(null),
+    // A mensagem ficou guardada no centro de leads: só aqui conta como Lead (e só a 1.ª de cada pessoa)
+    isNew ? capiLead(String(lead.id)) : Promise.resolve(null),
   ]);
 
   return NextResponse.json({ ok: true, token: lead.token, firstName: name.split(" ")[0], hasEmail: Boolean(lead.email), countLead: isNew });

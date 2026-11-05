@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { DEFAULT_MESSAGE, META_LEAD_VALUE, PROMOTER, QUICK_INTENTS } from "@/lib/config";
-import { getCookie, getFbc, getSource, leadAlreadySent, markLeadSent, newEventId, responseWindow, saveChat, track } from "@/lib/track";
+import { DEFAULT_MESSAGE, PROMOTER, QUICK_INTENTS } from "@/lib/config";
+import { getCookie, getFbc, getSource, newEventId, responseWindow, saveChat, track } from "@/lib/track";
 import { IconCheck, IconLock, IconSend, IconWhatsApp } from "../icons";
 import { useLanding } from "./LandingProvider";
 
@@ -97,11 +97,7 @@ export default function Composer({ variant, id }: Props) {
         setError({ msg: data.error || "Não foi possível enviar. Tente novamente ou use o WhatsApp.", field: data.field });
         return;
       }
-      if (data.countLead && !leadAlreadySent(phone)) {
-        track("Lead", { content_name: "Domaine XXV", content_category: intent || "mensagem", ...META_LEAD_VALUE }, eventId);
-        markLeadSent(phone);
-        if (intent === "visita") track("Schedule", { content_name: "visita_terreno" });
-      }
+      // O Lead NÃO é contado aqui (no botão). É enviado ao Meta pelo servidor só quando a mensagem fica guardada.
       if (data.token) saveChat(data.token, data.firstName);
       try {
         localStorage.setItem(ME_KEY, JSON.stringify({ name, phone, email }));

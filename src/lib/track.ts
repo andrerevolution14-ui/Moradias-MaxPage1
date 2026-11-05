@@ -42,24 +42,6 @@ export function trackingAllowed() {
   return !h.endsWith(".vercel.app");
 }
 
-const LEAD_KEY = "dx_lead_sent";
-function phoneKey(p: string) {
-  return p.replace(/\D/g, "").slice(-9);
-}
-export function leadAlreadySent(phone: string) {
-  try {
-    return (JSON.parse(localStorage.getItem(LEAD_KEY) || "[]") as string[]).includes(phoneKey(phone));
-  } catch {
-    return false;
-  }
-}
-export function markLeadSent(phone: string) {
-  try {
-    const list = JSON.parse(localStorage.getItem(LEAD_KEY) || "[]") as string[];
-    localStorage.setItem(LEAD_KEY, JSON.stringify([...new Set([...list, phoneKey(phone)])].slice(-20)));
-  } catch {}
-}
-
 export function track(
   event: string,
   customData?: Record<string, unknown>,
