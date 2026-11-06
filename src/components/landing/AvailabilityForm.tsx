@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getCookie, getFbc, getSource, newEventId, trackingAllowed } from "@/lib/track";
-import { IconLock } from "../icons";
+import { IconCheck, IconLock } from "../icons";
+import GuideCover from "./GuideCover";
+import { PROMOTER } from "@/lib/config";
 import { useLanding } from "./LandingProvider";
 
 const ME_KEY = "dx_me";
@@ -14,11 +16,35 @@ export function AvailabilityTitle({ className = "" }: { className?: string }) {
   const { available } = useLanding();
   const t =
     available === 0
-      ? "As 3 moradias estão reservadas. Quer entrar na lista de espera?"
+      ? "As 3 moradias estão reservadas. Entre na lista de espera."
       : available === 1
-        ? "Resta apenas 1 moradia disponível. Quer saber se continua livre?"
-        : `Restam apenas ${available} moradias disponíveis. Quer saber se o lote da sua preferência continua livre?`;
+        ? "Resta apenas 1 moradia. Verifique se continua livre."
+        : `Restam apenas ${available} moradias. Verifique se o seu lote continua livre.`;
   return <h2 className={className}>{t}</h2>;
+}
+
+const OFFER = ["7 passos, do sinal às chaves", "Checklist de documentos", "Sinais de alerta e custos"];
+
+/** Título + isca (guia gratuito com capa de produto digital) */
+export function Offer({ size = "md", titleClass = "" }: { size?: "sm" | "md"; titleClass?: string }) {
+  const sm = size === "sm";
+  return (
+    <div>
+      <AvailabilityTitle className={titleClass || "text-[19px] font-bold leading-snug tracking-tight [text-wrap:balance]"} />
+      <div className={`mt-3 flex items-center rounded-xl bg-[linear-gradient(135deg,#f3f5f8,#e8eef5)] ${sm ? "gap-3 p-3" : "gap-4 p-3.5 pr-4"}`}>
+        <GuideCover size={sm ? "sm" : "md"} />
+        <div className="min-w-0">
+          <div className="text-[11.5px] font-bold uppercase tracking-[0.08em] text-[#9a7a2e]">Bónus grátis</div>
+          <div className={`mt-0.5 font-bold leading-snug ${sm ? "text-[14px]" : "text-[15px]"}`}>Guia: Como Comprar em Planta com Segurança</div>
+          <ul className={`mt-1.5 space-y-0.5 leading-snug text-muted ${sm ? "text-[12px]" : "text-[12.5px]"}`}>
+            {OFFER.map((o) => (
+              <li key={o} className="flex items-start gap-1.5"><IconCheck size={13} className="mt-[2px] shrink-0 text-[#2fa863]" /> {o}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -89,11 +115,11 @@ export default function AvailabilityForm({ id, compact = false }: { id: string; 
   }
 
   return (
-    <form onSubmit={submit} noValidate>
+    <form onSubmit={submit} noValidate autoComplete="on" method="post" action="#">
       <div className={`grid gap-2.5 ${compact ? "" : "sm:grid-cols-2"}`}>
         <label className="block">
           <span className="mb-1 block text-[13px] font-semibold">Nome</span>
-          <input className="field" id={`nome-${id}`} name="name" autoComplete="name" autoCapitalize="words" enterKeyHint="next" value={name} onChange={(e) => setName(e.target.value)} aria-invalid={error?.field === "name"} placeholder="O seu nome" />
+          <input className="field" id={`nome-${id}`} name="name" type="text" autoComplete="name" autoCapitalize="words" enterKeyHint="next" value={name} onChange={(e) => setName(e.target.value)} aria-invalid={error?.field === "name"} placeholder="O seu nome" />
         </label>
         <label className="block">
           <span className="mb-1 block text-[13px] font-semibold">Telemóvel</span>
@@ -104,15 +130,18 @@ export default function AvailabilityForm({ id, compact = false }: { id: string; 
 
       {error && <p className="mt-3 rounded-lg bg-orange-50 px-3 py-2 text-sm text-orange-800" role="alert">{error.msg}</p>}
 
-      <button type="submit" disabled={sending} className="btn btn-primary mt-4 w-full whitespace-normal py-3.5 text-[15px] leading-snug disabled:opacity-70">
-        {sending ? "A verificar…" : "Verificar Disponibilidade e Ver Próximos Passos"}
+      <button type="submit" disabled={sending} className="btn btn-primary mt-3.5 w-full py-3 text-[15px] disabled:opacity-70">
+        {sending ? "A verificar…" : "Verificar disponibilidade"}
       </button>
 
       <p className="mt-3 flex items-start gap-1.5 text-[12px] leading-snug text-muted">
         <IconLock size={13} className="mt-0.5 shrink-0" />
         <span>
-          Sem compromisso. Os seus dados servem só para o André lhe confirmar a disponibilidade. <Link href="/privacidade" className="underline">Privacidade</Link>
+          Sem compromisso. Os seus dados servem só para lhe confirmar a disponibilidade. <Link href="/privacidade" className="underline">Privacidade</Link>
         </span>
+      </p>
+      <p className="mt-1.5 text-[12px] text-muted">
+        Prefere falar já? <a href={PROMOTER.phoneHref} className="underline">Ligue {PROMOTER.phoneDisplay}</a>
       </p>
     </form>
   );

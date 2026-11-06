@@ -4,9 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BUILDER, DEFAULT_LOTS, PROJECT, PROMOTER, formatEUR, type Lot } from "@/lib/config";
+import { DEFAULT_LOTS, PROMOTER, type Lot } from "@/lib/config";
 import { responseWindow, track } from "@/lib/track";
-import { IconArrowL, IconCheck, IconChevron, IconDoc, IconKey, IconWhatsApp } from "@/components/icons";
+import { IconArrowL, IconCheck, IconDoc, IconWhatsApp } from "@/components/icons";
+import GuideCover from "@/components/landing/GuideCover";
 
 const WA_TEXT = "Olá André! Acabei de verificar a disponibilidade no site e gostava de falar sobre os próximos passos para o Domaine XXV.";
 
@@ -22,64 +23,12 @@ const SUMMARY = [
   ["Contrato a preço fechado", "335.000 € chave na mão, prazo de 10 meses e penalizações em contrato."],
 ];
 
-const down = formatEUR(PROJECT.price * PROJECT.downPaymentPct);
-
-const GUIDE: { t: string; p: string[] }[] = [
-  {
-    t: "1. Reunião e visita ao terreno",
-    p: [
-      "Começa por uma conversa com o André, o promotor do projeto: o que procura, o seu prazo e a sua situação de financiamento.",
-      "Visita o lote em Oliveirinha, vê o projeto aprovado pela Câmara Municipal de Aveiro e esclarece todas as dúvidas. Sem custos e sem compromisso.",
-    ],
-  },
-  {
-    t: "2. Simulação de crédito gratuita",
-    p: [
-      "Antes de assumir qualquer compromisso, faz um estudo de viabilidade bancária gratuito, acompanhado por uma intermediária de crédito habilitada.",
-      "Numa compra em planta, o crédito habitação pode financiar até 90%. O banco liberta o dinheiro por fases, à medida que a obra avança, segundo as suas avaliações.",
-    ],
-  },
-  {
-    t: "3. Reserva e contrato-promessa (CPCV)",
-    p: [
-      `Com o crédito encaminhado, reserva a moradia com uma única entrada de 10% (${down}), imputada ao preço total de ${formatEUR(PROJECT.price)}.`,
-      "O contrato define as condições de devolução do sinal, incluindo se o financiamento não for aprovado.",
-    ],
-  },
-  {
-    t: "4. Escritura do terreno em seu nome",
-    p: ["O lote é escriturado em seu nome antes de a obra começar. Desde esse dia é o proprietário do terreno onde a sua casa vai ser construída."],
-  },
-  {
-    t: "5. Construção a preço fechado",
-    p: [
-      `Construção em aço leve (LSF) pelo ${BUILDER.name}, ao preço fechado no contrato de empreitada, com prazo de 10 meses e penalizações por atrasos imputáveis à construtora.`,
-      "Cerca de 33.500 € do preço só são pagos na fase final (retenção de boa execução). Não é um custo adicional.",
-      "Pode levar o seu engenheiro para fiscalizar a obra, com agendamento e regras de segurança.",
-    ],
-  },
-  {
-    t: "6. Entrega das chaves e garantias",
-    p: ["Recebe a moradia pronta a habitar, com as garantias legais e contratuais por escrito e o procedimento de assistência."],
-  },
-];
-
-const CHECKLIST = [
-  "O projeto já está aprovado pela Câmara?",
-  "O terreno fica em meu nome antes da obra?",
-  "O preço é fechado em contrato, com tudo o que inclui discriminado?",
-  "Há penalizações se a obra atrasar?",
-  "Posso ver as minutas dos contratos antes de assinar?",
-  "Posso levar um engenheiro independente à obra?",
-];
-
 export default function ThankYou() {
   const q = useSearchParams();
   const token = q.get("l");
   const first = (q.get("n") || "").replace(/[<>]/g, "").slice(0, 40);
   const [lots, setLots] = useState<Lot[]>(DEFAULT_LOTS);
   const [when, setWhen] = useState("ainda hoje");
-  const [guideOpen, setGuideOpen] = useState(false);
 
   useEffect(() => {
     setWhen(responseWindow());
@@ -140,16 +89,20 @@ export default function ThankYou() {
             </p>
           </div>
 
-          <button
-            onClick={() => {
-              setGuideOpen(true);
-              track("ViewContent", { content_name: "guia_compra_planta" });
-              setTimeout(() => document.getElementById("guia")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
-            }}
-            className="btn btn-primary mt-5 w-full py-4 text-[16px]"
+          <Link
+            href={`/guia${token ? `?l=${encodeURIComponent(token)}` : ""}`}
+            className="mt-5 block rounded-2xl bg-[linear-gradient(135deg,#f3f5f8,#e8eef5)] p-4 ring-1 ring-line transition hover:ring-brand/40"
           >
-            <IconDoc size={20} /> Abrir Guia Prático
-          </button>
+            <span className="flex items-center gap-4">
+              <GuideCover size="sm" />
+              <span className="min-w-0 flex-1">
+                <span className="block text-[12px] font-bold uppercase tracking-[0.08em] text-[#9a7a2e]">O seu guia gratuito</span>
+                <span className="mt-0.5 block text-[16px] font-bold leading-snug">Como Comprar em Planta com Segurança</span>
+                <span className="mt-1 block text-[12.5px] text-muted">7 passos · checklist · sinais de alerta</span>
+              </span>
+            </span>
+            <span className="btn btn-primary mt-4 w-full py-3 text-[15px]"><IconDoc size={18} /> Abrir Guia Prático</span>
+          </Link>
         </section>
 
         {/* Resumo em 3 passos (lê-se mesmo sem abrir o guia) */}
@@ -166,41 +119,6 @@ export default function ThankYou() {
               </li>
             ))}
           </ol>
-        </section>
-
-        {/* Guia completo, na própria página */}
-        <section id="guia" className="mt-4 scroll-mt-4 rounded-2xl border border-line bg-white">
-          <button onClick={() => setGuideOpen((v) => !v)} className="flex w-full items-center justify-between gap-3 p-5 text-left sm:p-6" aria-expanded={guideOpen}>
-            <span>
-              <span className="eyebrow">Guia prático</span>
-              <span className="mt-1 block text-[18px] font-bold leading-snug">Como Comprar em Planta com Segurança</span>
-            </span>
-            <IconChevron size={20} className={`shrink-0 text-muted transition ${guideOpen ? "rotate-180" : ""}`} />
-          </button>
-          {guideOpen && (
-            <div className="fade-in space-y-5 border-t border-line px-5 pb-6 pt-5 sm:px-6">
-              {GUIDE.map((g) => (
-                <div key={g.t}>
-                  <h3 className="font-semibold">{g.t}</h3>
-                  {g.p.map((x) => (
-                    <p key={x} className="mt-1.5 text-[15px] leading-relaxed text-[#2b3540]">{x}</p>
-                  ))}
-                </div>
-              ))}
-              <div className="rounded-xl bg-brand-soft p-4">
-                <h3 className="flex items-center gap-2 font-semibold text-brand-ink"><IconKey size={18} /> Perguntas a fazer a qualquer promotor</h3>
-                <ul className="mt-2 space-y-1.5 text-[14.5px] text-brand-ink">
-                  {CHECKLIST.map((c) => (
-                    <li key={c} className="flex items-start gap-2"><IconCheck size={16} className="mt-0.5 shrink-0" /> {c}</li>
-                  ))}
-                </ul>
-                <p className="mt-2 text-[13px] text-brand-ink/80">No Domaine XXV, a resposta a todas é sim.</p>
-              </div>
-              <p className="text-[12px] leading-snug text-muted">
-                Informação indicativa. As condições aplicáveis são as dos contratos assinados. Crédito sujeito a aprovação bancária.
-              </p>
-            </div>
-          )}
         </section>
 
         {/* Passo 3: WhatsApp */}

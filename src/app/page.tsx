@@ -9,8 +9,8 @@ import {
 } from "@/components/icons";
 import LandingProvider from "@/components/landing/LandingProvider";
 import Gallery from "@/components/landing/Gallery";
-import AvailabilityForm, { AvailabilityTitle } from "@/components/landing/AvailabilityForm";
-import { AvailabilitySubtitle } from "@/components/landing/ContactDialog";
+import AvailabilityForm, { Offer } from "@/components/landing/AvailabilityForm";
+import TrustMini from "@/components/landing/TrustMini";
 import ContactDialog from "@/components/landing/ContactDialog";
 import LotsTable from "@/components/landing/LotsTable";
 import Simulator, { MonthlyFrom } from "@/components/landing/Simulator";
@@ -477,22 +477,15 @@ function Faq() {
   );
 }
 
-/** Cartão fixo (computador): o formulário de disponibilidade já à vista. */
+/** Cartão fixo (computador): oferta + formulário já à vista + credibilidade. */
 function ContactCard() {
   return (
     <div className="rounded-2xl border border-line bg-white p-5 shadow-[0_10px_30px_rgba(21,32,43,0.08)]">
-      <AvailabilityTitle className="text-[18px] font-bold leading-snug tracking-tight [text-wrap:balance]" />
-      <AvailabilitySubtitle className="mt-2 text-[13.5px] leading-relaxed text-muted" />
+      <Offer size="sm" titleClass="text-[18px] font-bold leading-snug tracking-tight [text-wrap:balance]" />
       <div className="mt-4">
         <AvailabilityForm id="sidebar" compact />
       </div>
-      <div className="mt-4 flex items-center gap-3 border-t border-line pt-4">
-        <Image src={PROMOTER.avatar} alt={PROMOTER.name} width={44} height={44} className="h-11 w-11 rounded-full object-cover" />
-        <div className="min-w-0 text-[13px] leading-tight">
-          <div className="font-bold">{PROMOTER.name}</div>
-          <div className="text-muted">Promotor · {formatEUR(PROJECT.price)} chave na mão</div>
-        </div>
-      </div>
+      <TrustMini className="mt-4 border-t border-line pt-4" />
     </div>
   );
 }
@@ -500,15 +493,13 @@ function ContactCard() {
 function PromoterBlock() {
   return (
     <section id="disponibilidade" className="mt-12 bg-soft">
-      <div className="mx-auto flex max-w-[640px] flex-col items-center px-4 py-12 text-center lg:py-16">
-        <div className="relative h-28 w-28 overflow-hidden rounded-full ring-4 ring-white shadow-[0_10px_30px_rgba(21,32,43,0.12)]">
-          <Image src={PROMOTER.portrait} alt={PROMOTER.name} fill sizes="112px" quality={85} className="object-cover object-top" />
-        </div>
-        <p className="mt-3 text-[14px] text-muted"><b className="text-ink">{PROMOTER.name}</b> · Promotor do Domaine XXV</p>
-        <AvailabilityTitle className="mt-4 text-[24px] font-bold leading-tight tracking-tight [text-wrap:balance] sm:text-[30px]" />
-        <AvailabilitySubtitle className="mt-3 max-w-[52ch] text-[15.5px] leading-relaxed text-muted [text-wrap:balance]" />
-        <div className="mt-6 w-full max-w-[520px] rounded-2xl border border-line bg-white p-5 text-left">
-          <AvailabilityForm id="promoter_block" />
+      <div className="mx-auto max-w-[560px] px-4 py-12 lg:py-16">
+        <div className="rounded-2xl border border-line bg-white p-5 sm:p-6">
+          <Offer titleClass="text-[22px] font-bold leading-tight tracking-tight [text-wrap:balance] sm:text-[26px]" />
+          <div className="mt-4">
+            <AvailabilityForm id="promoter_block" />
+          </div>
+          <TrustMini className="mt-4 border-t border-line pt-4" />
         </div>
       </div>
     </section>

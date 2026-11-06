@@ -1,21 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { PROMOTER } from "@/lib/config";
 import { track } from "@/lib/track";
 import { IconPhone, IconX } from "../icons";
-import AvailabilityForm, { AvailabilityTitle } from "./AvailabilityForm";
+import AvailabilityForm, { Offer } from "./AvailabilityForm";
+import TrustMini from "./TrustMini";
 import { useLanding } from "./LandingProvider";
-
-/** Subtítulo do passo 1 (igual em todos os sítios) */
-export function AvailabilitySubtitle({ className = "" }: { className?: string }) {
-  return (
-    <p className={className}>
-      Preencha os dados abaixo para verificar a disponibilidade atualizada e aceder ao <b>Guia Passo a Passo: Como Comprar em Planta com Segurança</b>.
-    </p>
-  );
-}
 
 /**
  * Janela "Verificar disponibilidade" (abre a partir de qualquer botão da página).
@@ -63,15 +54,11 @@ export default function ContactDialog() {
         >
           <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-line lg:hidden" />
           <button onClick={closeSheet} className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-soft" aria-label="Fechar"><IconX size={18} /></button>
-          <AvailabilityTitle className="pr-10 text-[20px] font-bold leading-snug tracking-tight [text-wrap:balance]" />
-          <AvailabilitySubtitle className="mt-2 text-[14.5px] leading-relaxed text-muted" />
-          <div className="mt-3 flex items-center gap-2.5 text-[13px] text-muted">
-            <Image src={PROMOTER.avatar} alt={PROMOTER.name} width={32} height={32} className="h-8 w-8 rounded-full object-cover" />
-            <span>Confirmado pelo próprio promotor, <b className="text-ink">{PROMOTER.name}</b></span>
-          </div>
+          <div className="pr-10"><Offer size="sm" titleClass="text-[19px] font-bold leading-snug tracking-tight [text-wrap:balance]" /></div>
           <div className="mt-4">
             <AvailabilityForm id="dialog" compact />
           </div>
+          <TrustMini className="mt-4 border-t border-line pt-4" />
         </div>
       </div>
     </>

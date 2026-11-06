@@ -193,3 +193,9 @@ input[type="range"] {
   .glass { background: rgba(15, 24, 34, 0.85); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
 
+@media print {
+  body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .fixed { display: none !important; }
+  @page { margin: 14mm; }
+}
+
