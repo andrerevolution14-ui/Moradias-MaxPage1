@@ -47,6 +47,7 @@ export const DESIGNERS = {
   legal: "Risco Calculado – Arquitectura e Engenharia, Lda.",
   where: "Mealhada · Aveiro",
   instagram: "https://www.instagram.com/riscocalculado.arq/",
+  logo: "/brand/risco-calculado.webp",
   // Preencher com os nomes e percurso para aparecerem no site
   architect: "", // ex.: "Arq.ª Nome Apelido · OA n.º ..."
   engineer: "", // ex.: "Eng. Nome Apelido · OE n.º ..."
@@ -58,12 +59,12 @@ export const FINANCING_BANK = "";
 
 // Marcas previstas no caderno de encargos
 export const BRANDS = [
-  { name: "Cortizo", use: "Caixilharia em alumínio" },
-  { name: "Daikin", use: "Climatização e bomba de calor" },
-  { name: "Bosch", use: "Eletrodomésticos" },
-  { name: "Teka", use: "Equipamentos de cozinha" },
-  { name: "Margres", use: "Cerâmica e revestimentos" },
-  { name: "Castro Wood Floors", use: "Pavimento em madeira" },
+  { name: "Cortizo", use: "Caixilharia em alumínio", logo: "/brand/cortizo.webp", w: 984, h: 264 },
+  { name: "Daikin", use: "Climatização e bomba de calor", logo: "/brand/daikin.webp", w: 980, h: 222 },
+  { name: "Bosch", use: "Eletrodomésticos", logo: "/brand/bosch.webp", w: 980, h: 235 },
+  { name: "Teka", use: "Equipamentos de cozinha", logo: "/brand/teka.webp", w: 1056, h: 1056 },
+  { name: "Margres", use: "Cerâmica e revestimentos", logo: "/brand/margres.webp", w: 980, h: 239 },
+  { name: "Castro Wood Floors", use: "Pavimento em madeira", logo: "/brand/castro-wood-floors.webp", w: 408, h: 82 },
 ];
 
 export type LotStatus = "disponivel" | "reservado" | "vendido";

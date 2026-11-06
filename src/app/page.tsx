@@ -190,7 +190,8 @@ function Description() {
           Em cima, uma suite, dois quartos e casa de banho completa. E um <b>sótão de 34 m²</b> para escritório, quarto de brincar ou arrumação.
         </p>
         <p>
-          Entregue pronta a habitar: cozinha equipada, ar condicionado, bomba de calor A+ e caixilharia com corte térmico. Os acabamentos escolhe-os consigo.
+          Entregue pronta a habitar, com marcas de referência: caixilharia Cortizo, climatização Daikin, cozinha Bosch e Teka, cerâmica Margres
+          e pavimento Castro Wood Floors. Projeto da Risco Calculado, construção do Grupo Freitas Renovações. Os acabamentos escolhe-os consigo.
         </p>
       </div>
     </section>
@@ -254,7 +255,7 @@ function Details() {
     ["Estrutura", "Aço leve (LSF)"],
     ["Financiamento", "Crédito habitação até 90%"],
     ["Construtora", BUILDER.licence ? `${BUILDER.name} · Alvará n.º ${BUILDER.licence}` : BUILDER.name],
-    ["Projeto", `${DESIGNERS.firm} (arquitetura e engenharia)`],
+    ["Projeto", DESIGNERS.firm],
     ...(FINANCING_BANK ? [["Financiamento", `Disponível com ${FINANCING_BANK}`]] : []),
   ];
   const features = [
@@ -283,8 +284,11 @@ function Details() {
       <h3 className="mb-3 mt-7 font-semibold">Marcas incluídas</h3>
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         {BRANDS.map((b) => (
-          <li key={b.name} className="rounded-lg border border-line bg-white px-3 py-2.5">
-            <div className="text-[15px] font-bold tracking-tight">{b.name}</div>
+          <li key={b.name} className="flex flex-col gap-2 rounded-lg border border-line bg-white px-3 py-3">
+            <div className="flex h-9 items-center">
+              {/* logótipos já otimizados (WebP sem perdas, poucos KB): servidos tal como estão para máxima nitidez */}
+              <Image src={b.logo} alt={b.name} width={b.w} height={b.h} unoptimized className="h-auto max-h-9 w-auto max-w-[130px] object-contain" />
+            </div>
             <div className="text-[12.5px] leading-snug text-muted">{b.use}</div>
           </li>
         ))}
@@ -382,8 +386,8 @@ function Builder() {
           </div>
         </div>
         <div className="flex items-center gap-4 rounded-xl border border-line bg-white p-3.5">
-          <div className="grid h-20 w-20 shrink-0 place-items-center rounded-lg bg-soft text-center font-serif text-[13px] font-semibold leading-tight text-ink">
-            Risco<br />Calculado
+          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-white">
+            <Image src={DESIGNERS.logo} alt={DESIGNERS.firm} fill sizes="80px" unoptimized className="object-contain p-1" />
           </div>
           <div className="min-w-0">
             <div className="eyebrow">Arquitetura e engenharia</div>
