@@ -7,6 +7,7 @@ import { PROJECT, PROMOTER, formatEUR } from "@/lib/config";
 import { track } from "@/lib/track";
 import GuideCover from "@/components/landing/GuideCover";
 import { IconArrowL, IconCheck, IconDoc, IconShield, IconWhatsApp } from "@/components/icons";
+import { Affordability, Calendar, Clauses, Compare, CostlyMistakes, Inspection } from "./tools";
 
 /* ------------------------------------------------------------------ */
 /* Conteúdo (válido para qualquer compra em planta em Portugal)        */
@@ -126,13 +127,17 @@ const GLOSSARY = [
 ];
 
 const TOC = [
-  ["planta", "Comprar em planta"],
+  ["planta", "Planta, usado ou construir?"],
+  ["calculadora", "Quanto posso comprar?"],
   ["passos", "Os 7 passos"],
   ["dinheiro", "Para onde vai o dinheiro"],
-  ["documentos", "Checklist de documentos"],
+  ["documentos", "Documentos"],
+  ["clausulas", "Cláusulas do CPCV"],
   ["alertas", "Sinais de alerta"],
-  ["custos", "Custos a contar"],
-  ["perguntas", "Perguntas ao promotor"],
+  ["erros", "Erros caros"],
+  ["custos", "Custos"],
+  ["vistoria", "Vistoria de entrega"],
+  ["perguntas", "Perguntas"],
   ["glossario", "Glossário"],
 ];
 
@@ -191,7 +196,7 @@ export default function Guide() {
               O que verificar, quando pagar e como se proteger, do primeiro contacto até às chaves. Serve para qualquer compra em planta em Portugal.
             </p>
             <div className="mt-4 flex flex-wrap gap-2 text-[12.5px] text-white/80">
-              {["7 passos", `Checklist de ${DOCS.length} documentos`, `${ALERTS.length} sinais de alerta`, "10 min de leitura"].map((x) => (
+              {["Calculadora", "7 passos", "Cláusulas do CPCV", "2 checklists", "10 min de leitura"].map((x) => (
                 <span key={x} className="rounded-full bg-white/10 px-2.5 py-1 ring-1 ring-white/15">{x}</span>
               ))}
             </div>
@@ -210,30 +215,17 @@ export default function Guide() {
         </nav>
 
         {/* 1 */}
-        <Chapter id="planta" n={1} title="Comprar em planta: o que ganha e o que tem de acautelar">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl bg-[#ecf7f0] p-4">
-              <div className="font-semibold text-[#1a6b3c]">O que ganha</div>
-              <ul className="mt-2 space-y-1.5 text-[14.5px] text-[#1f4d33]">
-                {["Preço de hoje para uma casa entregue mais tarde", "Casa nova, eficiente e com garantia", "Escolhe acabamentos antes de construir", "Pagamentos repartidos ao longo da obra"].map((x) => (
-                  <li key={x} className="flex gap-2"><IconCheck size={16} className="mt-0.5 shrink-0" /> {x}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-xl bg-[#fff4ec] p-4">
-              <div className="font-semibold text-[#9a4a14]">O que tem de acautelar</div>
-              <ul className="mt-2 space-y-1.5 text-[14.5px] text-[#6b3a17]">
-                {["Atrasos na obra", "Derrapagens no preço", "Construtora sem capacidade", "Contratos pouco claros"].map((x) => (
-                  <li key={x} className="flex gap-2"><span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#d06a2a]" /> {x}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <p className="mt-3 text-[15px] leading-relaxed">Todos estes riscos se controlam com três coisas: <b>documentos verificados</b>, <b>contratos claros</b> e <b>pagamentos que acompanham a obra</b>. É disso que trata este guia.</p>
+        <Chapter id="planta" n={1} title="Planta, usado ou construir sozinho?">
+          <Compare />
+          <p className="mt-3 text-[15px] leading-relaxed">Os riscos da planta (atrasos, derrapagens, contratos pouco claros) controlam-se com <b>documentos verificados</b>, <b>contratos claros</b> e <b>pagamentos que acompanham a obra</b>.</p>
         </Chapter>
 
         {/* 2 */}
-        <Chapter id="passos" n={2} title="O processo em 7 passos">
+        <Chapter id="calculadora" n={2} title="Quanto posso comprar?">
+          <Affordability token={token} />
+        </Chapter>
+
+        <Chapter id="passos" n={3} title="O processo em 7 passos">
           <ol className="relative">
             {STEPS.map((s, i) => (
               <li key={s.t} className="relative flex gap-4 pb-6 last:pb-0">
@@ -255,10 +247,12 @@ export default function Guide() {
               </li>
             ))}
           </ol>
+          <h3 className="mb-3 mt-6 font-semibold">O meu calendário</h3>
+          <Calendar />
         </Chapter>
 
         {/* 3 */}
-        <Chapter id="dinheiro" n={3} title="Para onde vai o seu dinheiro">
+        <Chapter id="dinheiro" n={4} title="Para onde vai o seu dinheiro">
           <p className="text-[15px] leading-relaxed">Numa compra em planta bem feita, o dinheiro <b>acompanha a obra</b>. Exemplo com uma casa de {formatEUR(price)}:</p>
           <div className="mt-4 overflow-hidden rounded-xl border border-line">
             <div className="flex h-14 text-[12px] font-semibold text-white">
@@ -294,7 +288,7 @@ export default function Guide() {
         </Chapter>
 
         {/* 4 */}
-        <Chapter id="documentos" n={4} title="Checklist: documentos a pedir antes de pagar">
+        <Chapter id="documentos" n={5} title="Checklist: documentos a pedir antes de pagar">
           <div className="mb-3 flex items-center gap-3">
             <div className="h-2 flex-1 overflow-hidden rounded-full bg-soft">
               <div className="h-full rounded-full bg-[#2fa863] transition-all" style={{ width: `${(checked.length / DOCS.length) * 100}%` }} />
@@ -317,8 +311,12 @@ export default function Guide() {
           <p className="mt-2 text-[12px] text-muted">Vá marcando à medida que recebe cada documento. Fica guardado neste dispositivo.</p>
         </Chapter>
 
+        <Chapter id="clausulas" n={6} title="4 cláusulas a exigir no CPCV">
+          <Clauses />
+        </Chapter>
+
         {/* 5 */}
-        <Chapter id="alertas" n={5} title={`${ALERTS.length} sinais de alerta`}>
+        <Chapter id="alertas" n={7} title={`${ALERTS.length} sinais de alerta`}>
           <ul className="grid gap-2 sm:grid-cols-2">
             {ALERTS.map((a) => (
               <li key={a} className="flex items-start gap-2.5 rounded-xl border border-[#f2c9b1] bg-[#fff4ec] p-3 text-[14.5px] text-[#6b3a17]">
@@ -328,8 +326,12 @@ export default function Guide() {
           </ul>
         </Chapter>
 
+        <Chapter id="erros" n={8} title="Os 5 erros mais caros">
+          <CostlyMistakes />
+        </Chapter>
+
         {/* 6 */}
-        <Chapter id="custos" n={6} title="Custos a contar para além do preço">
+        <Chapter id="custos" n={9} title="Custos a contar para além do preço">
           <div className="overflow-hidden rounded-xl border border-line">
             <table className="w-full text-left text-[13.5px]">
               <thead className="bg-soft text-[11.5px] uppercase tracking-wide text-muted">
@@ -348,8 +350,12 @@ export default function Guide() {
           </div>
         </Chapter>
 
+        <Chapter id="vistoria" n={10} title="Checklist da vistoria de entrega">
+          <Inspection />
+        </Chapter>
+
         {/* 7 */}
-        <Chapter id="perguntas" n={7} title="6 perguntas a fazer a qualquer promotor">
+        <Chapter id="perguntas" n={11} title="6 perguntas a fazer a qualquer promotor">
           <div className="rounded-xl bg-brand-soft p-4">
             <ol className="space-y-2 text-[15px] text-brand-ink">
               {QUESTIONS.map((x, i) => (
@@ -361,7 +367,7 @@ export default function Guide() {
         </Chapter>
 
         {/* Glossário */}
-        <Chapter id="glossario" n={8} title="Glossário rápido">
+        <Chapter id="glossario" n={12} title="Glossário rápido">
           <dl className="grid gap-2 sm:grid-cols-2">
             {GLOSSARY.map(([t, d]) => (
               <div key={t} className="rounded-xl border border-line bg-white p-3">

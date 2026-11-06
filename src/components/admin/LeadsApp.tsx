@@ -17,6 +17,7 @@ type LeadListItem = {
   created_at: string;
   last_message_at: string;
   whatsapp_at: string | null;
+  affordability: { income: number; debts: number; years: number; rate: number; maxLoan: number; fits: boolean } | null;
   last_message: string | null;
   last_sender: "lead" | "admin" | null;
 };
@@ -249,6 +250,11 @@ function Dashboard({ sms, config, onLogout }: { sms: boolean; config: Config | n
                           <span className="rounded px-1.5 py-0.5 text-[10.5px] font-semibold text-white" style={{ background: st?.color || "#666" }}>{st?.label || l.status}</span>
                           {l.last_sender === "lead" && <span className="text-[10.5px] font-semibold text-orange-600">por responder</span>}
                           {l.whatsapp_at && <span className="rounded bg-[#1fae5b] px-1.5 py-0.5 text-[10.5px] font-semibold text-white">abriu WhatsApp</span>}
+                          {l.affordability && (
+                            <span className={`rounded px-1.5 py-0.5 text-[10.5px] font-semibold ${l.affordability.fits ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
+                              {l.affordability.fits ? "orçamento ok" : "orçamento curto"}
+                            </span>
+                          )}
                           {l.lot && <span className="text-[10.5px] text-muted">{l.lot}</span>}
                         </div>
                       </div>
@@ -372,6 +378,12 @@ function LeadDetail({ id, sms, onBack, onChange }: { id: number; sms: boolean; o
               {lead.email && <span>{lead.email}</span>}
               <span>desde {fullDate(lead.created_at)}</span>
               {lead.whatsapp_at && <span className="font-semibold text-[#1a8f4b]">abriu o WhatsApp · {fullDate(lead.whatsapp_at)}</span>}
+              {lead.affordability && (
+                <span className={`font-semibold ${lead.affordability.fits ? "text-emerald-700" : "text-amber-700"}`}>
+                  Calculadora: {lead.affordability.income.toLocaleString("pt-PT")} €/mês líquidos
+                  {lead.affordability.debts ? ` · ${lead.affordability.debts.toLocaleString("pt-PT")} € em prestações` : ""} · crédito máx. ≈ {lead.affordability.maxLoan.toLocaleString("pt-PT")} € · {lead.affordability.fits ? "cabe no orçamento" : "não chega (sozinho)"}
+                </span>
+              )}
             </div>
           </div>
           <button onClick={() => setShowInfo((s) => !s)} className="shrink-0 rounded-lg border border-line px-2.5 py-1.5 text-[12.5px] font-medium hover:bg-soft">{showInfo ? "Fechar" : "Detalhes"}</button>

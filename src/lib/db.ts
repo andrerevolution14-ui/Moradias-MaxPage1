@@ -60,6 +60,7 @@ async function ensureSchema(sql: ReturnType<typeof postgres>) {
     CREATE INDEX IF NOT EXISTS leads_last_msg_idx ON leads (last_message_at DESC);
     CREATE INDEX IF NOT EXISTS leads_ip_created_idx ON leads (ip, created_at);
     ALTER TABLE leads ADD COLUMN IF NOT EXISTS whatsapp_at TIMESTAMPTZ;
+    ALTER TABLE leads ADD COLUMN IF NOT EXISTS affordability JSONB;
 
     CREATE TABLE IF NOT EXISTS messages (
       id          SERIAL PRIMARY KEY,
@@ -97,6 +98,7 @@ export type LeadRow = {
   updated_at: Date;
   last_message_at: Date;
   whatsapp_at: Date | null;
+  affordability: { income: number; debts: number; years: number; rate: number; maxLoan: number; fits: boolean; at: string } | null;
 };
 
 export type MessageRow = {

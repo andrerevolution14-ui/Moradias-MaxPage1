@@ -23,7 +23,7 @@ export function AvailabilityTitle({ className = "" }: { className?: string }) {
   return <h2 className={className}>{t}</h2>;
 }
 
-const OFFER = ["7 passos, do sinal às chaves", "Checklist de documentos", "Sinais de alerta e custos"];
+const OFFER = ["Calculadora: quanto pode comprar", "7 passos e 2 checklists", "Cláusulas a exigir no contrato"];
 
 /** Título + isca (guia gratuito com capa de produto digital) */
 export function Offer({ size = "md", titleClass = "" }: { size?: "sm" | "md"; titleClass?: string }) {
