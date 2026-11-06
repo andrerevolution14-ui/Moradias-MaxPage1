@@ -188,7 +188,6 @@ input[type="range"] {
 .glass-bg {
   filter: blur(48px) saturate(1.5) brightness(0.9);
   transform: translateZ(0);
-  animation: fade-in 0.45s ease-out;
 }
 @media (prefers-reduced-transparency: reduce) {
   .glass { background: rgba(15, 24, 34, 0.85); -webkit-backdrop-filter: none; backdrop-filter: none; }

@@ -6,6 +6,18 @@ import { IconArrowL, IconArrowR, IconX } from "../icons";
 
 export type Pic = { src: string; alt: string };
 
+/** Versão minúscula (128 px) de cada foto para o fundo de vidro. URL fixo = fica em cache e aparece de imediato. */
+export const glassSrc = (src: string) => `/_next/image?url=${encodeURIComponent(src)}&w=128&q=75`;
+
+/** Pré-carrega os fundos de vidro (≈3 KB cada) quando a página está livre. */
+export function preloadGlass(srcs: string[]) {
+  if (typeof window === "undefined") return;
+  const run = () => srcs.forEach((s) => { const im = new window.Image(); im.decoding = "async"; im.src = glassSrc(s); });
+  const w = window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void };
+  if (w.requestIdleCallback) w.requestIdleCallback(run, { timeout: 2500 });
+  else setTimeout(run, 1200);
+}
+
 /**
  * Visualizador em ecrã inteiro, dentro da página.
  * As fotos ficam lado a lado numa faixa com "snap": o dedo e as setas fazem-nas deslizar suavemente.
@@ -98,12 +110,21 @@ export default function Lightbox({ pics, index, onClose, zoomable = false }: { p
   const pic = pics[i];
 
   return (
-    <div className="fade-in fixed inset-0 z-[60] flex flex-col overflow-hidden bg-[#0f1822]" role="dialog" aria-modal="true" aria-label={pic.alt}>
+    <div className="fade-in fixed inset-0 z-[60] flex flex-col overflow-hidden bg-[#1d1f22]" role="dialog" aria-modal="true" aria-label={pic.alt}>
       {/* Vidro líquido: a própria foto, muito desfocada, por trás de um véu translúcido */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div key={pic.src} className="glass-bg absolute -inset-[12%]">
-          <Image src={pic.src} alt="" fill sizes="320px" quality={75} className="object-cover" />
-        </div>
+        {pics.map((p, k) =>
+          near.has(k) ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={p.src}
+              src={glassSrc(p.src)}
+              alt=""
+              decoding="async"
+              className={`glass-bg absolute -inset-[12%] h-[124%] w-[124%] object-cover transition-opacity duration-300 ${k === i ? "opacity-100" : "opacity-0"}`}
+            />
+          ) : null,
+        )}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,24,34,0.35),rgba(15,24,34,0.55))]" />
       </div>
 

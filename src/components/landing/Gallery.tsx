@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
-import { GALLERY } from "@/lib/config";
+import { useEffect, useRef, useState } from "react";
+import { GALLERY, PLANS, WORKS } from "@/lib/config";
 import { trackOnce } from "@/lib/track";
 import { Icon360, IconArrowL, IconArrowR, IconCamera, IconPlan } from "../icons";
-import Lightbox from "./Lightbox";
+import Lightbox, { preloadGlass } from "./Lightbox";
 import Tour360Button from "./Tour360";
 
 /**
@@ -18,6 +18,11 @@ export default function Gallery() {
   const [open, setOpen] = useState<number | null>(null);
   const planIdx = GALLERY.findIndex((g) => g.plan);
   const [atStart, setAtStart] = useState(true);
+
+  // Fundos de vidro de todas as fotos ficam prontos antes de alguém abrir uma
+  useEffect(() => {
+    preloadGlass([...GALLERY, ...WORKS, ...PLANS].map((g) => g.src));
+  }, []);
 
   function onScroll() {
     const x = track.current?.scrollLeft || 0;
