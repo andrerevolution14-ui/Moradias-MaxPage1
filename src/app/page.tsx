@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  BUILDER, DISTANCES, FAQ, LOT_SPEC, PLANS, PROJECT, PROMOTER, ROOMS, TESTIMONIALS, WORKS, formatEUR,
+  BRANDS, BUILDER, DESIGNERS, DISTANCES, FAQ, FINANCING_BANK, LOT_SPEC, PLANS, PROJECT, PROMOTER, ROOMS, TESTIMONIALS, WORKS, formatEUR,
 } from "@/lib/config";
 import {
   IconArea, IconBath, IconBed, IconCar, IconCheck, IconChevron, IconClock, IconDoc, IconHammer, IconKey,
@@ -142,7 +142,7 @@ function Summary() {
       <div className="mt-5 flex items-center gap-3 rounded-xl bg-brand-soft px-4 py-3 text-[14px] leading-snug text-brand-ink">
         <IconKey size={20} className="shrink-0 text-brand" />
         <p>
-          <b>Venda em planta, com possibilidade de crédito habitação.</b>{" "}
+          <b>{FINANCING_BANK ? `Venda em planta, com financiamento disponível com ${FINANCING_BANK}.` : "Venda em planta, com possibilidade de crédito habitação."}</b>{" "}
           <a href="#simulador" className="font-semibold underline">Simular prestação</a>
         </p>
       </div>
@@ -253,7 +253,9 @@ function Details() {
     ["Estado", "Venda em planta · projeto aprovado"],
     ["Estrutura", "Aço leve (LSF)"],
     ["Financiamento", "Crédito habitação até 90%"],
-    ["Construtora", BUILDER.name],
+    ["Construtora", BUILDER.licence ? `${BUILDER.name} · Alvará n.º ${BUILDER.licence}` : BUILDER.name],
+    ["Projeto", `${DESIGNERS.firm} (arquitetura e engenharia)`],
+    ...(FINANCING_BANK ? [["Financiamento", `Disponível com ${FINANCING_BANK}`]] : []),
   ];
   const features = [
     "Cozinha totalmente equipada", "Ar condicionado multi-split", "Bomba de calor A+", "Corte térmico e vidro duplo",
@@ -274,6 +276,16 @@ function Details() {
         {features.map((f) => (
           <li key={f} className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-white px-2.5 py-1.5 text-[13.5px]">
             <IconCheck size={14} className="text-brand" /> {f}
+          </li>
+        ))}
+      </ul>
+
+      <h3 className="mb-3 mt-7 font-semibold">Marcas incluídas</h3>
+      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {BRANDS.map((b) => (
+          <li key={b.name} className="rounded-lg border border-line bg-white px-3 py-2.5">
+            <div className="text-[15px] font-bold tracking-tight">{b.name}</div>
+            <div className="text-[12.5px] leading-snug text-muted">{b.use}</div>
           </li>
         ))}
       </ul>
@@ -317,7 +329,7 @@ function Safety() {
   const items = [
     [IconKey, "O terreno fica em seu nome", "Compra o lote por escritura antes de a obra começar. Desde aí, é o proprietário do terreno."],
     [IconDoc, "Uma única entrada de 33.500 €", "10% do preço, imputados ao valor total. O contrato define as condições de devolução, incluindo se o crédito não for aprovado."],
-    [IconHammer, "Construção em aço leve (LSF)", "Estrutura em Light Steel Framing, executada pelo Grupo Freitas Renovações segundo o projeto e o caderno de encargos."],
+    [IconHammer, "Construção em aço leve (LSF)", `Estrutura em Light Steel Framing, executada pelo Grupo Freitas Renovações${BUILDER.licence ? ` (alvará n.º ${BUILDER.licence})` : ""} segundo o projeto e o caderno de encargos.`],
     [IconShield, "A obra não depende só do banco", "O crédito é libertado por fases. A construtora tem capacidade própria para manter a obra perante atrasos pontuais nos desembolsos."],
     [IconLock, "Retenção de boa execução", "Cerca de 33.500 € do preço só são pagos na fase final prevista no contrato. Não é um custo adicional."],
     [IconClock, "Prazo e penalizações em contrato", "10 meses a partir do início definido no contrato, com penalizações por atrasos imputáveis à construtora."],
@@ -356,16 +368,30 @@ function Safety() {
 function Builder() {
   return (
     <section id="construtora" className="sec">
-      <h2 className="sec-title">Quem constrói e quem aprovou</h2>
+      <h2 className="sec-title">Quem faz o projeto</h2>
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="flex items-center gap-4 rounded-xl border border-line bg-white p-3.5">
           <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-cta">
             <Image src={BUILDER.logo} alt={BUILDER.name} fill sizes="80px" className="object-contain p-2" />
           </div>
-          <div>
-            <div className="eyebrow">Construtora oficial</div>
+          <div className="min-w-0">
+            <div className="eyebrow">Construção</div>
             <div className="font-semibold">{BUILDER.name}</div>
+            {BUILDER.licence && <div className="mt-0.5 text-[13.5px] font-semibold text-ink">Alvará n.º {BUILDER.licence}</div>}
             <div className="text-[13px] text-muted">{BUILDER.blurb}</div>
+          </div>
+        </div>
+        <div className="flex items-center gap-4 rounded-xl border border-line bg-white p-3.5">
+          <div className="grid h-20 w-20 shrink-0 place-items-center rounded-lg bg-soft text-center font-serif text-[13px] font-semibold leading-tight text-ink">
+            Risco<br />Calculado
+          </div>
+          <div className="min-w-0">
+            <div className="eyebrow">Arquitetura e engenharia</div>
+            <div className="font-semibold">{DESIGNERS.firm}</div>
+            {DESIGNERS.architect && <div className="text-[13.5px]">{DESIGNERS.architect}</div>}
+            {DESIGNERS.engineer && <div className="text-[13.5px]">{DESIGNERS.engineer}</div>}
+            <div className="text-[13px] text-muted">{DESIGNERS.bio} {DESIGNERS.where}.</div>
+            <a href={DESIGNERS.instagram} target="_blank" rel="noopener" className="text-[13px] font-semibold text-brand underline">Ver trabalhos no Instagram</a>
           </div>
         </div>
         <div className="flex items-center gap-4 rounded-xl border border-line bg-white p-3.5">
@@ -378,6 +404,16 @@ function Builder() {
             <div className="text-[13px] text-muted">Projeto aprovado. Sem licenças pendentes.</div>
           </div>
         </div>
+        {FINANCING_BANK && (
+          <div className="flex items-center gap-4 rounded-xl border border-line bg-white p-3.5">
+            <div className="grid h-20 w-20 shrink-0 place-items-center rounded-lg bg-brand-soft px-1 text-center text-[13px] font-bold leading-tight text-brand-ink">{FINANCING_BANK}</div>
+            <div>
+              <div className="eyebrow">Financiamento</div>
+              <div className="font-semibold">Disponível com {FINANCING_BANK}</div>
+              <div className="text-[13px] text-muted">Projeto avaliado pelo banco. Crédito sujeito a aprovação.</div>
+            </div>
+          </div>
+        )}
       </div>
       <h3 className="mb-3 mt-6 font-semibold">Obras reais do Grupo Freitas</h3>
       <WorksStrip pics={WORKS} />

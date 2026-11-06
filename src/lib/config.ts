@@ -37,7 +37,34 @@ export const BUILDER = {
   logo: "/brand/freitas.webp",
   blurb:
     "Mais de 15 anos de construção e remodelação no distrito de Aveiro. Alvará de construção certificado.",
+  // N.º do alvará (IMPIC). Quando preenchido aparece na construtora, nas características e na segurança da compra.
+  licence: "",
 } as const;
+
+// Arquitetura e engenharia (projeto aprovado)
+export const DESIGNERS = {
+  firm: "Risco Calculado",
+  legal: "Risco Calculado – Arquitectura e Engenharia, Lda.",
+  where: "Mealhada · Aveiro",
+  instagram: "https://www.instagram.com/riscocalculado.arq/",
+  // Preencher com os nomes e percurso para aparecerem no site
+  architect: "", // ex.: "Arq.ª Nome Apelido · OA n.º ..."
+  engineer: "", // ex.: "Eng. Nome Apelido · OE n.º ..."
+  bio: "Gabinete de arquitetura e engenharia responsável pelo projeto aprovado.",
+};
+
+// Banco parceiro. Quando preenchido aparece "Financiamento disponível com …" no resumo, simulador, características e FAQ.
+export const FINANCING_BANK = "";
+
+// Marcas previstas no caderno de encargos
+export const BRANDS = [
+  { name: "Cortizo", use: "Caixilharia em alumínio" },
+  { name: "Daikin", use: "Climatização e bomba de calor" },
+  { name: "Bosch", use: "Eletrodomésticos" },
+  { name: "Teka", use: "Equipamentos de cozinha" },
+  { name: "Margres", use: "Cerâmica e revestimentos" },
+  { name: "Castro Wood Floors", use: "Pavimento em madeira" },
+];
 
 export type LotStatus = "disponivel" | "reservado" | "vendido";
 export type Lot = { id: string; label: string; status: LotStatus };

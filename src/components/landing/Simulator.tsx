@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { PROJECT, SIM_DEFAULTS, formatEUR, monthlyPayment } from "@/lib/config";
+import { FINANCING_BANK, PROJECT, SIM_DEFAULTS, formatEUR, monthlyPayment } from "@/lib/config";
 import { trackOnce } from "@/lib/track";
 import { useLanding } from "./LandingProvider";
 
@@ -64,7 +64,7 @@ export default function Simulator() {
               })
             }
           >
-            Pedir estudo bancário gratuito
+            {FINANCING_BANK ? `Pedir simulação com ${FINANCING_BANK}` : "Pedir estudo bancário gratuito"}
           </button>
         </div>
       </div>
