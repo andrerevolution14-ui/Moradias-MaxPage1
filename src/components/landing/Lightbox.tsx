@@ -1,26 +1,88 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { IconArrowL, IconArrowR, IconX } from "../icons";
 
 export type Pic = { src: string; alt: string };
 
-/** Visualizador em ecrã inteiro, dentro da página. Com zoom (botões, duplo toque) e deslizar entre imagens. */
+/**
+ * Visualizador em ecrã inteiro, dentro da página.
+ * As fotos ficam lado a lado numa faixa com "snap": o dedo e as setas fazem-nas deslizar suavemente.
+ * A foto aberta carrega com prioridade e as vizinhas (±2) são pré-carregadas.
+ * Com zoom (botões ou duplo toque).
+ */
 export default function Lightbox({ pics, index, onClose, zoomable = false }: { pics: Pic[]; index: number; onClose: () => void; zoomable?: boolean }) {
   const [i, setI] = useState(index);
   const [zoom, setZoom] = useState(1);
-  const touch = useRef<number | null>(null);
+  const [near, setNear] = useState<Set<number>>(() => new Set([index - 2, index - 1, index, index + 1, index + 2]));
+  const track = useRef<HTMLDivElement>(null);
+  const current = useRef(index);
+  const wheelLock = useRef(0);
   const n = pics.length;
+  const zoomed = zoom > 1;
+
+  // Abre logo na foto escolhida, sem animação
+  useLayoutEffect(() => {
+    const el = track.current;
+    if (el) el.scrollLeft = index * el.clientWidth;
+  }, [index]);
+
+  // Mantém o encaixe se o ecrã rodar / mudar de tamanho
+  useEffect(() => {
+    const onResize = () => {
+      const el = track.current;
+      if (el) el.scrollLeft = current.current * el.clientWidth;
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const onScroll = useCallback(() => {
+    const el = track.current;
+    if (!el || !el.clientWidth) return;
+    const k = Math.max(0, Math.min(n - 1, Math.round(el.scrollLeft / el.clientWidth)));
+    if (k !== current.current) {
+      current.current = k;
+      setI(k);
+      setNear((s) => {
+        if ([k - 2, k - 1, k, k + 1, k + 2].every((x) => s.has(x))) return s;
+        const next = new Set(s);
+        [k - 2, k - 1, k, k + 1, k + 2].forEach((x) => next.add(x));
+        return next;
+      });
+    }
+  }, [n]);
 
   const go = useCallback((d: number) => {
-    setZoom(1);
-    setI((x) => (x + d + n) % n);
+    const el = track.current;
+    if (!el) return;
+    const k = Math.max(0, Math.min(n - 1, current.current + d));
+    el.scrollTo({ left: k * el.clientWidth, behavior: "smooth" });
   }, [n]);
+
+  // Roda do rato (computador): uma volta = uma foto, com deslize suave
+  useEffect(() => {
+    const el = track.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (zoomed) return;
+      const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (Math.abs(d) < 8) return;
+      e.preventDefault();
+      const now = Date.now();
+      if (now - wheelLock.current < 450) return;
+      wheelLock.current = now;
+      go(d > 0 ? 1 : -1);
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [go, zoomed]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
+      if (zoomed) return;
       if (e.key === "ArrowRight") go(1);
       if (e.key === "ArrowLeft") go(-1);
     };
@@ -31,10 +93,9 @@ export default function Lightbox({ pics, index, onClose, zoomable = false }: { p
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
     };
-  }, [go, onClose]);
+  }, [go, onClose, zoomed]);
 
   const pic = pics[i];
-  const zoomed = zoom > 1;
 
   return (
     <div className="fade-in fixed inset-0 z-[60] flex flex-col bg-[#0f1822]" role="dialog" aria-modal="true" aria-label={pic.alt}>
@@ -51,34 +112,55 @@ export default function Lightbox({ pics, index, onClose, zoomable = false }: { p
         </div>
       </div>
 
-      <div
-        className={`relative flex-1 ${zoomed ? "overflow-auto" : "overflow-hidden"}`}
-        onTouchStart={(e) => { if (!zoomed) touch.current = e.touches[0].clientX; }}
-        onTouchEnd={(e) => {
-          if (touch.current === null || zoomed) return;
-          const dx = e.changedTouches[0].clientX - touch.current;
-          if (Math.abs(dx) > 50 && n > 1) go(dx < 0 ? 1 : -1);
-          touch.current = null;
-        }}
-        onDoubleClick={() => zoomable && setZoom((z) => (z > 1 ? 1 : 2.5))}
-      >
-        {zoomed ? (
-          <div style={{ width: `${zoom * 100}%` }} className="min-h-full">
-            {/* Em zoom usamos a imagem original para máxima nitidez */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={pic.src} alt={pic.alt} className="block h-auto w-full" />
+      <div className="relative min-h-0 flex-1">
+        {/* Faixa de fotos: desliza com o dedo, roda do rato ou setas */}
+        <div
+          ref={track}
+          onScroll={onScroll}
+          onDoubleClick={() => zoomable && setZoom(2.5)}
+          className={`no-scrollbar flex h-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain ${zoomed ? "invisible" : ""}`}
+        >
+          {pics.map((p, k) => (
+            <div key={p.src} className="relative h-full w-full shrink-0 snap-center snap-always">
+              {near.has(k) && (
+                <Image
+                  src={p.src}
+                  alt={p.alt}
+                  fill
+                  sizes="100vw"
+                  quality={85}
+                  priority={k === index}
+                  loading={k === index ? undefined : "eager"}
+                  draggable={false}
+                  className="select-none object-contain"
+                />
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Zoom: a foto atual em tamanho grande, arrastável */}
+        {zoomed && (
+          <div className="absolute inset-0 overflow-auto" onDoubleClick={() => setZoom(1)}>
+            <div style={{ width: `${zoom * 100}%` }} className="min-h-full">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={pic.src} alt={pic.alt} className="block h-auto w-full" />
+            </div>
           </div>
-        ) : (
-          <Image key={pic.src} src={pic.src} alt={pic.alt} fill sizes="100vw" quality={85} className="object-contain" />
         )}
+
         {n > 1 && !zoomed && (
           <>
-            <button onClick={() => go(-1)} className="absolute left-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/15 text-white" aria-label="Anterior"><IconArrowL /></button>
-            <button onClick={() => go(1)} className="absolute right-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/15 text-white" aria-label="Seguinte"><IconArrowR /></button>
+            {i > 0 && (
+              <button onClick={() => go(-1)} className="absolute left-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/15 text-white transition hover:bg-white/25" aria-label="Anterior"><IconArrowL /></button>
+            )}
+            {i < n - 1 && (
+              <button onClick={() => go(1)} className="absolute right-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/15 text-white transition hover:bg-white/25" aria-label="Seguinte"><IconArrowR /></button>
+            )}
           </>
         )}
       </div>
-      {zoomable && !zoomed && <p className="pb-[max(env(safe-area-inset-bottom),12px)] pt-2 text-center text-[12px] text-white/60">Toque duas vezes ou use + para ampliar</p>}
+      {zoomable && !zoomed && <p className="pb-[max(env(safe-area-inset-bottom),12px)] pt-2 text-center text-[12px] text-white/60">Deslize para ver as outras · toque duas vezes para ampliar</p>}
     </div>
   );
 }
