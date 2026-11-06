@@ -5,11 +5,12 @@ import {
 } from "@/lib/config";
 import {
   IconArea, IconBath, IconBed, IconCar, IconCheck, IconChevron, IconClock, IconDoc, IconHammer, IconKey,
-  IconLock, IconPin, IconShield, IconStar, IconTree,
+  IconLock, IconPhone, IconPin, IconShield, IconStar, IconTree,
 } from "@/components/icons";
 import LandingProvider from "@/components/landing/LandingProvider";
 import Gallery from "@/components/landing/Gallery";
-import DirectContact from "@/components/landing/DirectContact";
+import AvailabilityForm, { AvailabilityTitle } from "@/components/landing/AvailabilityForm";
+import { AvailabilitySubtitle } from "@/components/landing/ContactDialog";
 import ContactDialog from "@/components/landing/ContactDialog";
 import LotsTable from "@/components/landing/LotsTable";
 import Simulator, { MonthlyFrom } from "@/components/landing/Simulator";
@@ -100,8 +101,8 @@ function Header() {
           <span className="font-serif text-[22px] font-semibold tracking-wide">Domaine XXV</span>
           <span className="hidden text-[12px] text-muted sm:inline">Oliveirinha · Aveiro</span>
         </Link>
-        <Ask className="btn btn-primary hidden px-4 py-2 text-sm lg:inline-flex" preset={{ cta: "header" }}>Enviar mensagem</Ask>
-        <a href={`https://wa.me/${PROMOTER.whatsapp}`} target="_blank" rel="noopener" className="btn btn-ghost px-3 py-2 text-sm lg:hidden">WhatsApp</a>
+        <Ask className="btn btn-primary hidden px-4 py-2 text-sm lg:inline-flex" preset={{ cta: "header" }}>Verificar disponibilidade</Ask>
+        <a href={PROMOTER.phoneHref} className="btn btn-ghost px-3 py-2 text-sm lg:hidden"><IconPhone size={16} /> Ligar</a>
       </div>
     </header>
   );
@@ -164,9 +165,9 @@ function Summary() {
         <Image src={PROMOTER.avatar} alt={PROMOTER.name} width={48} height={48} className="h-12 w-12 rounded-full object-cover" />
         <div className="min-w-0 flex-1 leading-tight">
           <div className="font-bold">{PROMOTER.name}</div>
-          <div className="text-[13px] text-muted">Promotor · responde no próprio dia</div>
+          <div className="text-[13px] text-muted">Promotor · confirma no próprio dia</div>
         </div>
-        <Ask className="btn btn-primary px-3.5 py-2.5 text-sm" preset={{ cta: "summary_mobile", intent: "visita" }}>Marcar visita</Ask>
+        <Ask className="btn btn-primary px-3.5 py-2.5 text-sm" preset={{ cta: "summary_mobile" }}>Verificar lotes</Ask>
       </div>
     </section>
   );
@@ -237,7 +238,7 @@ function Plans() {
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
         <Tour360Button className="btn btn-ghost" label="Visita virtual 360°" />
-        <Ask className="btn btn-ghost" preset={{ intent: "plantas", cta: "plantas" }}>Pedir caderno de acabamentos</Ask>
+        <Ask className="btn btn-ghost" preset={{ cta: "plantas" }}>Verificar disponibilidade</Ask>
       </div>
     </section>
   );
@@ -476,51 +477,38 @@ function Faq() {
   );
 }
 
-/** Cartão fixo (computador): quem responde + botões. A mensagem abre numa janela. */
+/** Cartão fixo (computador): o formulário de disponibilidade já à vista. */
 function ContactCard() {
   return (
     <div className="rounded-2xl border border-line bg-white p-5 shadow-[0_10px_30px_rgba(21,32,43,0.08)]">
-      <div className="flex items-center gap-3.5">
-        <Image src={PROMOTER.avatar} alt={PROMOTER.name} width={64} height={64} className="h-16 w-16 rounded-full object-cover" />
-        <div className="min-w-0 leading-tight">
-          <div className="text-[17px] font-bold">{PROMOTER.name}</div>
-          <div className="text-[13px] text-muted">Promotor do projeto · Domaine XXV</div>
-          <div className="mt-1 flex items-center gap-1.5 text-[12.5px] font-medium text-brand">
-            <span className="h-2 w-2 rounded-full bg-[#2fa863]" /> Responde no próprio dia
-          </div>
+      <AvailabilityTitle className="text-[18px] font-bold leading-snug tracking-tight [text-wrap:balance]" />
+      <AvailabilitySubtitle className="mt-2 text-[13.5px] leading-relaxed text-muted" />
+      <div className="mt-4">
+        <AvailabilityForm id="sidebar" compact />
+      </div>
+      <div className="mt-4 flex items-center gap-3 border-t border-line pt-4">
+        <Image src={PROMOTER.avatar} alt={PROMOTER.name} width={44} height={44} className="h-11 w-11 rounded-full object-cover" />
+        <div className="min-w-0 text-[13px] leading-tight">
+          <div className="font-bold">{PROMOTER.name}</div>
+          <div className="text-muted">Promotor · {formatEUR(PROJECT.price)} chave na mão</div>
         </div>
       </div>
-      <div className="mt-4 rounded-xl bg-soft px-4 py-3">
-        <div className="text-[13px] text-muted">Preço chave na mão</div>
-        <div className="text-[22px] font-extrabold tabular-nums">{formatEUR(PROJECT.price)}</div>
-        <div className="text-[12.5px] text-muted">Entrada de 10%: {formatEUR(PROJECT.price * PROJECT.downPaymentPct)}</div>
-      </div>
-      <div className="mt-4 grid gap-2">
-        <Ask className="btn btn-primary w-full py-3.5 text-[15px]" preset={{ cta: "sidebar" }}>Enviar mensagem</Ask>
-        <Ask className="btn btn-ghost w-full" preset={{ cta: "sidebar_visita", intent: "visita" }}>Marcar visita ao terreno</Ask>
-        <DirectContact cta="sidebar" />
-      </div>
-      <p className="mt-3 text-center text-[12px] text-muted">Sem compromisso · {PROMOTER.phoneDisplay}</p>
     </div>
   );
 }
 
 function PromoterBlock() {
   return (
-    <section className="mt-12 bg-soft">
+    <section id="disponibilidade" className="mt-12 bg-soft">
       <div className="mx-auto flex max-w-[640px] flex-col items-center px-4 py-12 text-center lg:py-16">
-        <div className="relative h-36 w-36 overflow-hidden rounded-full ring-4 ring-white shadow-[0_10px_30px_rgba(21,32,43,0.12)]">
-          <Image src={PROMOTER.portrait} alt={PROMOTER.name} fill sizes="144px" quality={85} className="object-cover object-top" />
+        <div className="relative h-28 w-28 overflow-hidden rounded-full ring-4 ring-white shadow-[0_10px_30px_rgba(21,32,43,0.12)]">
+          <Image src={PROMOTER.portrait} alt={PROMOTER.name} fill sizes="112px" quality={85} className="object-cover object-top" />
         </div>
-        <div className="eyebrow mt-6">Fale com quem desenvolve o projeto</div>
-        <h2 className="mt-2 text-[28px] font-bold leading-tight tracking-tight sm:text-[34px]">{PROMOTER.name}</h2>
-        <p className="mt-1 text-muted">Promotor do Domaine XXV · em parceria com o {BUILDER.name}</p>
-        <p className="mt-4 max-w-[52ch] text-[16px] leading-relaxed [text-wrap:balance]">
-          Sem call center nem intermediários. Quem lhe responde é quem acompanha o projeto, da reserva às chaves. Respondo no próprio dia.
-        </p>
-        <div className="mt-6 grid w-full max-w-[420px] gap-2">
-          <Ask className="btn btn-primary w-full py-3.5 text-[15px]" preset={{ cta: "promoter_block" }}>Enviar mensagem ao André</Ask>
-          <DirectContact cta="promoter_block" />
+        <p className="mt-3 text-[14px] text-muted"><b className="text-ink">{PROMOTER.name}</b> · Promotor do Domaine XXV</p>
+        <AvailabilityTitle className="mt-4 text-[24px] font-bold leading-tight tracking-tight [text-wrap:balance] sm:text-[30px]" />
+        <AvailabilitySubtitle className="mt-3 max-w-[52ch] text-[15.5px] leading-relaxed text-muted [text-wrap:balance]" />
+        <div className="mt-6 w-full max-w-[520px] rounded-2xl border border-line bg-white p-5 text-left">
+          <AvailabilityForm id="promoter_block" />
         </div>
       </div>
     </section>

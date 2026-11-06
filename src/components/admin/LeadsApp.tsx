@@ -16,6 +16,7 @@ type LeadListItem = {
   source: Record<string, string>;
   created_at: string;
   last_message_at: string;
+  whatsapp_at: string | null;
   last_message: string | null;
   last_sender: "lead" | "admin" | null;
 };
@@ -247,6 +248,7 @@ function Dashboard({ sms, config, onLogout }: { sms: boolean; config: Config | n
                         <div className="mt-1 flex items-center gap-1.5">
                           <span className="rounded px-1.5 py-0.5 text-[10.5px] font-semibold text-white" style={{ background: st?.color || "#666" }}>{st?.label || l.status}</span>
                           {l.last_sender === "lead" && <span className="text-[10.5px] font-semibold text-orange-600">por responder</span>}
+                          {l.whatsapp_at && <span className="rounded bg-[#1fae5b] px-1.5 py-0.5 text-[10.5px] font-semibold text-white">abriu WhatsApp</span>}
                           {l.lot && <span className="text-[10.5px] text-muted">{l.lot}</span>}
                         </div>
                       </div>
@@ -369,6 +371,7 @@ function LeadDetail({ id, sms, onBack, onChange }: { id: number; sms: boolean; o
               <span className="tabular-nums">{fmtPhone(lead.phone)}</span>
               {lead.email && <span>{lead.email}</span>}
               <span>desde {fullDate(lead.created_at)}</span>
+              {lead.whatsapp_at && <span className="font-semibold text-[#1a8f4b]">abriu o WhatsApp · {fullDate(lead.whatsapp_at)}</span>}
             </div>
           </div>
           <button onClick={() => setShowInfo((s) => !s)} className="shrink-0 rounded-lg border border-line px-2.5 py-1.5 text-[12.5px] font-medium hover:bg-soft">{showInfo ? "Fechar" : "Detalhes"}</button>

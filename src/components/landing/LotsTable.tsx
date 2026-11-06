@@ -63,8 +63,8 @@ export default function LotsTable() {
                           })
                         }
                       >
-                        <span className="sm:hidden">Info</span>
-                        <span className="hidden sm:inline">Pedir info</span>
+                        <span className="sm:hidden">Verificar</span>
+                        <span className="hidden sm:inline">Verificar</span>
                       </button>
                     )}
                   </td>
