@@ -98,17 +98,25 @@ export default function Lightbox({ pics, index, onClose, zoomable = false }: { p
   const pic = pics[i];
 
   return (
-    <div className="fade-in fixed inset-0 z-[60] flex flex-col bg-[#0f1822]" role="dialog" aria-modal="true" aria-label={pic.alt}>
-      <div className="flex items-center justify-between gap-3 px-4 pb-2 pt-[max(env(safe-area-inset-top),12px)] text-sm text-white/80">
-        <span className="truncate">{n > 1 && `${i + 1} / ${n} · `}{pic.alt}</span>
+    <div className="fade-in fixed inset-0 z-[60] flex flex-col overflow-hidden bg-[#0f1822]" role="dialog" aria-modal="true" aria-label={pic.alt}>
+      {/* Vidro líquido: a própria foto, muito desfocada, por trás de um véu translúcido */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div key={pic.src} className="glass-bg absolute -inset-[12%]">
+          <Image src={pic.src} alt="" fill sizes="320px" quality={75} className="object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,24,34,0.35),rgba(15,24,34,0.55))]" />
+      </div>
+
+      <div className="relative flex items-center justify-between gap-3 px-4 pb-2 pt-[max(env(safe-area-inset-top),12px)] text-sm text-white">
+        <span className="glass truncate rounded-full px-3 py-1.5">{n > 1 && `${i + 1} / ${n} · `}{pic.alt}</span>
         <div className="flex shrink-0 items-center gap-2">
           {zoomable && (
             <>
-              <button onClick={() => setZoom((z) => Math.max(1, z - 1))} disabled={!zoomed} className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-xl text-white disabled:opacity-40" aria-label="Reduzir">−</button>
-              <button onClick={() => setZoom((z) => Math.min(4, z + 1))} disabled={zoom >= 4} className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-xl text-white disabled:opacity-40" aria-label="Ampliar">+</button>
+              <button onClick={() => setZoom((z) => Math.max(1, z - 1))} disabled={!zoomed} className="glass grid h-10 w-10 place-items-center rounded-full text-xl text-white disabled:opacity-40" aria-label="Reduzir">−</button>
+              <button onClick={() => setZoom((z) => Math.min(4, z + 1))} disabled={zoom >= 4} className="glass grid h-10 w-10 place-items-center rounded-full text-xl text-white disabled:opacity-40" aria-label="Ampliar">+</button>
             </>
           )}
-          <button onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white" aria-label="Fechar"><IconX /></button>
+          <button onClick={onClose} className="glass grid h-10 w-10 place-items-center rounded-full text-white" aria-label="Fechar"><IconX /></button>
         </div>
       </div>
 
@@ -152,15 +160,15 @@ export default function Lightbox({ pics, index, onClose, zoomable = false }: { p
         {n > 1 && !zoomed && (
           <>
             {i > 0 && (
-              <button onClick={() => go(-1)} className="absolute left-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/15 text-white transition hover:bg-white/25" aria-label="Anterior"><IconArrowL /></button>
+              <button onClick={() => go(-1)} className="absolute left-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full text-white transition glass hover:brightness-125" aria-label="Anterior"><IconArrowL /></button>
             )}
             {i < n - 1 && (
-              <button onClick={() => go(1)} className="absolute right-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/15 text-white transition hover:bg-white/25" aria-label="Seguinte"><IconArrowR /></button>
+              <button onClick={() => go(1)} className="absolute right-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full text-white transition glass hover:brightness-125" aria-label="Seguinte"><IconArrowR /></button>
             )}
           </>
         )}
       </div>
-      {zoomable && !zoomed && <p className="pb-[max(env(safe-area-inset-bottom),12px)] pt-2 text-center text-[12px] text-white/60">Deslize para ver as outras · toque duas vezes para ampliar</p>}
+      {zoomable && !zoomed && <p className="relative pb-[max(env(safe-area-inset-bottom),12px)] pt-2 text-center text-[12px] text-white/75">Deslize para ver as outras · toque duas vezes para ampliar</p>}
     </div>
   );
 }
