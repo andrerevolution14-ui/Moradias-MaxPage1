@@ -24,7 +24,7 @@ export default function CookieBanner() {
       className="fade-in fixed inset-x-3 bottom-[calc(80px+env(safe-area-inset-bottom))] z-[45] mx-auto max-w-md rounded-2xl border border-line bg-white p-4 shadow-[0_10px_30px_rgba(21,32,43,0.16)] lg:bottom-5 lg:left-5 lg:right-auto lg:mx-0"
     >
       <p className="text-[13.5px] leading-snug text-ink">
-        Usamos cookies para medir a eficácia dos nossos anúncios (Meta). Pode aceitar ou recusar.{" "}
+        Usamos cookies para medir os nossos anúncios (Meta) e melhorar o site (Microsoft Clarity). Pode aceitar ou recusar.{" "}
         <Link href="/privacidade" className="text-muted underline">Saber mais</Link>
       </p>
       <div className="mt-3 grid grid-cols-2 gap-2">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getCookie, getFbc, getSource, newEventId, trackingAllowed } from "@/lib/track";
+import { ev, flush } from "@/lib/analytics";
 import { IconCheck, IconLock } from "../icons";
 import GuideCover from "./GuideCover";
 import { PROMOTER } from "@/lib/config";
@@ -23,7 +24,7 @@ export function AvailabilityTitle({ className = "" }: { className?: string }) {
   return <h2 className={className}>{t}</h2>;
 }
 
-const OFFER = ["Calculadora: quanto pode comprar", "7 passos e 2 checklists", "Cláusulas a exigir no contrato"];
+const OFFER = ["Calculadora: quanto pode comprar", "Calendário, checklists e cláusulas", "Os erros mais caros a evitar"];
 
 /** Título + isca (guia gratuito com capa de produto digital) */
 export function Offer({ size = "md", titleClass = "" }: { size?: "sm" | "md"; titleClass?: string }) {
@@ -35,7 +36,7 @@ export function Offer({ size = "md", titleClass = "" }: { size?: "sm" | "md"; ti
         <GuideCover size={sm ? "sm" : "md"} />
         <div className="min-w-0">
           <div className="text-[11.5px] font-bold uppercase tracking-[0.08em] text-[#9a7a2e]">Bónus grátis</div>
-          <div className={`mt-0.5 font-bold leading-snug ${sm ? "text-[14px]" : "text-[15px]"}`}>Guia: Como Comprar em Planta com Segurança</div>
+          <div className={`mt-0.5 font-bold leading-snug ${sm ? "text-[14px]" : "text-[15px]"}`}>Guia: 12 ferramentas para comprar em planta com segurança</div>
           <ul className={`mt-1.5 space-y-0.5 leading-snug text-muted ${sm ? "text-[12px]" : "text-[12.5px]"}`}>
             {OFFER.map((o) => (
               <li key={o} className="flex items-start gap-1.5"><IconCheck size={13} className="mt-[2px] shrink-0 text-[#2fa863]" /> {o}</li>
@@ -107,6 +108,8 @@ export default function AvailabilityForm({ id, compact = false }: { id: string; 
         localStorage.setItem(ME_KEY, JSON.stringify({ name, phone }));
       } catch {}
       // O Lead para o Meta é enviado pelo servidor quando o pedido fica guardado (não aqui).
+      ev("lead", cta);
+      flush(true);
       router.push(`/obrigado${data.token ? `?l=${encodeURIComponent(data.token)}&n=${encodeURIComponent(data.firstName || "")}` : ""}`);
     } catch {
       setError({ msg: "Sem ligação. Verifique a internet ou ligue-nos." });

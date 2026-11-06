@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PROJECT, PROMOTER, formatEUR } from "@/lib/config";
 import { track } from "@/lib/track";
+import { ev, flush } from "@/lib/analytics";
 import GuideCover from "@/components/landing/GuideCover";
 import { IconArrowL, IconCheck, IconDoc, IconShield, IconWhatsApp } from "@/components/icons";
 import { Affordability, Calendar, Clauses, Compare, CostlyMistakes, Inspection } from "./tools";
@@ -170,6 +171,8 @@ export default function Guide() {
 
   function onWhatsApp() {
     track("Contact", { method: "whatsapp", cta: "guia" });
+    ev("whatsapp", "guia");
+    flush(true);
     if (token) {
       const payload = JSON.stringify({ token });
       if (navigator.sendBeacon) navigator.sendBeacon("/api/leads/whatsapp", new Blob([payload], { type: "application/json" }));
@@ -187,16 +190,17 @@ export default function Guide() {
           <Link href={back} className="flex items-center gap-1.5 text-sm text-white/80"><IconArrowL size={18} /> Voltar</Link>
           <button onClick={() => window.print()} className="rounded-full bg-white/10 px-3 py-1.5 text-[13px] font-semibold ring-1 ring-white/25">Guardar em PDF</button>
         </div>
-        <div className="mx-auto flex max-w-3xl flex-col items-start gap-6 px-4 pb-10 pt-8 sm:flex-row sm:items-center">
-          <GuideCover size="lg" />
+        <div className="mx-auto flex max-w-3xl flex-col items-start gap-6 px-4 pb-10 pt-6 sm:flex-row sm:items-center sm:pt-8">
+          <div className="hidden sm:block"><GuideCover size="lg" /></div>
+          <div className="sm:hidden"><GuideCover size="md" /></div>
           <div>
             <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-[#d9b56a]">Guia prático gratuito · 2026</div>
-            <h1 className="mt-2 font-serif text-[32px] font-semibold leading-[1.1] [text-wrap:balance] sm:text-[40px]">Como Comprar em Planta com Segurança</h1>
+            <h1 className="mt-2 font-serif text-[30px] font-semibold leading-[1.1] [text-wrap:balance] sm:text-[40px]"><span className="text-[#d9b56a]">12 ferramentas</span> para comprar em planta com segurança</h1>
             <p className="mt-3 max-w-[46ch] text-[15.5px] leading-relaxed text-white/80">
               O que verificar, quando pagar e como se proteger, do primeiro contacto até às chaves. Serve para qualquer compra em planta em Portugal.
             </p>
             <div className="mt-4 flex flex-wrap gap-2 text-[12.5px] text-white/80">
-              {["Calculadora", "7 passos", "Cláusulas do CPCV", "2 checklists", "10 min de leitura"].map((x) => (
+              {["Calculadora", "Calendário", "Cláusulas do CPCV", "2 checklists", "10 min"].map((x) => (
                 <span key={x} className="rounded-full bg-white/10 px-2.5 py-1 ring-1 ring-white/15">{x}</span>
               ))}
             </div>

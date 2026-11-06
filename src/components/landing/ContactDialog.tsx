@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { PROMOTER } from "@/lib/config";
 import { track } from "@/lib/track";
+import { ev } from "@/lib/analytics";
 import { IconPhone, IconX } from "../icons";
 import AvailabilityForm, { Offer } from "./AvailabilityForm";
 import TrustMini from "./TrustMini";
@@ -23,6 +24,7 @@ export default function ContactDialog() {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeSheet();
     window.addEventListener("keydown", onKey);
     track("ViewContent", { content_name: "janela_disponibilidade" });
+    ev("form_open", "janela");
     if (window.matchMedia("(min-width: 1024px)").matches) {
       setTimeout(() => panel.current?.querySelector<HTMLInputElement>("input[name=name]")?.focus(), 150);
     }

@@ -106,7 +106,7 @@ type Config = {
 };
 
 function Dashboard({ sms, config, onLogout }: { sms: boolean; config: Config | null; onLogout: () => void }) {
-  const [tab, setTab] = useState<"leads" | "lotes" | "definicoes">("leads");
+  const [tab, setTab] = useState<"leads" | "estatisticas" | "lotes" | "definicoes">("leads");
   const [leads, setLeads] = useState<LeadListItem[] | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
   const [filter, setFilter] = useState<string>("todas");
@@ -165,13 +165,13 @@ function Dashboard({ sms, config, onLogout }: { sms: boolean; config: Config | n
       <header className="flex items-center justify-between gap-3 border-b border-line bg-white px-4 py-2.5">
         <div className="flex items-center gap-4">
           <div className="leading-tight">
-            <div className="font-serif text-lg font-semibold">Domaine XXV</div>
-            <div className="text-[11px] text-muted">Centro de leads</div>
+            <div className="whitespace-nowrap font-serif text-lg font-semibold">Domaine XXV</div>
+            <div className="hidden text-[11px] text-muted sm:block">Centro de leads</div>
           </div>
           <div className="flex rounded-lg bg-soft p-0.5 text-sm">
-            {(["leads", "lotes", "definicoes"] as const).map((t) => (
-              <button key={t} onClick={() => setTab(t)} className={`rounded-md px-2.5 py-1.5 font-semibold sm:px-3 ${tab === t ? "bg-white shadow-sm" : "text-muted"}`}>
-                {t === "leads" ? "Leads" : t === "lotes" ? "Lotes" : <span title="Definições">⚙<span className="hidden sm:inline"> Definições</span></span>}
+            {(["leads", "estatisticas", "lotes", "definicoes"] as const).map((t) => (
+              <button key={t} onClick={() => setTab(t)} className={`rounded-md px-2 py-1.5 font-semibold sm:px-3 ${tab === t ? "bg-white shadow-sm" : "text-muted"}`}>
+                {t === "leads" ? "Leads" : t === "estatisticas" ? <span>Dados<span className="hidden sm:inline"> do site</span></span> : t === "lotes" ? "Lotes" : <span title="Definições">⚙<span className="hidden sm:inline"> Definições</span></span>}
                 {t === "leads" && unread > 0 && <span className="ml-1.5 rounded-full bg-brand px-1.5 text-[11px] text-white">{unread}</span>}
               </button>
             ))}
@@ -192,7 +192,9 @@ function Dashboard({ sms, config, onLogout }: { sms: boolean; config: Config | n
         </div>
       </header>
 
-      {tab === "definicoes" ? (
+      {tab === "estatisticas" ? (
+        <Stats />
+      ) : tab === "definicoes" ? (
         <Settings config={config} />
       ) : tab === "lotes" ? (
         <LotsEditor />
@@ -593,6 +595,127 @@ function Settings({ config }: { config: Config | null }) {
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+const SECTION_NAMES: Record<string, string> = {
+  descricao: "Descrição", localizacao: "Localização", unidades: "Moradias disponíveis", plantas: "Plantas", detalhes: "Características",
+  condicoes: "Como comprar", simulador: "Simulador", construtora: "Quem faz o projeto", faq: "Perguntas", disponibilidade: "Formulário final",
+  planta: "1 · Planta vs usado", calculadora: "2 · Calculadora", passos: "3 · 7 passos", dinheiro: "4 · Dinheiro", documentos: "5 · Documentos",
+  clausulas: "6 · Cláusulas", alertas: "7 · Alertas", erros: "8 · Erros caros", custos: "9 · Custos", vistoria: "10 · Vistoria",
+  perguntas: "11 · Perguntas", glossario: "12 · Glossário",
+};
+
+type StatsData = {
+  days: number; visits: number; avgTime: number; medianTime: number; avgScroll: number;
+  funnel: [string, number][]; sections: { name: string; n: number }[]; guideSections: { name: string; n: number }[];
+  clicks: { name: string; n: number }[]; sources: { name: string; n: number }[]; devices: { name: string; n: number }[]; daily: { day: string; n: number }[];
+};
+
+const mmss = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+
+function Bars({ rows, total, names }: { rows: { name: string; n: number }[]; total: number; names?: Record<string, string> }) {
+  if (!rows.length) return <p className="text-sm text-muted">Ainda sem dados.</p>;
+  const max = Math.max(...rows.map((r) => r.n), 1);
+  return (
+    <ul className="space-y-1.5">
+      {rows.map((r) => (
+        <li key={r.name} className="text-[13px]">
+          <div className="flex justify-between gap-3"><span className="truncate">{names?.[r.name] || r.name}</span><span className="shrink-0 tabular-nums text-muted">{r.n}{total ? ` · ${Math.round((r.n / total) * 100)}%` : ""}</span></div>
+          <div className="mt-0.5 h-1.5 rounded-full bg-soft"><div className="h-full rounded-full bg-brand" style={{ width: `${(r.n / max) * 100}%` }} /></div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Stats() {
+  const [days, setDays] = useState(7);
+  const [d, setD] = useState<StatsData | null>(null);
+  useEffect(() => {
+    let alive = true;
+    fetch(`/api/admin/stats?days=${days}`, { cache: "no-store" }).then((r) => r.json()).then((x) => alive && setD(x)).catch(() => {});
+    return () => { alive = false; };
+  }, [days]);
+  const card = "rounded-2xl border border-line bg-white p-4";
+  return (
+    <div className="flex-1 overflow-y-auto p-3 sm:p-6">
+      <div className="mx-auto max-w-4xl space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-lg font-bold">Dados do site</h2>
+          <div className="flex rounded-lg bg-white p-0.5 text-[13px] ring-1 ring-line">
+            {[1, 7, 30, 90].map((n) => (
+              <button key={n} onClick={() => setDays(n)} className={`rounded-md px-3 py-1.5 font-semibold ${days === n ? "bg-cta text-white" : "text-muted"}`}>{n === 1 ? "Hoje" : `${n} dias`}</button>
+            ))}
+          </div>
+        </div>
+        {!d ? <p className="py-10 text-center text-muted">A carregar…</p> : (
+          <>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {[
+                ["Visitas", String(d.visits)],
+                ["Tempo médio", mmss(d.avgTime)],
+                ["Tempo mediano", mmss(d.medianTime)],
+                ["Scroll médio", `${d.avgScroll}%`],
+              ].map(([k, v]) => (
+                <div key={k} className={card}>
+                  <div className="text-[12px] uppercase tracking-wide text-muted">{k}</div>
+                  <div className="mt-1 text-[24px] font-bold tabular-nums">{v}</div>
+                </div>
+              ))}
+            </div>
+            <div className={card}>
+              <h3 className="mb-3 font-semibold">Funil</h3>
+              <ol className="space-y-2">
+                {d.funnel.map(([k, n], i) => {
+                  const base = d.funnel[0][1] || 1;
+                  const prev = i ? d.funnel[i - 1][1] : 0;
+                  return (
+                    <li key={k} className="text-[13.5px]">
+                      <div className="flex justify-between gap-3">
+                        <span>{k}</span>
+                        <span className="tabular-nums"><b>{n}</b> <span className="text-muted">· {Math.round((n / base) * 100)}%{i > 0 && prev ? ` (${Math.round((n / prev) * 100)}% do passo anterior)` : ""}</span></span>
+                      </div>
+                      <div className="mt-1 h-2.5 rounded-full bg-soft"><div className="h-full rounded-full bg-[#2fa863]" style={{ width: `${(n / base) * 100}%` }} /></div>
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className={card}><h3 className="mb-3 font-semibold">Secções vistas (página)</h3><Bars rows={d.sections} total={d.visits} names={SECTION_NAMES} /></div>
+              <div className={card}><h3 className="mb-3 font-semibold">Botões mais clicados</h3><Bars rows={d.clicks} total={0} /></div>
+              <div className={card}><h3 className="mb-3 font-semibold">Capítulos do guia lidos</h3><Bars rows={d.guideSections} total={0} names={SECTION_NAMES} /></div>
+              <div className={card}>
+                <h3 className="mb-3 font-semibold">Origem</h3><Bars rows={d.sources} total={d.visits} />
+                <h3 className="mb-3 mt-5 font-semibold">Dispositivo</h3><Bars rows={d.devices} total={d.visits} />
+              </div>
+            </div>
+            {d.daily.length > 1 && (
+              <div className={card}>
+                <h3 className="mb-3 font-semibold">Visitas por dia</h3>
+                <div className="flex h-28 items-end gap-1">
+                  {d.daily.map((x) => {
+                    const max = Math.max(...d.daily.map((y) => y.n), 1);
+                    return (
+                      <div key={x.day} className="flex flex-1 flex-col items-center gap-1">
+                        <span className="text-[10px] tabular-nums text-muted">{x.n}</span>
+                        <div className="w-full rounded-t bg-brand" style={{ height: `${(x.n / max) * 80}px` }} />
+                        <span className="text-[10px] text-muted">{x.day}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            <p className="text-[12px] text-muted">
+              Estatísticas anónimas, sem cookies. Para ver gravações de sessões e mapas de calor (onde clicam e até onde descem), abra o Microsoft Clarity:{" "}
+              <a href="https://clarity.microsoft.com/" target="_blank" rel="noopener" className="text-brand underline">clarity.microsoft.com</a> (só regista quem aceitou cookies).
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

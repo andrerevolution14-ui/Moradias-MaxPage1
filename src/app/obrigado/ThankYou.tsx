@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DEFAULT_LOTS, PROMOTER, type Lot } from "@/lib/config";
 import { responseWindow, track } from "@/lib/track";
+import { ev, flush } from "@/lib/analytics";
 import { IconArrowL, IconCheck, IconDoc, IconWhatsApp } from "@/components/icons";
 import GuideCover from "@/components/landing/GuideCover";
 
@@ -41,6 +42,8 @@ export default function ThankYou() {
 
   function onWhatsApp() {
     track("Contact", { method: "whatsapp", cta: "obrigado" });
+    ev("whatsapp", "obrigado");
+    flush(true);
     if (token) {
       const payload = JSON.stringify({ token });
       if (navigator.sendBeacon) navigator.sendBeacon("/api/leads/whatsapp", new Blob([payload], { type: "application/json" }));
@@ -91,14 +94,15 @@ export default function ThankYou() {
 
           <Link
             href={`/guia${token ? `?l=${encodeURIComponent(token)}` : ""}`}
+            data-ev="Abrir guia (obrigado)"
             className="mt-5 block rounded-2xl bg-[linear-gradient(135deg,#f3f5f8,#e8eef5)] p-4 ring-1 ring-line transition hover:ring-brand/40"
           >
             <span className="flex items-center gap-4">
               <GuideCover size="sm" />
               <span className="min-w-0 flex-1">
                 <span className="block text-[12px] font-bold uppercase tracking-[0.08em] text-[#9a7a2e]">O seu guia gratuito</span>
-                <span className="mt-0.5 block text-[16px] font-bold leading-snug">Como Comprar em Planta com Segurança</span>
-                <span className="mt-1 block text-[12.5px] text-muted">7 passos · checklist · sinais de alerta</span>
+                <span className="mt-0.5 block text-[16px] font-bold leading-snug">12 ferramentas para comprar em planta com segurança</span>
+                <span className="mt-1 block text-[12.5px] text-muted">Calculadora · calendário · checklists · cláusulas</span>
               </span>
             </span>
             <span className="btn btn-primary mt-4 w-full py-3 text-[15px]"><IconDoc size={18} /> Abrir Guia Prático</span>

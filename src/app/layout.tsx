@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { Inter, Fraunces } from "next/font/google";
 import MetaPixel from "@/components/MetaPixel";
 import CookieBanner from "@/components/CookieBanner";
+import Analytics from "@/components/Analytics";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
@@ -41,6 +43,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         <MetaPixel />
         <CookieBanner />
+        <Suspense fallback={null}>
+          <Analytics />
+        </Suspense>
       </body>
     </html>
   );

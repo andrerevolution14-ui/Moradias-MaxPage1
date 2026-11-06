@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Guide from "./Guide";
 
 export const metadata: Metadata = {
-  title: "Guia: Como Comprar em Planta com Segurança · Domaine XXV",
+  title: "12 ferramentas para comprar em planta com segurança · Domaine XXV",
   description: "Os 7 passos, a checklist de documentos, os sinais de alerta e os custos de uma compra em planta em Portugal.",
   robots: { index: false, follow: false },
 };

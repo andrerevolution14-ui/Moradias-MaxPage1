@@ -93,8 +93,9 @@ export function Affordability({ token }: { token: string | null }) {
           ["Casa até", res.house, ""],
         ].map(([l, v, suf]) => (
           <div key={l as string} className="bg-white px-2 py-3">
-            <div className="text-[11.5px] uppercase tracking-wide text-muted">{l as string}</div>
-            <div className="mt-0.5 text-[17px] font-bold tabular-nums sm:text-[20px]">{income > 0 ? `${formatEUR(v as number)}${suf}` : "—"}</div>
+            <div className="text-[10.5px] uppercase leading-tight tracking-wide text-muted sm:text-[11.5px]">{l as string}</div>
+            <div className="mt-1 text-[15px] font-bold leading-tight tabular-nums sm:text-[20px]">{income > 0 ? formatEUR(v as number) : "—"}</div>
+            {income > 0 && suf && <div className="text-[11px] text-muted">{suf}</div>}
           </div>
         ))}
       </div>
@@ -270,9 +271,31 @@ const COMPARE: [string, string, string, string][] = [
 ];
 
 export function Compare() {
+  const cols = [
+    { name: "Em planta", i: 1, main: true },
+    { name: "Usado", i: 2, main: false },
+    { name: "Construir sozinho", i: 3, main: false },
+  ] as const;
   return (
-    <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
-      <table className="w-full min-w-[520px] overflow-hidden rounded-xl border border-line text-left text-[13.5px]">
+    <>
+      {/* Telemóvel: um cartão por opção */}
+      <div className="space-y-2.5 sm:hidden">
+        {cols.map((c) => (
+          <div key={c.name} className={`rounded-xl p-3.5 ${c.main ? "bg-cta text-paper" : "border border-line bg-white"}`}>
+            <div className="font-bold">{c.name}</div>
+            <dl className="mt-2 grid grid-cols-[104px_1fr] gap-x-3 gap-y-1 text-[13.5px]">
+              {COMPARE.map((row) => (
+                <div key={row[0]} className="contents">
+                  <dt className={c.main ? "text-white/65" : "text-muted"}>{row[0]}</dt>
+                  <dd className={c.main ? "font-medium" : ""}>{row[c.i]}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ))}
+      </div>
+      {/* Computador: tabela */}
+      <table className="hidden w-full overflow-hidden rounded-xl border border-line text-left text-[13.5px] sm:table">
         <thead>
           <tr className="text-[12px] uppercase tracking-wide">
             <th className="bg-soft px-3 py-2.5 text-muted" />
@@ -292,7 +315,7 @@ export function Compare() {
           ))}
         </tbody>
       </table>
-    </div>
+    </>
   );
 }
 

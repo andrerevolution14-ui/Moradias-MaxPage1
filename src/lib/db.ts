@@ -72,6 +72,19 @@ async function ensureSchema(sql: ReturnType<typeof postgres>) {
     );
     CREATE INDEX IF NOT EXISTS messages_lead_idx ON messages (lead_id, created_at);
 
+    CREATE TABLE IF NOT EXISTS events (
+      id          BIGSERIAL PRIMARY KEY,
+      session     TEXT NOT NULL,
+      type        TEXT NOT NULL,
+      name        TEXT NOT NULL DEFAULT '',
+      path        TEXT NOT NULL DEFAULT '',
+      value       INTEGER,
+      meta        JSONB,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+    CREATE INDEX IF NOT EXISTS events_created_idx ON events (created_at);
+    CREATE INDEX IF NOT EXISTS events_type_created_idx ON events (type, created_at);
+
     CREATE TABLE IF NOT EXISTS settings (
       key    TEXT PRIMARY KEY,
       value  JSONB NOT NULL,
