@@ -33,7 +33,7 @@ const STEPS = [
   {
     t: "Verificar documentos",
     when: "Antes de pagar qualquer sinal",
-    do: ["Use a checklist deste guia (secção 4).", "Confirme no portal do IMPIC que a construtora tem alvará válido."],
+    do: ["Use a checklist deste guia (secção 4).", "Peça cópia de tudo antes de marcar a reserva."],
     warn: "Nunca entregue dinheiro sem ter visto o registo predial e o projeto aprovado.",
     dx: "Dossier técnico e minutas dos contratos disponíveis antes de reservar.",
   },
@@ -45,7 +45,7 @@ const STEPS = [
       "Inclua uma cláusula que devolve o sinal se o crédito não for aprovado.",
       "Pode pedir o registo provisório da aquisição para proteger a sua posição.",
     ],
-    warn: "Regra do sinal (art. 442.º do Código Civil): se o vendedor desistir, devolve-o em dobro; se for o comprador, perde-o.",
+    warn: "",
     dx: "Entrada única de 10% (33.500 €), imputada ao preço.",
   },
   {
@@ -81,10 +81,8 @@ const DOCS = [
   ["Certidão permanente do registo predial", "Quem é o dono e se há hipotecas ou penhoras."],
   ["Caderneta predial", "Identificação fiscal do terreno."],
   ["Projeto aprovado / licença de construção", "Emitidos pela Câmara Municipal."],
-  ["Alvará da construtora (IMPIC)", "Confirme o número e a validade no portal do IMPIC."],
   ["Caderno de encargos e mapa de acabamentos", "Marcas, materiais e equipamentos incluídos."],
   ["Minutas do CPCV e do contrato de empreitada", "Preço, prazo, penalizações e devolução do sinal."],
-  ["Pré-certificado energético", "Classe energética prevista."],
   ["Plano de pagamentos", "Quanto paga, quando e contra que fase da obra."],
 ];
 
@@ -92,7 +90,6 @@ const ALERTS = [
   "Pede grandes pagamentos antes de a obra avançar.",
   "O preço é “estimado” ou “sujeito a revisão”.",
   "Ainda não há projeto aprovado nem licença.",
-  "A construtora não tem alvará válido no IMPIC.",
   "Não há prazo de entrega nem penalizações por atraso.",
   "Recusa mostrar os contratos antes de assinar.",
   "Pede sinal em dinheiro ou sem recibo.",
@@ -194,7 +191,7 @@ export default function Guide() {
               O que verificar, quando pagar e como se proteger, do primeiro contacto até às chaves. Serve para qualquer compra em planta em Portugal.
             </p>
             <div className="mt-4 flex flex-wrap gap-2 text-[12.5px] text-white/80">
-              {["7 passos", "Checklist de 8 documentos", "7 sinais de alerta", "10 min de leitura"].map((x) => (
+              {["7 passos", `Checklist de ${DOCS.length} documentos`, `${ALERTS.length} sinais de alerta`, "10 min de leitura"].map((x) => (
                 <span key={x} className="rounded-full bg-white/10 px-2.5 py-1 ring-1 ring-white/15">{x}</span>
               ))}
             </div>
@@ -252,7 +249,7 @@ export default function Guide() {
                       <li key={x} className="flex gap-2"><IconCheck size={16} className="mt-1 shrink-0 text-[#2fa863]" /> {x}</li>
                     ))}
                   </ul>
-                  <p className="mt-2.5 rounded-lg bg-[#fff8e8] px-3 py-2 text-[13.5px] leading-snug text-[#6b5313]"><b>Atenção:</b> {s.warn}</p>
+                  {s.warn && <p className="mt-2.5 rounded-lg bg-[#fff8e8] px-3 py-2 text-[13.5px] leading-snug text-[#6b5313]"><b>Atenção:</b> {s.warn}</p>}
                   <p className="mt-2 text-[13px] text-brand"><b>No Domaine XXV:</b> {s.dx}</p>
                 </div>
               </li>
@@ -321,7 +318,7 @@ export default function Guide() {
         </Chapter>
 
         {/* 5 */}
-        <Chapter id="alertas" n={5} title="7 sinais de alerta">
+        <Chapter id="alertas" n={5} title={`${ALERTS.length} sinais de alerta`}>
           <ul className="grid gap-2 sm:grid-cols-2">
             {ALERTS.map((a) => (
               <li key={a} className="flex items-start gap-2.5 rounded-xl border border-[#f2c9b1] bg-[#fff4ec] p-3 text-[14.5px] text-[#6b3a17]">
