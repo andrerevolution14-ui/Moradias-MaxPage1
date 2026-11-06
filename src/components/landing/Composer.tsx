@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { DEFAULT_MESSAGE, PROMOTER, QUICK_INTENTS } from "@/lib/config";
-import { getCookie, getFbc, getSource, newEventId, responseWindow, saveChat, track } from "@/lib/track";
+import { getCookie, getFbc, getSource, newEventId, responseWindow, saveChat, track, trackingAllowed } from "@/lib/track";
 import { IconCheck, IconLock, IconSend, IconWhatsApp } from "../icons";
 import { useLanding } from "./LandingProvider";
 
@@ -87,6 +87,7 @@ export default function Composer({ variant, id }: Props) {
           lot,
           website: hp,
           eventId,
+          consent: trackingAllowed(),
           fbp: getCookie("_fbp"),
           fbc: getFbc(),
           source: { ...getSource(), page: location.href, cta, variant: process.env.NEXT_PUBLIC_SITE_VARIANT },

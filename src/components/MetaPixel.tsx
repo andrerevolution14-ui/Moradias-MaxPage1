@@ -4,6 +4,7 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 import { captureSource, track, trackingAllowed } from "@/lib/track";
 import { META_PIXEL_ID } from "@/lib/config";
+import { CONSENT_EVENT } from "@/lib/consent";
 
 const PIXEL_ID = META_PIXEL_ID;
 
@@ -11,7 +12,10 @@ export default function MetaPixel() {
   const [allowed, setAllowed] = useState(false);
   useEffect(() => {
     captureSource();
-    setAllowed(trackingAllowed());
+    const sync = () => setAllowed(trackingAllowed());
+    sync();
+    window.addEventListener(CONSENT_EVENT, sync);
+    return () => window.removeEventListener(CONSENT_EVENT, sync);
   }, []);
   useEffect(() => {
     if (!allowed) return;

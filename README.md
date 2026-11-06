@@ -52,6 +52,8 @@ Enquanto o domínio não estiver verificado, o Resend só entrega ao email com q
 - O `Lead` é enviado **só pelo servidor** e **só quando a mensagem fica recebida** no centro de leads, uma vez por pessoa
   (mensagens seguintes da mesma pessoa não contam). O botão não dispara nada. Vai com `value: 335000`, `currency: EUR`.
 - O número do André e os de `META_EXCLUDE_PHONES` nunca contam (para testes).
+- **Consentimento (RGPD):** o Pixel e a API de Conversões só funcionam depois de a pessoa carregar em
+  "Aceitar" no aviso de cookies. Quem recusa não é medido (o site e as mensagens funcionam igual).
 - Para testar: Events Manager → *Testar eventos* → copie o código (ex.: `TEST12345`), ponha-o em `META_TEST_EVENT_CODE`,
   faça *Redeploy*, envie uma mensagem no site e confirme que aparecem `PageView` e `Lead` com “Navegador” e “Servidor”
   (deduplicados). No fim apague `META_TEST_EVENT_CODE` e faça *Redeploy*.

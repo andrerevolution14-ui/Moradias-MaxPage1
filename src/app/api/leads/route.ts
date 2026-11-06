@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
   const excluded = new Set(
     [PROMOTER.whatsapp, ...(process.env.META_EXCLUDE_PHONES || "").split(",")].map((p) => normalizePhone(p.trim())).filter(Boolean),
   );
-  const countsForMeta = !excluded.has(phone);
+  // Só envia ao Meta se a pessoa aceitou os cookies de medição (RGPD)
+  const countsForMeta = !excluded.has(phone) && body.consent === true;
 
   /** Lead no Meta: enviado SÓ pelo servidor, SÓ quando a mensagem de uma pessoa nova ficou recebida. */
   const capiLead = async (externalId: string) => {

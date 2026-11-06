@@ -30,8 +30,15 @@ export function getFbc() {
   return undefined;
 }
 
-/** O Pixel só corre no site publicado: nunca em localhost nem em pré-visualizações *.vercel.app. */
+import { getConsent } from "./consent";
+
+/** Pode medir: domínio real, fora do painel /leads e com consentimento de cookies. */
 export function trackingAllowed() {
+  return domainAllowed() && getConsent() === "granted" && !location.pathname.startsWith("/leads");
+}
+
+/** O Pixel só corre no site publicado: nunca em localhost nem em pré-visualizações *.vercel.app. */
+export function domainAllowed() {
   if (typeof location === "undefined") return false;
   const h = location.hostname.replace(/^www\./, "");
   if (h === "localhost" || h === "::1" || /^127\.|^192\.168\.|^10\./.test(h)) return false;
