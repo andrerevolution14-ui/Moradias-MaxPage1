@@ -35,6 +35,7 @@ export const BUILDER = {
   name: "Grupo Freitas Renovações",
   legal: "Freitas Renovações Lda.",
   logo: "/brand/freitas.webp",
+  url: "https://www.grupofreitasrenovacoes.pt/",
   blurb:
     "Mais de 15 anos de construção e remodelação no distrito de Aveiro. Alvará de construção certificado.",
   // N.º do alvará (IMPIC). Quando preenchido aparece na construtora, nas características e na segurança da compra.
@@ -59,12 +60,12 @@ export const FINANCING_BANK = "";
 
 // Marcas previstas no caderno de encargos
 export const BRANDS = [
-  { name: "Cortizo", use: "Caixilharia em alumínio", logo: "/brand/cortizo.webp", w: 984, h: 264 },
-  { name: "Daikin", use: "Climatização e bomba de calor", logo: "/brand/daikin.webp", w: 980, h: 222 },
-  { name: "Bosch", use: "Eletrodomésticos", logo: "/brand/bosch.webp", w: 980, h: 235 },
-  { name: "Teka", use: "Equipamentos de cozinha", logo: "/brand/teka.webp", w: 1056, h: 1056 },
-  { name: "Margres", use: "Cerâmica e revestimentos", logo: "/brand/margres.webp", w: 980, h: 239 },
-  { name: "Castro Wood Floors", use: "Pavimento em madeira", logo: "/brand/castro-wood-floors.webp", w: 408, h: 82 },
+  { name: "Cortizo", url: "https://www.cortizo.com/pt/", use: "Caixilharia em alumínio", logo: "/brand/cortizo.webp", w: 984, h: 264 },
+  { name: "Daikin", url: "https://www.daikin.pt/", use: "Climatização e bomba de calor", logo: "/brand/daikin.webp", w: 980, h: 222 },
+  { name: "Bosch", url: "https://www.bosch-home.pt/", use: "Eletrodomésticos", logo: "/brand/bosch.webp", w: 980, h: 235 },
+  { name: "Teka", url: "https://www.teka.com/pt-pt/", use: "Equipamentos de cozinha", logo: "/brand/teka.webp", w: 1056, h: 1056 },
+  { name: "Margres", url: "https://margres.com/pt", use: "Cerâmica e revestimentos", logo: "/brand/margres.webp", w: 980, h: 239 },
+  { name: "Castro Wood Floors", url: "https://www.castrowoodfloors.pt/", use: "Pavimento em madeira", logo: "/brand/castro-wood-floors.webp", w: 408, h: 82 },
 ];
 
 export type LotStatus = "disponivel" | "reservado" | "vendido";

@@ -284,12 +284,14 @@ function Details() {
       <h3 className="mb-3 mt-7 font-semibold">Marcas incluídas</h3>
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         {BRANDS.map((b) => (
-          <li key={b.name} className="flex flex-col gap-2 rounded-lg border border-line bg-white px-3 py-3">
+          <li key={b.name}>
+           <a href={b.url} target="_blank" rel="noopener" aria-label={`${b.name} (abre num novo separador)`} className="flex h-full flex-col gap-2 rounded-lg border border-line bg-white px-3 py-3 transition hover:border-brand/40 hover:shadow-sm">
             <div className="flex h-9 items-center">
               {/* logótipos já otimizados (WebP sem perdas, poucos KB): servidos tal como estão para máxima nitidez */}
               <Image src={b.logo} alt={b.name} width={b.w} height={b.h} unoptimized className="h-auto max-h-9 w-auto max-w-[130px] object-contain" />
             </div>
             <div className="text-[12.5px] leading-snug text-muted">{b.use}</div>
+           </a>
           </li>
         ))}
       </ul>
@@ -375,20 +377,21 @@ function Builder() {
       <h2 className="sec-title">Quem faz o projeto</h2>
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="flex items-center gap-4 rounded-xl border border-line bg-white p-3.5">
-          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-cta">
+          <a href={BUILDER.url} target="_blank" rel="noopener" aria-label={`${BUILDER.name} (abre num novo separador)`} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-cta">
             <Image src={BUILDER.logo} alt={BUILDER.name} fill sizes="80px" className="object-contain p-2" />
-          </div>
+          </a>
           <div className="min-w-0">
             <div className="eyebrow">Construção</div>
-            <div className="font-semibold">{BUILDER.name}</div>
+            <a href={BUILDER.url} target="_blank" rel="noopener" className="font-semibold hover:underline">{BUILDER.name}</a>
             {BUILDER.licence && <div className="mt-0.5 text-[13.5px] font-semibold text-ink">Alvará n.º {BUILDER.licence}</div>}
             <div className="text-[13px] text-muted">{BUILDER.blurb}</div>
+            <a href={BUILDER.url} target="_blank" rel="noopener" className="text-[13px] font-semibold text-brand underline">Visitar o site da construtora</a>
           </div>
         </div>
         <div className="flex items-center gap-4 rounded-xl border border-line bg-white p-3.5">
-          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-white">
+          <a href={DESIGNERS.instagram} target="_blank" rel="noopener" aria-label={`${DESIGNERS.firm} no Instagram (abre num novo separador)`} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-white">
             <Image src={DESIGNERS.logo} alt={DESIGNERS.firm} fill sizes="80px" unoptimized className="object-contain p-1" />
-          </div>
+          </a>
           <div className="min-w-0">
             <div className="eyebrow">Arquitetura e engenharia</div>
             <div className="font-semibold">{DESIGNERS.firm}</div>
@@ -419,7 +422,10 @@ function Builder() {
           </div>
         )}
       </div>
-      <h3 className="mb-3 mt-6 font-semibold">Obras reais do Grupo Freitas</h3>
+      <div className="mb-3 mt-6 flex items-baseline justify-between gap-3">
+        <h3 className="font-semibold">Obras reais do Grupo Freitas</h3>
+        <a href={BUILDER.url} target="_blank" rel="noopener" className="shrink-0 text-[13px] font-semibold text-brand underline">Ver mais obras</a>
+      </div>
       <WorksStrip pics={WORKS} />
     </section>
   );
