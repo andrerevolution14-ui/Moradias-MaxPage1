@@ -26,23 +26,24 @@ export function AvailabilityTitle({ className = "" }: { className?: string }) {
 
 const OFFER = ["Calculadora: quanto pode comprar", "Calendário, checklists e cláusulas", "Os erros mais caros a evitar"];
 
-/** Título + isca (guia gratuito com capa de produto digital) */
-export function Offer({ size = "md", titleClass = "" }: { size?: "sm" | "md"; titleClass?: string }) {
-  const sm = size === "sm";
+/** Título do formulário (a oferta do guia aparece por baixo do botão) */
+export function Offer({ titleClass = "" }: { size?: "sm" | "md"; titleClass?: string }) {
+  return <AvailabilityTitle className={titleClass || "text-[19px] font-bold leading-snug tracking-tight [text-wrap:balance]"} />;
+}
+
+/** Bónus: guia gratuito, logo abaixo do botão */
+function Bonus() {
   return (
-    <div>
-      <AvailabilityTitle className={titleClass || "text-[19px] font-bold leading-snug tracking-tight [text-wrap:balance]"} />
-      <div className={`mt-3 flex items-center rounded-xl bg-[linear-gradient(135deg,#f3f5f8,#e8eef5)] ${sm ? "gap-3 p-3" : "gap-4 p-3.5 pr-4"}`}>
-        <GuideCover size={sm ? "sm" : "md"} />
-        <div className="min-w-0">
-          <div className="text-[11.5px] font-bold uppercase tracking-[0.08em] text-[#9a7a2e]">Bónus grátis</div>
-          <div className={`mt-0.5 font-bold leading-snug ${sm ? "text-[14px]" : "text-[15px]"}`}>Guia: 12 ferramentas para comprar em planta com segurança</div>
-          <ul className={`mt-1.5 space-y-0.5 leading-snug text-muted ${sm ? "text-[12px]" : "text-[12.5px]"}`}>
-            {OFFER.map((o) => (
-              <li key={o} className="flex items-start gap-1.5"><IconCheck size={13} className="mt-[2px] shrink-0 text-[#2fa863]" /> {o}</li>
-            ))}
-          </ul>
-        </div>
+    <div className="mt-3 flex items-center gap-3 rounded-xl bg-[linear-gradient(135deg,#f3f5f8,#e8eef5)] p-3">
+      <GuideCover size="sm" />
+      <div className="min-w-0">
+        <div className="text-[11.5px] font-bold uppercase tracking-[0.08em] text-[#9a7a2e]">Bónus grátis</div>
+        <div className="mt-0.5 text-[14px] font-bold leading-snug">Guia: 12 ferramentas para comprar em planta com segurança</div>
+        <ul className="mt-1.5 space-y-0.5 text-[12px] leading-snug text-muted">
+          {OFFER.map((o) => (
+            <li key={o} className="flex items-start gap-1.5"><IconCheck size={13} className="mt-[2px] shrink-0 text-[#2fa863]" /> {o}</li>
+          ))}
+        </ul>
       </div>
     </div>
   );
@@ -136,6 +137,8 @@ export default function AvailabilityForm({ id, compact = false }: { id: string; 
       <button type="submit" disabled={sending} className="btn btn-primary mt-3.5 w-full py-3 text-[15px] disabled:opacity-70">
         {sending ? "A verificar…" : "Verificar disponibilidade"}
       </button>
+
+      <Bonus />
 
       <p className="mt-3 flex items-start gap-1.5 text-[12px] leading-snug text-muted">
         <IconLock size={13} className="mt-0.5 shrink-0" />

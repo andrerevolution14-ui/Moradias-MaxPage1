@@ -7,6 +7,7 @@ import { trackOnce } from "@/lib/track";
 import { Icon360, IconArrowL, IconArrowR, IconCamera, IconPlan } from "../icons";
 import Lightbox, { preloadGlass } from "./Lightbox";
 import Tour360Button from "./Tour360";
+import GalleryVideo from "./GalleryVideo";
 
 /**
  * Mosaico estilo portal que se desliza para a direita:
@@ -50,11 +51,13 @@ export default function Gallery() {
   const small = "w-[42vw] sm:w-[30vw] lg:w-[300px]";
 
   // Mosaico da visita 360° (como o "Visita Virtual" dos portais)
-  const items: ({ kind: "pic"; i: number } | { kind: "tour" })[] = [];
+  const items: ({ kind: "pic"; i: number } | { kind: "tour" } | { kind: "video" })[] = [];
   GALLERY.forEach((_, i) => {
     items.push({ kind: "pic", i });
     // A 360° vem logo a seguir à capa (em cima na 2.ª coluna). As pequenas vão aos pares: divisão em cima, detalhe por baixo.
     if (i === 0) items.push({ kind: "tour" });
+    // Vídeo vertical a ocupar a 3.ª coluna inteira
+    if (i === 1) items.push({ kind: "video" });
   });
 
   return (
@@ -66,6 +69,9 @@ export default function Gallery() {
           className="no-scrollbar grid h-[300px] snap-x snap-mandatory scroll-px-4 grid-flow-col grid-rows-2 gap-2 overflow-x-auto scroll-smooth px-4 sm:h-[420px] lg:h-[520px] lg:scroll-px-0 lg:px-0"
         >
           {items.map((it, k) => {
+            if (it.kind === "video") {
+              return <GalleryVideo key="video" className="row-span-2 h-full w-[169px] sm:w-[236px] lg:w-[293px]" />;
+            }
             if (it.kind === "tour") {
               return (
                 <Tour360Button key="tour" className={`${tile} ${small} group text-left`}>
