@@ -9,6 +9,9 @@ const STATUS: Record<LotStatus, { label: string; cls: string }> = {
   vendido: { label: "Vendido", cls: "bg-zinc-100 text-zinc-500 ring-zinc-200" },
 };
 
+const ORDER: Record<string, number> = { vendido: 0, reservado: 1, disponivel: 2 };
+const sortLots = <T extends { status: string; id: string }>(ls: T[]) => [...ls].sort((a, b) => ORDER[a.status] - ORDER[b.status] || a.id.localeCompare(b.id));
+
 export default function LotsTable() {
   const { lots, available, openComposer } = useLanding();
   return (
@@ -32,7 +35,7 @@ export default function LotsTable() {
             </tr>
           </thead>
           <tbody>
-            {lots.map((l) => {
+            {sortLots(lots).map((l) => {
               const s = STATUS[l.status];
               const off = l.status !== "disponivel";
               return (

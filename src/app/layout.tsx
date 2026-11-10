@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Inter, Fraunces } from "next/font/google";
 import MetaPixel from "@/components/MetaPixel";
-import CookieBanner from "@/components/CookieBanner";
 import Analytics from "@/components/Analytics";
 import "./globals.css";
 
@@ -42,7 +41,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-dvh">
         {children}
         <MetaPixel />
-        <CookieBanner />
         <Suspense fallback={null}>
           <Analytics />
         </Suspense>

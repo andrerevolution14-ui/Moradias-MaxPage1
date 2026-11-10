@@ -4,7 +4,6 @@ import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ev, evOnce, flush } from "@/lib/analytics";
-import { CONSENT_EVENT, getConsent } from "@/lib/consent";
 import { getSource } from "@/lib/track";
 
 const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID || "w054c2dshv";
@@ -19,12 +18,9 @@ export default function Analytics() {
   const path = usePathname();
   const [clarity, setClarity] = useState(false);
 
-  // Clarity (gravações de sessão e mapas de calor): só com consentimento de cookies
+  // Clarity (gravações de sessão e mapas de calor): só no site publicado e fora do painel
   useEffect(() => {
-    const sync = () => setClarity(getConsent() === "granted" && !location.pathname.startsWith("/leads") && !/^(localhost|127\.)/.test(location.hostname));
-    sync();
-    window.addEventListener(CONSENT_EVENT, sync);
-    return () => window.removeEventListener(CONSENT_EVENT, sync);
+    setClarity(!location.pathname.startsWith("/leads") && !/^(localhost|127\.)/.test(location.hostname));
   }, []);
 
   useEffect(() => {

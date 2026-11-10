@@ -24,6 +24,9 @@ const SUMMARY = [
   ["Contrato a preço fechado", "335.000 € chave na mão, prazo de 10 meses e penalizações em contrato."],
 ];
 
+const ORDER: Record<string, number> = { vendido: 0, reservado: 1, disponivel: 2 };
+const sortLots = <T extends { status: string; id: string }>(ls: T[]) => [...ls].sort((a, b) => ORDER[a.status] - ORDER[b.status] || a.id.localeCompare(b.id));
+
 export default function ThankYou() {
   const q = useSearchParams();
   const token = q.get("l");
@@ -77,7 +80,7 @@ export default function ThankYou() {
           <div className="mt-4 rounded-xl bg-soft p-4">
             <div className="text-[13px] font-semibold text-muted">Disponibilidade neste momento</div>
             <ul className="mt-2 grid gap-1.5">
-              {lots.map((l) => {
+              {sortLots(lots).map((l) => {
                 const s = STATUS[l.status];
                 return (
                   <li key={l.id} className="flex items-center justify-between text-[15px]">

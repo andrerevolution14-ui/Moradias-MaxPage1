@@ -16,7 +16,6 @@ import LotsTable from "@/components/landing/LotsTable";
 import Simulator, { MonthlyFrom } from "@/components/landing/Simulator";
 import Ask from "@/components/landing/Ask";
 import SeenTracker from "@/components/landing/SeenTracker";
-import CookiePrefs from "@/components/CookiePrefs";
 import Tour360Button from "@/components/landing/Tour360";
 import { PlansGrid, WorksStrip } from "@/components/landing/PicStrip";
 
@@ -515,7 +514,6 @@ function Footer() {
         </div>
         <div className="flex gap-4">
           <Link href="/privacidade" className="underline">Privacidade</Link>
-          <CookiePrefs />
           <span>© 2026 Domaine XXV · {BUILDER.legal}</span>
         </div>
       </div>

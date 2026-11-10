@@ -30,11 +30,10 @@ export function getFbc() {
   return undefined;
 }
 
-import { getConsent } from "./consent";
 
-/** Pode medir: domínio real, fora do painel /leads e com consentimento de cookies. */
+/** Pode medir: domínio real e fora do painel /leads. */
 export function trackingAllowed() {
-  return domainAllowed() && getConsent() === "granted" && !location.pathname.startsWith("/leads");
+  return domainAllowed() && !location.pathname.startsWith("/leads");
 }
 
 /** O Pixel só corre no site publicado: nunca em localhost nem em pré-visualizações *.vercel.app. */
