@@ -480,11 +480,11 @@ function Faq() {
 function ContactCard() {
   return (
     <div className="rounded-2xl border border-line bg-white p-5 shadow-[0_10px_30px_rgba(21,32,43,0.08)]">
+      <TrustMini className="mb-4 border-b border-line pb-4" />
       <Offer size="sm" titleClass="text-[18px] font-bold leading-snug tracking-tight [text-wrap:balance]" />
       <div className="mt-4">
         <AvailabilityForm id="sidebar" compact />
       </div>
-      <TrustMini className="mt-4 border-t border-line pt-4" />
     </div>
   );
 }
@@ -494,11 +494,11 @@ function PromoterBlock() {
     <section id="disponibilidade" className="mt-12 bg-soft">
       <div className="mx-auto max-w-[560px] px-4 py-12 lg:py-16">
         <div className="rounded-2xl border border-line bg-white p-5 sm:p-6">
+          <TrustMini className="mb-4 border-b border-line pb-4" />
           <Offer titleClass="text-[22px] font-bold leading-tight tracking-tight [text-wrap:balance] sm:text-[26px]" />
           <div className="mt-4">
             <AvailabilityForm id="promoter_block" />
           </div>
-          <TrustMini className="mt-4 border-t border-line pt-4" />
         </div>
       </div>
     </section>

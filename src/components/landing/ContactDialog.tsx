@@ -56,11 +56,11 @@ export default function ContactDialog() {
         >
           <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-line lg:hidden" />
           <button onClick={closeSheet} className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-soft" aria-label="Fechar"><IconX size={18} /></button>
-          <div className="pr-10"><Offer size="sm" titleClass="text-[19px] font-bold leading-snug tracking-tight [text-wrap:balance]" /></div>
+          <TrustMini className="mb-4 border-b border-line pb-4 pr-10" />
+          <Offer size="sm" titleClass="text-[19px] font-bold leading-snug tracking-tight [text-wrap:balance]" />
           <div className="mt-4">
             <AvailabilityForm id="dialog" compact />
           </div>
-          <TrustMini className="mt-4 border-t border-line pt-4" />
         </div>
       </div>
     </>
