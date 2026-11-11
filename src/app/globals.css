@@ -199,3 +199,11 @@ input[type="range"] {
   @page { margin: 14mm; }
 }
 
+/* Scroll suave: as faixas horizontais não "puxam" a página nem o gesto de voltar atrás */
+.snap-x {
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+img, video { -webkit-user-drag: none; }
+

@@ -44,9 +44,15 @@ export default function Analytics() {
         visibleSince = 0;
       }
     };
+    let ticking = false;
     const onScroll = () => {
-      const h = document.documentElement.scrollHeight - innerHeight;
-      if (h > 0) maxScroll = Math.max(maxScroll, Math.round((scrollY / h) * 100));
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const h = document.documentElement.scrollHeight - innerHeight;
+        if (h > 0) maxScroll = Math.max(maxScroll, Math.round((scrollY / h) * 100));
+      });
     };
     const report = () => {
       if (visibleSince) {

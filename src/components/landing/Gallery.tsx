@@ -25,10 +25,16 @@ export default function Gallery() {
     preloadGlass([...GALLERY, ...WORKS, ...PLANS].map((g) => g.src));
   }, []);
 
+  const ticking = useRef(false);
   function onScroll() {
-    const x = track.current?.scrollLeft || 0;
-    setAtStart(x < 40);
-    if (x > 40) trackOnce("gallery", "ViewContent", { content_name: "galeria", content_type: "home_listing" });
+    if (ticking.current) return;
+    ticking.current = true;
+    requestAnimationFrame(() => {
+      ticking.current = false;
+      const x = track.current?.scrollLeft || 0;
+      setAtStart(x < 40);
+      if (x > 40) trackOnce("gallery", "ViewContent", { content_name: "galeria", content_type: "home_listing" });
+    });
   }
   function step(d: number) {
     const el = track.current;

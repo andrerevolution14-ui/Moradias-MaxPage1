@@ -16,6 +16,7 @@ import LotsTable from "@/components/landing/LotsTable";
 import Simulator, { MonthlyFrom } from "@/components/landing/Simulator";
 import Ask from "@/components/landing/Ask";
 import SeenTracker from "@/components/landing/SeenTracker";
+import MapEmbed from "@/components/landing/MapEmbed";
 import Tour360Button from "@/components/landing/Tour360";
 import { PlansGrid, WorksStrip } from "@/components/landing/PicStrip";
 
@@ -204,7 +205,7 @@ function Location() {
       <h2 className="sec-title">Localização</h2>
       <p className="-mt-2 mb-4 text-[15px] text-muted">{PROJECT.address}, {PROJECT.postal}</p>
       <div className="relative h-[380px] overflow-hidden rounded-xl border border-line bg-soft sm:h-[440px]">
-        <iframe src={PROJECT.mapEmbed} title="Mapa: Domaine XXV em Oliveirinha, Aveiro" loading="lazy" className="absolute inset-0 h-full w-full border-0" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />
+        <div className="absolute inset-0"><MapEmbed src={PROJECT.mapEmbed} title="Mapa: Domaine XXV em Oliveirinha, Aveiro" /></div>
       </div>
       <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
         {DISTANCES.map(([t, p]) => (
