@@ -23,10 +23,10 @@ import { Guarantees, InlineCta, Triangle } from "@/components/landing/Persuasion
 import Urgency from "@/components/landing/Urgency";
 
 const NAV = [
-  ["garantias", "Garantias"],
-  ["unidades", "Moradias"],
   ["localizacao", "Localização"],
   ["plantas", "Plantas"],
+  ["garantias", "Garantias"],
+  ["unidades", "Moradias"],
   ["condicoes", "Como comprar"],
   ["simulador", "Simulador"],
   ["faq", "Perguntas"],
@@ -54,8 +54,10 @@ export default function Page() {
             <Summary />
 
 
-            {/* Ordem pensada para conversão: porquê esta casa → é seguro? → o que resta → onde fica → como é → quem já confiou → detalhes → como comprar */}
+            {/* Ordem pensada para conversão: porquê esta casa → onde fica → como é → é seguro? → o que resta → quem já confiou → detalhes → como comprar */}
             <Description />
+            <Location />
+            <Plans />
             <Guarantees />
 
             <section id="unidades" className="sec">
@@ -64,8 +66,6 @@ export default function Page() {
               <InlineCta cta="inline_lotes" title="Confirme qual dos lotes livres pode ser seu." />
             </section>
 
-            <Location />
-            <Plans />
             <Testimonials />
             <Details />
             <BuyInPlan />
