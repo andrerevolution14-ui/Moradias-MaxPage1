@@ -36,6 +36,24 @@ export default function Gallery() {
       if (x > 40) trackOnce("gallery", "ViewContent", { content_name: "galeria", content_type: "home_listing" });
     });
   }
+  // Só as primeiras fotos carregam logo; as restantes quando a pessoa desliza a galeria ou a página fica parada
+  const [rest, setRest] = useState(false);
+  useEffect(() => {
+    const go = () => setRest(true);
+    const later = () => {
+      const w = window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
+      if (w.requestIdleCallback) w.requestIdleCallback(go, { timeout: 4000 });
+      else setTimeout(go, 2500);
+    };
+    if (document.readyState === "complete") later();
+    else window.addEventListener("load", later, { once: true });
+    window.addEventListener("scroll", go, { once: true, passive: true });
+    return () => {
+      window.removeEventListener("load", later);
+      window.removeEventListener("scroll", go);
+    };
+  }, []);
+
   function step(d: number) {
     const el = track.current;
     if (el) el.scrollBy({ left: d * el.clientWidth * 0.8, behavior: "smooth" });
@@ -71,7 +89,10 @@ export default function Gallery() {
       <div className="relative">
         <div
           ref={track}
-          onScroll={onScroll}
+          onScroll={(e) => {
+            if (!rest) setRest(true);
+            onScroll();
+          }}
           className="no-scrollbar grid h-[300px] snap-x snap-mandatory scroll-px-4 grid-flow-col grid-rows-2 gap-2 overflow-x-auto scroll-smooth px-4 sm:h-[420px] lg:h-[520px] lg:scroll-px-0 lg:px-0"
         >
           {items.map((it, k) => {
@@ -95,17 +116,17 @@ export default function Gallery() {
             const g = GALLERY[it.i];
             return (
               <button key={g.src} onClick={() => setOpen(it.i)} className={`${tile} ${g.big ? big : small} ${g.plan ? "bg-white ring-1 ring-line" : ""}`} aria-label={`Ver foto: ${g.alt}`}>
-                <Image
+                {(k < 4 || rest) && <Image
                   src={g.src}
                   alt={g.alt}
                   fill
                   sizes={sizesFor(g)}
                   quality={85}
                   priority={k === 0}
-                  loading={k === 0 ? undefined : k < 5 ? "eager" : "lazy"}
+                  loading={k === 0 ? undefined : k < 4 ? "eager" : "lazy"}
                   className={g.plan ? "object-contain p-2" : "object-cover"}
                   style={g.pos ? { objectPosition: g.pos } : undefined}
-                />
+                />}
                 {k === 0 && (
                   <span className="pointer-events-none absolute left-3 top-3 flex flex-wrap gap-1.5">
                     <span className="rounded-md bg-cta px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-paper">Venda em planta</span>

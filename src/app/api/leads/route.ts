@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
   const message = clip(body.message, 2000);
   const intent = clip(body.intent, 40) || null;
   const lot = clip(body.lot, 40) || null;
+  const bestTime = clip(body.bestTime, 40) || null;
 
   if (name.length < 2) return NextResponse.json({ error: "Indique o seu nome.", field: "name" }, { status: 422 });
   if (!phone) return NextResponse.json({ error: "Verifique o número de telemóvel.", field: "phone" }, { status: 422 });
@@ -102,6 +103,7 @@ export async function POST(req: NextRequest) {
           email = COALESCE(${email}, email),
           intent = COALESCE(${intent}, intent),
           lot = COALESCE(${lot}, lot),
+          best_time = COALESCE(${bestTime}, best_time),
           unread = TRUE,
           updated_at = now(),
           last_message_at = now()
@@ -109,8 +111,8 @@ export async function POST(req: NextRequest) {
         RETURNING *`;
     } else {
       [lead] = await sql<LeadRow[]>`
-        INSERT INTO leads (token, name, phone, email, intent, lot, source, ip, user_agent)
-        VALUES (${newToken()}, ${name}, ${phone}, ${email}, ${intent}, ${lot}, ${sql.json(source)}, ${ip}, ${ua})
+        INSERT INTO leads (token, name, phone, email, intent, lot, best_time, source, ip, user_agent)
+        VALUES (${newToken()}, ${name}, ${phone}, ${email}, ${intent}, ${lot}, ${bestTime}, ${sql.json(source)}, ${ip}, ${ua})
         RETURNING *`;
     }
     await sql`INSERT INTO messages (lead_id, sender, body) VALUES (${lead.id}, 'lead', ${message})`;

@@ -62,6 +62,7 @@ async function ensureSchema(sql: ReturnType<typeof postgres>) {
     ALTER TABLE leads ADD COLUMN IF NOT EXISTS whatsapp_at TIMESTAMPTZ;
     ALTER TABLE leads ADD COLUMN IF NOT EXISTS affordability JSONB;
     ALTER TABLE leads ADD COLUMN IF NOT EXISTS quality TEXT;
+    ALTER TABLE leads ADD COLUMN IF NOT EXISTS best_time TEXT;
     ALTER TABLE leads ADD COLUMN IF NOT EXISTS quality_at TIMESTAMPTZ;
     ALTER TABLE leads ADD COLUMN IF NOT EXISTS meta_sent TEXT[] NOT NULL DEFAULT '{}';
 
@@ -115,6 +116,7 @@ export type LeadRow = {
   last_message_at: Date;
   whatsapp_at: Date | null;
   quality: string | null;
+  best_time: string | null;
   quality_at: Date | null;
   meta_sent: string[];
   affordability: { income: number; debts: number; years: number; rate: number; maxLoan: number; fits: boolean; at: string } | null;

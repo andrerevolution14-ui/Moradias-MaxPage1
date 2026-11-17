@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PROMOTER } from "@/lib/config";
 import { track } from "@/lib/track";
 import { ev } from "@/lib/analytics";
@@ -16,6 +16,19 @@ import { useLanding } from "./LandingProvider";
 export default function ContactDialog() {
   const { sheetOpen, closeSheet, openComposer } = useLanding();
   const panel = useRef<HTMLDivElement>(null);
+  // Esconde a barra fixa quando já há um botão de pedido no ecrã (evita dois botões iguais)
+  const [hideBar, setHideBar] = useState(false);
+  useEffect(() => {
+    const els = document.querySelectorAll("[data-inline-cta], #disponibilidade");
+    if (!els.length) return;
+    const seen = new Set<Element>();
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) e.isIntersecting ? seen.add(e.target) : seen.delete(e.target);
+      setHideBar(seen.size > 0);
+    }, { rootMargin: "0px 0px -80px 0px" });
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!sheetOpen) return;
@@ -37,7 +50,7 @@ export default function ContactDialog() {
   return (
     <>
       {/* Barra fixa no telemóvel */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper px-3 pb-[max(env(safe-area-inset-bottom),10px)] pt-2.5 [transform:translateZ(0)] lg:hidden">
+      <div className={`fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper px-3 pb-[max(env(safe-area-inset-bottom),10px)] pt-2.5 transition-transform duration-200 [transform:translateZ(0)] lg:hidden ${hideBar ? "translate-y-full" : ""}`}>
         <div className="grid grid-cols-[1fr_auto] gap-2">
           <button className="btn btn-primary py-3" onClick={() => openComposer({ cta: "mobile_bar" })}>
             Verificar disponibilidade

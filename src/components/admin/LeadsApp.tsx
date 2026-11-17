@@ -18,6 +18,7 @@ type LeadListItem = {
   last_message_at: string;
   whatsapp_at: string | null;
   quality: string | null;
+  best_time: string | null;
   meta_sent: string[] | null;
   affordability: { income: number; debts: number; years: number; rate: number; maxLoan: number; fits: boolean } | null;
   last_message: string | null;
@@ -268,6 +269,7 @@ function Dashboard({ sms, config, onLogout }: { sms: boolean; config: Config | n
                               {l.affordability.fits ? "orçamento ok" : "orçamento curto"}
                             </span>
                           )}
+                          {l.best_time && <span className="text-[10.5px] text-muted">{l.best_time.split(" ")[0]}</span>}
                           {l.lot && <span className="text-[10.5px] text-muted">{l.lot}</span>}
                         </div>
                       </div>
@@ -395,6 +397,7 @@ function LeadDetail({ id, sms, onBack, onChange }: { id: number; sms: boolean; o
               <span className="tabular-nums">{fmtPhone(lead.phone)}</span>
               {lead.email && <span>{lead.email}</span>}
               <span>desde {fullDate(lead.created_at)}</span>
+              {lead.best_time && <span className="font-semibold text-ink">Ligar: {lead.best_time}</span>}
               {lead.whatsapp_at && <span className="font-semibold text-[#1a8f4b]">abriu o WhatsApp · {fullDate(lead.whatsapp_at)}</span>}
               {lead.affordability && (
                 <span className={`font-semibold ${lead.affordability.fits ? "text-emerald-700" : "text-amber-700"}`}>

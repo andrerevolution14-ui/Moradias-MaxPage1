@@ -4,7 +4,7 @@ import {
   BRANDS, BUILDER, DESIGNERS, DISTANCES, FAQ, FINANCING_BANK, LOT_SPEC, PLANS, PROJECT, PROMOTER, ROOMS, TESTIMONIALS, WORKS, formatEUR,
 } from "@/lib/config";
 import {
-  IconArea, IconBath, IconBed, IconCar, IconCheck, IconChevron, IconClock, IconDoc, IconHammer, IconKey,
+  IconArea, IconBath, IconBed, IconCamera, IconCar, IconCheck, IconChevron, IconClock, IconDoc, IconHammer, IconKey,
   IconLock, IconPhone, IconPin, IconShield, IconStar, IconTree,
 } from "@/components/icons";
 import LandingProvider from "@/components/landing/LandingProvider";
@@ -19,9 +19,12 @@ import SeenTracker from "@/components/landing/SeenTracker";
 import MapEmbed from "@/components/landing/MapEmbed";
 import Tour360Button from "@/components/landing/Tour360";
 import { PlansGrid, WorksStrip } from "@/components/landing/PicStrip";
+import { Guarantees, InlineCta, Triangle } from "@/components/landing/Persuasion";
+import Urgency from "@/components/landing/Urgency";
 
 const NAV = [
   ["localizacao", "Localização"],
+  ["garantias", "Garantias"],
   ["unidades", "Moradias"],
   ["plantas", "Plantas"],
   ["condicoes", "Como comprar"],
@@ -52,11 +55,13 @@ export default function Page() {
 
 
             <Description />
+            <Guarantees />
             <Location />
 
             <section id="unidades" className="sec">
               <h2 className="sec-title">Moradias disponíveis</h2>
               <LotsTable />
+              <InlineCta cta="inline_lotes" title="Confirme qual dos lotes livres pode ser seu." />
             </section>
 
             <Plans />
@@ -67,6 +72,7 @@ export default function Page() {
               <h2 className="sec-title">Simulador de crédito habitação</h2>
               <p className="-mt-2 mb-4 text-[15px] text-muted">Quanto ficaria a pagar por mês, com a entrada fixa de 10%.</p>
               <Simulator />
+              <InlineCta cta="inline_simulador" title="A prestação cabe no seu orçamento? Fale com o André antes que os lotes acabem." />
             </section>
 
             <Builder />
@@ -120,8 +126,11 @@ function Summary() {
   return (
     <section className="pt-4">
       <h1 className="text-[23px] font-bold leading-tight tracking-tight [text-wrap:balance] sm:text-[32px]">
-        Moradia T3 com jardim em Oliveirinha, Aveiro
+        A moradia T3 com jardim a 8 minutos de Aveiro, pronta a habitar em 10 meses
       </h1>
+      <p className="mt-1.5 text-[15px] leading-snug text-[#2b3540] [text-wrap:pretty]">
+        Espaço, localização e preço, sem abdicar de nenhum. Preço fechado em contrato, com impostos incluídos.
+      </p>
       <p className="mt-1.5 flex items-start gap-1.5 text-[15px] text-muted">
         <IconPin size={16} className="mt-[3px] shrink-0" />
         <span>{PROJECT.address}, {PROJECT.postal} · <a href="#localizacao" className="underline">ver mapa</a></span>
@@ -160,14 +169,14 @@ function Summary() {
         ))}
       </ul>
 
-      {/* Contacto rápido no telemóvel, logo acima da dobra */}
-      <div className="mt-5 flex items-center gap-3 rounded-2xl border border-line bg-white p-3.5 lg:hidden">
-        <Image src={PROMOTER.avatar} alt={PROMOTER.name} width={48} height={48} className="h-12 w-12 rounded-full object-cover" />
-        <div className="min-w-0 flex-1 leading-tight">
-          <div className="font-bold">{PROMOTER.name}</div>
-          <div className="text-[13px] text-muted">Promotor · confirma no próprio dia</div>
+      {/* Pedido de contacto logo a seguir à promessa e ao preço */}
+      <div data-inline-cta className="mt-5 rounded-2xl border border-line bg-white p-3.5">
+        <Urgency />
+        <Ask className="btn btn-primary mt-3 w-full py-3.5 text-[16px]" preset={{ cta: "summary" }}>Verificar disponibilidade</Ask>
+        <div className="mt-3 flex items-center gap-2.5">
+          <Image src={PROMOTER.avatar} alt={PROMOTER.name} width={36} height={36} className="h-9 w-9 rounded-full object-cover" />
+          <p className="text-[12.5px] leading-snug text-muted"><b className="text-ink">{PROMOTER.name}</b>, promotor, responde no próprio dia. Sem compromisso.</p>
         </div>
-        <Ask className="btn btn-primary px-3.5 py-2.5 text-sm" preset={{ cta: "summary_mobile" }}>Verificar lotes</Ask>
       </div>
     </section>
   );
@@ -180,6 +189,7 @@ function Description() {
         <p className="font-serif text-[22px] leading-snug text-ink [text-wrap:balance]">
           Em Aveiro, quase sempre se escolhe dois: espaço, localização ou preço. Aqui não tem de abdicar de nenhum.
         </p>
+        <Triangle />
         <p>
           Três moradias lado a lado, numa rua tranquila de Oliveirinha. A oito minutos do centro de Aveiro e a dois da A17 e da A25.
         </p>
@@ -195,6 +205,7 @@ function Description() {
           e pavimento Castro Wood Floors. Projeto da Risco Calculado, construção do Grupo Freitas Renovações. Os acabamentos escolhe-os consigo.
         </p>
       </div>
+      <InlineCta cta="inline_descricao" title="Gostou da casa? Veja se o seu lote continua livre." />
     </section>
   );
 }
@@ -215,6 +226,7 @@ function Location() {
           </li>
         ))}
       </ul>
+      <InlineCta cta="inline_localizacao" title="Quer ver o terreno ao vivo? Há visitas disponíveis esta semana." />
     </section>
   );
 }
@@ -298,6 +310,7 @@ function Details() {
           </li>
         ))}
       </ul>
+      <InlineCta cta="inline_detalhes" title="Pronta a habitar, com marcas de referência. Peça já a disponibilidade." />
     </section>
   );
 }
@@ -337,11 +350,12 @@ function BuyInPlan() {
 function Safety() {
   const items = [
     [IconKey, "O terreno fica em seu nome", "Compra o lote por escritura antes de a obra começar. Desde aí, é o proprietário do terreno."],
-    [IconDoc, "Uma única entrada de 33.500 €", "10% do preço, imputados ao valor total. O contrato define as condições de devolução, incluindo se o crédito não for aprovado."],
+    [IconDoc, "Uma única entrada de 33.500 €", "10% do preço, imputados ao valor total. Se o banco não aprovar o crédito, o sinal é devolvido na íntegra (cláusula no CPCV)."],
     [IconHammer, "Construção em aço leve (LSF)", `Estrutura em Light Steel Framing, executada pelo Grupo Freitas Renovações (alvará IMPIC n.º ${BUILDER.licence}) segundo o projeto e o caderno de encargos.`],
     [IconShield, "A obra não depende só do banco", "O crédito é libertado por fases. A construtora tem capacidade própria para manter a obra perante atrasos pontuais nos desembolsos."],
     [IconLock, "Retenção de boa execução", "Cerca de 33.500 € do preço só são pagos na fase final prevista no contrato. Não é um custo adicional."],
     [IconClock, "Prazo e penalizações em contrato", "10 meses a partir do início definido no contrato, com penalizações por atrasos imputáveis à construtora."],
+    [IconCamera, "Relatório fotográfico semanal", "Recebe todas as semanas fotografias e o ponto da obra, do início à entrega da chave."],
     [IconCheck, "Fiscalização independente", "Pode levar o seu engenheiro para acompanhar a obra, com agendamento e regras de segurança."],
     [IconStar, "Documentação antes de decidir", "Projeto, licenciamento, caderno de encargos e minutas dos contratos, para analisar antes de assinar."],
   ] as const;
@@ -454,6 +468,7 @@ function Testimonials() {
           </figure>
         ))}
       </div>
+      <InlineCta cta="inline_testemunhos" title="Construa com quem cumpre prazos e orçamentos." />
     </section>
   );
 }
@@ -498,6 +513,7 @@ function PromoterBlock() {
     <section id="disponibilidade" className="mt-12 bg-soft">
       <div className="mx-auto max-w-[560px] px-4 py-12 lg:py-16">
         <div className="rounded-2xl border border-line bg-white p-5 sm:p-6">
+          <Urgency className="mb-3" />
           <TrustMini className="mb-4 border-b border-line pb-4" />
           <Offer titleClass="text-[22px] font-bold leading-tight tracking-tight [text-wrap:balance] sm:text-[26px]" />
           <div className="mt-4">

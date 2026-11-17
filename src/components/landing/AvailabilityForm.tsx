@@ -24,6 +24,8 @@ export function AvailabilityTitle({ className = "" }: { className?: string }) {
   return <h2 className={className}>{t}</h2>;
 }
 
+export const BEST_TIMES = ["Manhã (9h–12h)", "Almoço (12h–14h)", "Tarde (14h–18h)", "Pós-laboral (18h–21h)"];
+
 const OFFER = ["Calculadora: quanto pode comprar", "Calendário, checklists e cláusulas", "Os erros mais caros a evitar"];
 
 /** Título do formulário (a oferta do guia aparece por baixo do botão) */
@@ -59,6 +61,7 @@ export default function AvailabilityForm({ id, compact = false }: { id: string; 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [hp, setHp] = useState("");
+  const [bestTime, setBestTime] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<{ msg: string; field?: string } | null>(null);
 
@@ -89,7 +92,8 @@ export default function AvailabilityForm({ id, compact = false }: { id: string; 
         body: JSON.stringify({
           name,
           phone,
-          message: `Pedido no site: verificar disponibilidade${lot ? ` (${lot})` : ""} e ver o guia de compra em planta.`,
+          message: `Pedido no site: verificar disponibilidade${lot ? ` (${lot})` : ""} e ver o guia de compra em planta.${bestTime ? `\nHorário preferido para ligar: ${bestTime}.` : ""}`,
+          bestTime,
           intent: "disponibilidade",
           lot,
           website: hp,
@@ -133,6 +137,22 @@ export default function AvailabilityForm({ id, compact = false }: { id: string; 
           <span className="mb-1 block text-[13px] font-semibold">Telemóvel</span>
           <input className="field" id={`tel-${id}`} name="tel" type="tel" inputMode="tel" autoComplete="tel" enterKeyHint="send" value={phone} onChange={(e) => setPhone(e.target.value)} aria-invalid={error?.field === "phone"} placeholder="912 345 678" />
         </label>
+        <fieldset className={compact ? "" : "sm:col-span-2"}>
+          <legend className="mb-1 block text-[13px] font-semibold">Quando prefere que o André ligue?</legend>
+          <div className="grid grid-cols-2 gap-1.5">
+            {BEST_TIMES.map((t) => (
+              <button
+                type="button"
+                key={t}
+                aria-pressed={bestTime === t}
+                onClick={() => setBestTime(bestTime === t ? "" : t)}
+                className={`rounded-lg border px-2 py-2 text-[13px] font-medium leading-tight transition ${bestTime === t ? "border-cta bg-cta text-paper" : "border-line bg-white text-ink"}`}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        </fieldset>
         <input tabIndex={-1} autoComplete="off" className="hidden" value={hp} onChange={(e) => setHp(e.target.value)} name="website_hp" aria-hidden />
       </div>
 
