@@ -23,9 +23,9 @@ export function Triangle() {
     ["Espaço + cidade", "Paga muito mais", "Moradias grandes perto da cidade passam facilmente os 500.000 €."],
   ] as const;
   return (
-    <div className="mt-5 overflow-hidden rounded-2xl border border-line bg-white">
+    <div className="overflow-hidden rounded-2xl border border-line bg-white">
       <div className="flex items-center gap-4 p-4">
-        <svg viewBox="0 0 120 108" className="h-[92px] w-[102px] shrink-0" aria-hidden>
+        <svg viewBox="0 0 120 108" className="h-[74px] w-[82px] shrink-0 sm:h-[92px] sm:w-[102px]" aria-hidden>
           <path d="M60 10 L110 98 L10 98 Z" fill="#e8eef5" stroke="#24476b" strokeWidth="2.5" strokeLinejoin="round" />
           {[[60, 10], [110, 98], [10, 98]].map(([x, y]) => (
             <g key={`${x}-${y}`}>
@@ -37,7 +37,7 @@ export function Triangle() {
         </svg>
         <div className="min-w-0">
           <div className="eyebrow">A regra do triângulo</div>
-          <p className="mt-1 text-[15px] font-semibold leading-snug">Espaço, localização e preço. Em Aveiro, quase sempre só pode escolher dois.</p>
+          <p className="mt-1 text-[14px] font-semibold leading-snug sm:text-[15px]">Espaço, localização e preço. Em Aveiro, quase sempre só pode escolher dois. Aqui tem os três.</p>
         </div>
       </div>
       <ul className="divide-y divide-line border-t border-line">

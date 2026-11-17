@@ -23,9 +23,9 @@ import { Guarantees, InlineCta, Triangle } from "@/components/landing/Persuasion
 import Urgency from "@/components/landing/Urgency";
 
 const NAV = [
-  ["localizacao", "Localização"],
   ["garantias", "Garantias"],
   ["unidades", "Moradias"],
+  ["localizacao", "Localização"],
   ["plantas", "Plantas"],
   ["condicoes", "Como comprar"],
   ["simulador", "Simulador"],
@@ -54,9 +54,9 @@ export default function Page() {
             <Summary />
 
 
+            {/* Ordem pensada para conversão: porquê esta casa → é seguro? → o que resta → onde fica → como é → quem já confiou → detalhes → como comprar */}
             <Description />
             <Guarantees />
-            <Location />
 
             <section id="unidades" className="sec">
               <h2 className="sec-title">Moradias disponíveis</h2>
@@ -64,7 +64,9 @@ export default function Page() {
               <InlineCta cta="inline_lotes" title="Confirme qual dos lotes livres pode ser seu." />
             </section>
 
+            <Location />
             <Plans />
+            <Testimonials />
             <Details />
             <BuyInPlan />
 
@@ -76,7 +78,6 @@ export default function Page() {
             </section>
 
             <Builder />
-            <Testimonials />
             <Faq />
           </div>
 
@@ -125,14 +126,14 @@ function Summary() {
   ] as const;
   return (
     <section className="pt-4">
-      <h1 className="text-[23px] font-bold leading-tight tracking-tight [text-wrap:balance] sm:text-[32px]">
+      <h1 className="text-[19px] font-bold leading-[1.25] tracking-tight [text-wrap:balance] sm:text-[30px] sm:leading-tight">
         A moradia T3 com jardim a 8 minutos de Aveiro, pronta a habitar em 10 meses
       </h1>
-      <p className="mt-1.5 text-[15px] leading-snug text-[#2b3540] [text-wrap:pretty]">
+      <p className="mt-1 text-[13.5px] leading-snug text-muted [text-wrap:pretty] sm:text-[15px]">
         Espaço, localização e preço, sem abdicar de nenhum. Preço fechado em contrato, com impostos incluídos.
       </p>
-      <p className="mt-1.5 flex items-start gap-1.5 text-[15px] text-muted">
-        <IconPin size={16} className="mt-[3px] shrink-0" />
+      <p className="mt-1.5 flex items-start gap-1 text-[12.5px] text-muted sm:text-[14px]">
+        <IconPin size={14} className="mt-[2px] shrink-0" />
         <span>{PROJECT.address}, {PROJECT.postal} · <a href="#localizacao" className="underline">ver mapa</a></span>
       </p>
 
@@ -186,9 +187,6 @@ function Description() {
   return (
     <section id="descricao" className="sec border-t-0">
       <div className="max-w-[64ch] space-y-4 text-[16px] leading-[1.75] text-[#2b3540]">
-        <p className="font-serif text-[22px] leading-snug text-ink [text-wrap:balance]">
-          Em Aveiro, quase sempre se escolhe dois: espaço, localização ou preço. Aqui não tem de abdicar de nenhum.
-        </p>
         <Triangle />
         <p>
           Três moradias lado a lado, numa rua tranquila de Oliveirinha. A oito minutos do centro de Aveiro e a dois da A17 e da A25.
