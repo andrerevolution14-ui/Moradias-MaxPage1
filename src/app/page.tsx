@@ -129,9 +129,6 @@ function Summary() {
       <h1 className="text-[19px] font-bold leading-[1.25] tracking-tight [text-wrap:balance] sm:text-[30px] sm:leading-tight">
         A moradia T3 com jardim a 8 minutos de Aveiro, pronta a habitar em 10 meses
       </h1>
-      <p className="mt-1 text-[13.5px] leading-snug text-muted [text-wrap:pretty] sm:text-[15px]">
-        Espaço, localização e preço, sem abdicar de nenhum. Preço fechado em contrato, com impostos incluídos.
-      </p>
       <p className="mt-1.5 flex items-start gap-1 text-[12.5px] text-muted sm:text-[14px]">
         <IconPin size={14} className="mt-[2px] shrink-0" />
         <span>{PROJECT.address}, {PROJECT.postal} · <a href="#localizacao" className="underline">ver mapa</a></span>
