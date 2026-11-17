@@ -255,7 +255,9 @@ function Details() {
     ["Estado", "Venda em planta · projeto aprovado"],
     ["Estrutura", "Aço leve (LSF)"],
     ["Financiamento", "Crédito habitação até 90%"],
-    ["Construtora", BUILDER.licence ? `${BUILDER.name} · Alvará n.º ${BUILDER.licence}` : BUILDER.name],
+    ["Construtora", BUILDER.name],
+    ["Alvará IMPIC", `N.º ${BUILDER.licence}`],
+    ["NIPC da construtora", BUILDER.nipc],
     ["Projeto", DESIGNERS.firm],
     ...(FINANCING_BANK ? [["Financiamento", `Disponível com ${FINANCING_BANK}`]] : []),
   ];
@@ -336,7 +338,7 @@ function Safety() {
   const items = [
     [IconKey, "O terreno fica em seu nome", "Compra o lote por escritura antes de a obra começar. Desde aí, é o proprietário do terreno."],
     [IconDoc, "Uma única entrada de 33.500 €", "10% do preço, imputados ao valor total. O contrato define as condições de devolução, incluindo se o crédito não for aprovado."],
-    [IconHammer, "Construção em aço leve (LSF)", `Estrutura em Light Steel Framing, executada pelo Grupo Freitas Renovações${BUILDER.licence ? ` (alvará n.º ${BUILDER.licence})` : ""} segundo o projeto e o caderno de encargos.`],
+    [IconHammer, "Construção em aço leve (LSF)", `Estrutura em Light Steel Framing, executada pelo Grupo Freitas Renovações (alvará IMPIC n.º ${BUILDER.licence}) segundo o projeto e o caderno de encargos.`],
     [IconShield, "A obra não depende só do banco", "O crédito é libertado por fases. A construtora tem capacidade própria para manter a obra perante atrasos pontuais nos desembolsos."],
     [IconLock, "Retenção de boa execução", "Cerca de 33.500 € do preço só são pagos na fase final prevista no contrato. Não é um custo adicional."],
     [IconClock, "Prazo e penalizações em contrato", "10 meses a partir do início definido no contrato, com penalizações por atrasos imputáveis à construtora."],
@@ -384,7 +386,8 @@ function Builder() {
           <div className="min-w-0">
             <div className="eyebrow">Construção</div>
             <a href={BUILDER.url} target="_blank" rel="noopener" className="font-semibold hover:underline">{BUILDER.name}</a>
-            {BUILDER.licence && <div className="mt-0.5 text-[13.5px] font-semibold text-ink">Alvará n.º {BUILDER.licence}</div>}
+            <div className="mt-0.5 text-[13.5px] font-semibold text-ink">Alvará IMPIC n.º {BUILDER.licence}</div>
+            <div className="text-[12.5px] text-muted">{BUILDER.legal} · NIPC {BUILDER.nipc}</div>
             <div className="text-[13px] text-muted">{BUILDER.blurb}</div>
             <a href={BUILDER.url} target="_blank" rel="noopener" className="text-[13px] font-semibold text-brand underline">Visitar o site da construtora</a>
           </div>
@@ -515,7 +518,7 @@ function Footer() {
         </div>
         <div className="flex gap-4">
           <Link href="/privacidade" className="underline">Privacidade</Link>
-          <span>© 2026 Domaine XXV · {BUILDER.legal}</span>
+          <span>© 2026 Domaine XXV · Construção: {BUILDER.legal}, NIPC {BUILDER.nipc}, alvará IMPIC n.º {BUILDER.licence}</span>
         </div>
       </div>
       <p className="mx-auto max-w-[1200px] px-4 pb-8 text-[11.5px] text-muted/80 lg:px-6">

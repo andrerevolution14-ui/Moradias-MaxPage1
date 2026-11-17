@@ -33,13 +33,13 @@ export const PROMOTER = {
 
 export const BUILDER = {
   name: "Grupo Freitas Renovações",
-  legal: "Freitas Renovações Lda.",
+  // Dados oficiais publicados em grupofreitasrenovacoes.pt
+  legal: "Esboço Lisonjeiro, Unipessoal, Lda.",
+  nipc: "519 390 270",
+  licence: "124371-PAR", // Alvará IMPIC (empreiteiro de obras particulares)
   logo: "/brand/freitas.webp",
   url: "https://www.grupofreitasrenovacoes.pt/",
-  blurb:
-    "Mais de 15 anos de construção e remodelação no distrito de Aveiro. Alvará de construção certificado.",
-  // N.º do alvará (IMPIC). Quando preenchido aparece na construtora, nas características e na segurança da compra.
-  licence: "",
+  blurb: "Construção e remodelação no distrito de Aveiro.",
 } as const;
 
 // Arquitetura e engenharia (projeto aprovado)
