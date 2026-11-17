@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getCookie, getFbc, getSource, newEventId, trackingAllowed } from "@/lib/track";
+import { getCookie, getFbc, getSource, newEventId, track, trackingAllowed } from "@/lib/track";
 import { ev, flush } from "@/lib/analytics";
 import { IconCheck, IconLock } from "../icons";
 import GuideCover from "./GuideCover";
-import { PROMOTER } from "@/lib/config";
+import { META_LEAD_VALUE, PROMOTER } from "@/lib/config";
 import { useLanding } from "./LandingProvider";
 
 const ME_KEY = "dx_me";
@@ -80,6 +80,7 @@ export default function AvailabilityForm({ id, compact = false }: { id: string; 
     if (phone.replace(/\D/g, "").length < 9) return setError({ msg: "Indique o seu telemóvel para o André lhe confirmar a disponibilidade.", field: "phone" });
     setSending(true);
     const lot = preset?.lot || null;
+    const leadId = newEventId("lead");
     const cta = preset?.cta || id;
     try {
       const res = await fetch("/api/leads", {
@@ -92,7 +93,7 @@ export default function AvailabilityForm({ id, compact = false }: { id: string; 
           intent: "disponibilidade",
           lot,
           website: hp,
-          eventId: newEventId("lead"),
+          eventId: leadId,
           consent: trackingAllowed(),
           fbp: getCookie("_fbp"),
           fbc: getFbc(),
@@ -108,7 +109,10 @@ export default function AvailabilityForm({ id, compact = false }: { id: string; 
       try {
         localStorage.setItem(ME_KEY, JSON.stringify({ name, phone }));
       } catch {}
-      // O Lead para o Meta é enviado pelo servidor quando o pedido fica guardado (não aqui).
+      // Lead só quando o servidor confirma que ficou guardado e é uma pessoa nova.
+      // Pixel (browser) + API de Conversões (servidor) com o mesmo event_id: o Meta conta uma só vez,
+      // e continua a contar mesmo que uma das duas vias falhe.
+      if (data.countLead) track("Lead", { content_name: "Domaine XXV", content_category: "disponibilidade", ...META_LEAD_VALUE }, leadId);
       ev("lead", cta);
       flush(true);
       router.push(`/obrigado${data.token ? `?l=${encodeURIComponent(data.token)}&n=${encodeURIComponent(data.firstName || "")}` : ""}`);

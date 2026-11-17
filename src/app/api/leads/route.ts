@@ -61,7 +61,8 @@ export async function POST(req: NextRequest) {
   const capiEvent = (eventName: string, externalId: string, extra: Record<string, unknown>) =>
     sendCapiEvent(req, {
       eventName,
-      eventId: `${eventName.toLowerCase()}-${externalId}-${eventIdIn || Date.now()}`,
+      // Lead: mesmo event_id do Pixel no browser → o Meta conta uma só vez
+      eventId: eventName === "Lead" && eventIdIn ? eventIdIn : `${eventName.toLowerCase()}-${externalId}-${eventIdIn || Date.now()}`,
       eventSourceUrl: source.page,
       user: { phone, email, name, externalId },
       fbp: clip(body.fbp, 200) || null,
@@ -114,7 +115,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Não foi possível enviar agora. Fale connosco por WhatsApp ou telefone." }, { status: 503 });
     }
     await capiLead(phone).catch(() => null); // a mensagem chegou ao André por email: conta
-    return NextResponse.json({ ok: true, token: null, firstName: name.split(" ")[0], hasEmail: false, countLead: true });
+    return NextResponse.json({ ok: true, token: null, firstName: name.split(" ")[0], hasEmail: false, countLead: countsForMeta });
   }
 
   const chatUrl = `${base}/conversa/${lead.token}`;
@@ -128,5 +129,5 @@ export async function POST(req: NextRequest) {
     isNew ? capiLead(String(lead.id)) : Promise.resolve(null),
   ]);
 
-  return NextResponse.json({ ok: true, token: lead.token, firstName: name.split(" ")[0], hasEmail: Boolean(lead.email), countLead: isNew });
+  return NextResponse.json({ ok: true, token: lead.token, firstName: name.split(" ")[0], hasEmail: Boolean(lead.email), countLead: isNew && countsForMeta });
 }
