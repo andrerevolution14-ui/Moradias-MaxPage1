@@ -27,8 +27,8 @@ const NAV = [
   ["plantas", "Plantas"],
   ["garantias", "Garantias"],
   ["unidades", "Moradias"],
-  ["condicoes", "Como comprar"],
   ["simulador", "Simulador"],
+  ["condicoes", "Como comprar"],
   ["faq", "Perguntas"],
 ];
 
@@ -54,7 +54,7 @@ export default function Page() {
             <Summary />
 
 
-            {/* Ordem pensada para conversão: porquê esta casa → onde fica → como é → é seguro? → o que resta → quem já confiou → detalhes → como comprar */}
+            {/* Ordem pensada para conversão: porquê esta casa → onde fica → como é → é seguro? → o que resta → quem já confiou → quanto pago por mês → como comprar → detalhes */}
             <Description />
             <Location />
             <Plans />
@@ -67,15 +67,15 @@ export default function Page() {
             </section>
 
             <Testimonials />
-            <Details />
-            <BuyInPlan />
-
             <section id="simulador" className="sec">
               <h2 className="sec-title">Simulador de crédito habitação</h2>
               <p className="-mt-2 mb-4 text-[15px] text-muted">Quanto ficaria a pagar por mês, com a entrada fixa de 10%.</p>
               <Simulator />
               <InlineCta cta="inline_simulador" title="A prestação cabe no seu orçamento? Fale com o André antes que os lotes acabem." />
             </section>
+            <BuyInPlan />
+            <Details />
+
 
             <Builder />
             <Faq />
