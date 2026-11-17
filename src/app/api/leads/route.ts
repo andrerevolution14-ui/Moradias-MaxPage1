@@ -3,6 +3,7 @@ import { db, type LeadRow } from "@/lib/db";
 import { clientIp, clip, isEmail, newToken, normalizePhone, siteUrl } from "@/lib/server-utils";
 import { emailLeadConfirmation, notifyAdminNewLead, notifyAdminLeadReply, smsLeadConfirmation } from "@/lib/notify";
 import { sendCapiEvent } from "@/lib/meta";
+import { getMetaLeadMode } from "@/lib/settings";
 import { META_LEAD_VALUE, PROMOTER } from "@/lib/config";
 
 const SOURCE_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid", "variant", "page", "referrer", "cta"];
@@ -38,6 +39,11 @@ export async function POST(req: NextRequest) {
     const v = clip((src as Record<string, unknown>)[k], 300);
     if (v) source[k] = v;
   }
+  // Cookies do Meta guardados com a lead: permitem enviar o Lead mais tarde (após qualificação) com boa correspondência
+  const fbp = clip(body.fbp, 200);
+  const fbc = clip(body.fbc, 400);
+  if (fbp) source.fbp = fbp;
+  if (fbc) source.fbc = fbc;
   if (process.env.NEXT_PUBLIC_SITE_VARIANT && !source.variant) source.variant = process.env.NEXT_PUBLIC_SITE_VARIANT;
 
   const ip = clientIp(req);
@@ -49,7 +55,9 @@ export async function POST(req: NextRequest) {
     [PROMOTER.whatsapp, ...(process.env.META_EXCLUDE_PHONES || "").split(",")].map((p) => normalizePhone(p.trim())).filter(Boolean),
   );
   // Só envia ao Meta se a pessoa aceitou os cookies de medição (RGPD)
-  const countsForMeta = !excluded.has(phone) && body.consent === true;
+  // Modo "qualificado" (por omissão): nada vai para o Meta agora; vai quando o André qualificar a lead no CRM.
+  const leadMode = await getMetaLeadMode();
+  const countsForMeta = leadMode === "imediato" && !excluded.has(phone) && body.consent === true;
 
   /** Lead no Meta: enviado SÓ pelo servidor, SÓ quando a mensagem de uma pessoa nova ficou recebida. */
   const capiLead = async (externalId: string) => {
@@ -65,8 +73,8 @@ export async function POST(req: NextRequest) {
       eventId: eventName === "Lead" && eventIdIn ? eventIdIn : `${eventName.toLowerCase()}-${externalId}-${eventIdIn || Date.now()}`,
       eventSourceUrl: source.page,
       user: { phone, email, name, externalId },
-      fbp: clip(body.fbp, 200) || null,
-      fbc: clip(body.fbc, 400) || null,
+      fbp: fbp || null,
+      fbc: fbc || null,
       customData: { content_name: "Domaine XXV", content_category: intent || "mensagem", ...extra },
     });
 
@@ -126,7 +134,14 @@ export async function POST(req: NextRequest) {
     isNew ? emailLeadConfirmation(lead, chatUrl) : Promise.resolve(false),
     isNew ? smsLeadConfirmation(lead, chatUrl) : Promise.resolve(false),
     // A mensagem ficou guardada no centro de leads: só aqui conta como Lead (e só a 1.ª de cada pessoa)
-    isNew ? capiLead(String(lead.id)) : Promise.resolve(null),
+    isNew
+      ? capiLead(String(lead.id)).then(async (r) => {
+          if (r && "ok" in r && r.ok) {
+            const sql = await db();
+            await sql`UPDATE leads SET meta_sent = array_append(meta_sent, 'Lead') WHERE id = ${lead.id}`;
+          }
+        })
+      : Promise.resolve(null),
   ]);
 
   return NextResponse.json({ ok: true, token: lead.token, firstName: name.split(" ")[0], hasEmail: Boolean(lead.email), countLead: isNew && countsForMeta });

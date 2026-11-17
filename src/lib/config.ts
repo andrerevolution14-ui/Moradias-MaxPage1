@@ -240,6 +240,30 @@ export const LEAD_STATUSES = [
 ] as const;
 export type LeadStatusId = (typeof LEAD_STATUSES)[number]["id"];
 
+/**
+ * Qualificação depois de falar com a pessoa. É isto que decide o que vai para o Meta:
+ * o algoritmo aprende com quem realmente interessa, não com quem só deixou o número.
+ * meta: eventos enviados à API de Conversões quando se escolhe esta opção (uma só vez por lead).
+ */
+export const LEAD_QUALITIES = [
+  { id: "visita_marcada", group: "Boa", label: "Visita marcada", color: "#15803d", meta: ["Lead", "LeadQualificada", "Schedule"] },
+  { id: "muito_quente", group: "Boa", label: "Muito interessado, quer avançar", color: "#16a34a", meta: ["Lead", "LeadQualificada"] },
+  { id: "boa", group: "Boa", label: "Interessado, tem orçamento", color: "#22c55e", meta: ["Lead", "LeadQualificada"] },
+  { id: "credito", group: "Média", label: "Interessado, depende do crédito", color: "#65a30d", meta: ["Lead"] },
+  { id: "media", group: "Média", label: "Interessado, ainda a pensar / a comparar", color: "#84cc16", meta: ["Lead"] },
+  { id: "futuro", group: "Média", label: "Só daqui a 6+ meses", color: "#a3a3a3", meta: ["Lead"] },
+  { id: "so_info", group: "Má", label: "Só curiosidade / pediu informação", color: "#f59e0b", meta: [] },
+  { id: "sem_orcamento", group: "Má", label: "Sem orçamento", color: "#f97316", meta: [] },
+  { id: "procura_outro", group: "Má", label: "Procura outra coisa (zona, tipologia, arrendar)", color: "#fb923c", meta: [] },
+  { id: "nao_pediu", group: "Má", label: "Diz que não pediu contacto", color: "#ef4444", meta: [] },
+  { id: "nao_atende", group: "Sem contacto", label: "Não atende (tentar de novo)", color: "#64748b", meta: [] },
+  { id: "nao_atende_3", group: "Sem contacto", label: "Não atende após 3 tentativas", color: "#475569", meta: [] },
+  { id: "numero_errado", group: "Sem contacto", label: "Número errado / não existe", color: "#dc2626", meta: [] },
+  { id: "spam", group: "Sem contacto", label: "Spam / teste", color: "#991b1b", meta: [] },
+] as const;
+export type LeadQualityId = (typeof LEAD_QUALITIES)[number]["id"];
+export type MetaLeadMode = "qualificado" | "imediato";
+
 /** 335000 → "335.000 €" (formato habitual no imobiliário português) */
 export function formatEUR(n: number) {
   const s = Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");

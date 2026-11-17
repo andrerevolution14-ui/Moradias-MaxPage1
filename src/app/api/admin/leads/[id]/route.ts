@@ -1,10 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { db, type LeadRow, type MessageRow } from "@/lib/db";
-import { LEAD_STATUSES } from "@/lib/config";
+import { LEAD_QUALITIES, LEAD_STATUSES } from "@/lib/config";
+import { sendQualification, type MetaResult } from "@/lib/qualify";
 import { clip } from "@/lib/server-utils";
 import { guard } from "../../_guard";
 
 const STATUS_IDS: string[] = LEAD_STATUSES.map((s) => s.id);
+const QUALITY_IDS: string[] = LEAD_QUALITIES.map((q) => q.id);
 
 export async function GET(req: NextRequest, ctx: RouteContext<"/api/admin/leads/[id]">) {
   const denied = guard(req);
@@ -27,15 +29,21 @@ export async function PATCH(req: NextRequest, ctx: RouteContext<"/api/admin/lead
   const status = typeof body.status === "string" && STATUS_IDS.includes(body.status) ? body.status : null;
   const notes = typeof body.notes === "string" ? clip(body.notes, 10000) : null;
   const unread = typeof body.unread === "boolean" ? body.unread : null;
-  const [lead] = await sql<LeadRow[]>`
+  const quality = typeof body.quality === "string" && QUALITY_IDS.includes(body.quality) ? body.quality : null;
+  let [lead] = await sql<LeadRow[]>`
     UPDATE leads SET
       status = COALESCE(${status}, status),
       notes = COALESCE(${notes}, notes),
       unread = COALESCE(${unread}, unread),
+      quality = COALESCE(${quality}, quality),
+      quality_at = CASE WHEN ${quality}::text IS NULL THEN quality_at ELSE now() END,
       updated_at = now()
     WHERE id = ${id} RETURNING *`;
   if (!lead) return NextResponse.json({ error: "Não encontrada" }, { status: 404 });
-  return NextResponse.json({ lead });
+  // Qualificou → envia ao Meta o que esta qualificação vale (Lead, LeadQualificada, Schedule), uma vez só
+  let meta: MetaResult | null = null;
+  if (quality) ({ lead, meta } = await sendQualification(req, lead));
+  return NextResponse.json({ lead, meta });
 }
 
 export async function DELETE(req: NextRequest, ctx: RouteContext<"/api/admin/leads/[id]">) {

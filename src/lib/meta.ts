@@ -20,6 +20,9 @@ export type CapiEvent = {
   customData?: Record<string, unknown>;
   fbp?: string | null;
   fbc?: string | null;
+  /** Dados guardados na lead (quando o evento é enviado depois, a partir do CRM) */
+  ip?: string | null;
+  userAgent?: string | null;
 };
 
 export function capiEnabled() {
@@ -48,10 +51,10 @@ export async function sendCapiEvent(req: NextRequest, ev: CapiEvent) {
   const version = process.env.META_GRAPH_VERSION || "v24.0";
 
   const user_data: Record<string, unknown> = {
-    client_ip_address: clientIp(req) || undefined,
-    client_user_agent: req.headers.get("user-agent") || undefined,
-    fbp: ev.fbp || req.cookies.get("_fbp")?.value || undefined,
-    fbc: ev.fbc || req.cookies.get("_fbc")?.value || undefined,
+    client_ip_address: (ev.ip !== undefined ? ev.ip : clientIp(req)) || undefined,
+    client_user_agent: (ev.userAgent !== undefined ? ev.userAgent : req.headers.get("user-agent")) || undefined,
+    fbp: ev.fbp || (ev.ip !== undefined ? undefined : req.cookies.get("_fbp")?.value) || undefined,
+    fbc: ev.fbc || (ev.ip !== undefined ? undefined : req.cookies.get("_fbc")?.value) || undefined,
   };
   const u = ev.user || {};
   if (u.phone) user_data.ph = [sha256(u.phone.replace(/\D/g, ""))];
@@ -71,7 +74,7 @@ export async function sendCapiEvent(req: NextRequest, ev: CapiEvent) {
         event_time: Math.floor(Date.now() / 1000),
         event_id: ev.eventId,
         action_source: "website",
-        event_source_url: ev.eventSourceUrl || req.headers.get("referer") || undefined,
+        event_source_url: ev.eventSourceUrl || (ev.ip !== undefined ? undefined : req.headers.get("referer")) || undefined,
         user_data,
         custom_data: ev.customData,
       },
@@ -85,7 +88,7 @@ export async function sendCapiEvent(req: NextRequest, ev: CapiEvent) {
       { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) },
     );
     if (!res.ok) console.error("[capi]", ev.eventName, res.status, await res.text());
-    return { ok: res.ok };
+    return { ok: res.ok, status: res.status };
   } catch (e) {
     console.error("[capi] erro", e);
     return { ok: false };

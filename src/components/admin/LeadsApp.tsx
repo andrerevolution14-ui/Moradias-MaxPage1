@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { DEFAULT_LOTS, LEAD_STATUSES, PROMOTER, type Lot, type LotStatus } from "@/lib/config";
+import { DEFAULT_LOTS, LEAD_QUALITIES, LEAD_STATUSES, PROMOTER, type Lot, type LotStatus } from "@/lib/config";
 import { IconArrowL, IconChat, IconPhone, IconSend, IconWhatsApp, IconX } from "../icons";
 
 type LeadListItem = {
@@ -17,6 +17,8 @@ type LeadListItem = {
   created_at: string;
   last_message_at: string;
   whatsapp_at: string | null;
+  quality: string | null;
+  meta_sent: string[] | null;
   affordability: { income: number; debts: number; years: number; rate: number; maxLoan: number; fits: boolean } | null;
   last_message: string | null;
   last_sender: "lead" | "admin" | null;
@@ -25,6 +27,8 @@ type Lead = LeadListItem & { token: string; notes: string; ip: string | null; us
 type Msg = { id: number; sender: "lead" | "admin"; body: string; notified: string | null; created_at: string };
 
 const STATUS = Object.fromEntries(LEAD_STATUSES.map((s) => [s.id, s]));
+const QUALITY = Object.fromEntries(LEAD_QUALITIES.map((q) => [q.id, q]));
+const QUALITY_GROUPS = ["Boa", "Média", "Má", "Sem contacto"] as const;
 
 function fmtPhone(d: string) {
   return /^351\d{9}$/.test(d) ? `+351 ${d.slice(3, 6)} ${d.slice(6, 9)} ${d.slice(9)}` : `+${d}`;
@@ -103,6 +107,7 @@ type Config = {
   meta: { pixelId: string; capi: boolean; testCode: boolean };
   database: boolean;
   siteUrl: string | null;
+  metaLeadMode?: "qualificado" | "imediato";
 };
 
 function Dashboard({ sms, config, onLogout }: { sms: boolean; config: Config | null; onLogout: () => void }) {
@@ -148,6 +153,7 @@ function Dashboard({ sms, config, onLogout }: { sms: boolean; config: Config | n
   const visible = useMemo(() => {
     let l = leads || [];
     if (filter === "por_responder") l = l.filter((x) => x.last_sender === "lead");
+    else if (filter === "por_qualificar") l = l.filter((x) => !x.quality || x.quality === "nao_atende");
     else if (filter !== "todas") l = l.filter((x) => x.status === filter);
     const s = q.trim().toLowerCase();
     if (s) l = l.filter((x) => x.name.toLowerCase().includes(s) || x.phone.includes(s.replace(/\D/g, "") || "§") || (x.email || "").includes(s));
@@ -223,7 +229,7 @@ function Dashboard({ sms, config, onLogout }: { sms: boolean; config: Config | n
             <div className="space-y-2 border-b border-line p-3">
               <input className="field py-2 text-sm" placeholder="Procurar nome, telefone ou email" value={q} onChange={(e) => setQ(e.target.value)} />
               <div className="no-scrollbar flex gap-1.5 overflow-x-auto">
-                {[{ id: "todas", label: "Todas" }, { id: "por_responder", label: "Por responder" }, ...LEAD_STATUSES].map((s) => (
+                {[{ id: "todas", label: "Todas" }, { id: "por_qualificar", label: "Por qualificar" }, { id: "por_responder", label: "Por responder" }, ...LEAD_STATUSES].map((s) => (
                   <button key={s.id} className="chip shrink-0 py-1 text-[12px]" aria-pressed={filter === s.id} onClick={() => setFilter(s.id)}>{s.label}</button>
                 ))}
               </div>
@@ -250,6 +256,11 @@ function Dashboard({ sms, config, onLogout }: { sms: boolean; config: Config | n
                         </div>
                         <div className="mt-1 flex items-center gap-1.5">
                           <span className="rounded px-1.5 py-0.5 text-[10.5px] font-semibold text-white" style={{ background: st?.color || "#666" }}>{st?.label || l.status}</span>
+                          {l.quality ? (
+                            <span className="rounded px-1.5 py-0.5 text-[10.5px] font-semibold text-white" style={{ background: QUALITY[l.quality]?.color || "#666" }}>{QUALITY[l.quality]?.group || l.quality}</span>
+                          ) : (
+                            <span className="rounded border border-dashed border-orange-400 px-1.5 py-0.5 text-[10.5px] font-semibold text-orange-700">por qualificar</span>
+                          )}
                           {l.last_sender === "lead" && <span className="text-[10.5px] font-semibold text-orange-600">por responder</span>}
                           {l.whatsapp_at && <span className="rounded bg-[#1fae5b] px-1.5 py-0.5 text-[10.5px] font-semibold text-white">abriu WhatsApp</span>}
                           {l.affordability && (
@@ -327,9 +338,14 @@ function LeadDetail({ id, sms, onBack, onChange }: { id: number; sms: boolean; o
 
   async function patch(body: Record<string, unknown>) {
     const r = await fetch(`/api/admin/leads/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-    if (r.ok) {
-      setLead((await r.json()).lead);
-      onChange();
+    if (!r.ok) return flash("Erro ao guardar.");
+    const d = await r.json();
+    setLead(d.lead);
+    onChange();
+    if (d.meta) {
+      if (d.meta.sent.length) flash(`Qualificada · enviado ao Meta: ${d.meta.sent.join(", ")}`);
+      else if (d.meta.skipped) flash(`Qualificada · Meta: ${d.meta.skipped}`);
+      else flash("Qualificada");
     }
   }
 
@@ -390,6 +406,7 @@ function LeadDetail({ id, sms, onBack, onChange }: { id: number; sms: boolean; o
           </div>
           <button onClick={() => setShowInfo((s) => !s)} className="shrink-0 rounded-lg border border-line px-2.5 py-1.5 text-[12.5px] font-medium hover:bg-soft">{showInfo ? "Fechar" : "Detalhes"}</button>
         </div>
+        <Qualification lead={lead} onPick={(q) => patch({ quality: q })} />
         <div className="mt-3 grid grid-cols-3 gap-2 sm:flex">
           <a href={`tel:+${lead.phone}`} className="btn btn-primary px-3 py-2 text-sm"><IconPhone size={16} /> Ligar</a>
           <a href={`https://wa.me/${lead.phone}?text=${encodeURIComponent(waText)}`} target="_blank" rel="noopener" className="btn btn-wa px-3 py-2 text-sm"><IconWhatsApp size={16} /> WhatsApp</a>
@@ -488,10 +505,45 @@ function LeadDetail({ id, sms, onBack, onChange }: { id: number; sms: boolean; o
       </form>
 
       {toast && (
-        <div className="fade-in absolute bottom-28 left-1/2 -translate-x-1/2 rounded-full bg-ink px-4 py-2 text-sm text-white shadow-lg">
+        <div className="fade-in absolute bottom-28 left-1/2 w-max max-w-[90%] -translate-x-1/2 rounded-2xl bg-ink px-4 py-2 text-sm text-white shadow-lg">
           {toast} <button onClick={() => setToast("")} className="ml-1 align-middle opacity-70"><IconX size={14} /></button>
         </div>
       )}
+    </div>
+  );
+}
+
+/** Qualificação depois do contacto: decide o que vai para o Meta */
+function Qualification({ lead, onPick }: { lead: Lead; onPick: (q: string) => void }) {
+  const q = lead.quality ? QUALITY[lead.quality] : null;
+  const sent = lead.meta_sent || [];
+  return (
+    <div className={`mt-3 rounded-xl border p-2.5 ${q ? "border-line bg-soft/60" : "border-orange-300 bg-orange-50"}`}>
+      <div className="space-y-1.5">
+        <span className="block text-[12.5px] font-bold">{q ? "Qualificação" : "Depois de falar com a pessoa, qualifique:"}</span>
+        <select
+          value={lead.quality || ""}
+          onChange={(e) => e.target.value && onPick(e.target.value)}
+          className="w-full rounded-lg border border-line bg-white px-2 py-1.5 text-[13.5px] font-semibold"
+          style={q ? { color: q.color } : undefined}
+        >
+          <option value="" disabled>Escolher…</option>
+          {QUALITY_GROUPS.map((g) => (
+            <optgroup key={g} label={g}>
+              {LEAD_QUALITIES.filter((x) => x.group === g).map((x) => <option key={x.id} value={x.id} className="text-ink">{x.label}</option>)}
+            </optgroup>
+          ))}
+        </select>
+      </div>
+      <div className="mt-1.5 text-[11.5px] leading-snug text-muted">
+        {sent.length ? (
+          <span className="font-semibold text-emerald-700">✓ Enviado ao Meta: {sent.join(", ")}</span>
+        ) : q && q.meta.length === 0 ? (
+          <span>Não conta no Meta (o anúncio não aprende com este tipo de pessoa).</span>
+        ) : (
+          <span>Boa → Meta recebe Lead + LeadQualificada · Média → só Lead · Má / Sem contacto → nada.</span>
+        )}
+      </div>
     </div>
   );
 }
@@ -549,6 +601,34 @@ function StatusRow({ ok, label, detail }: { ok: boolean; label: string; detail: 
   );
 }
 
+function MetaModeCard({ initial }: { initial: "qualificado" | "imediato" }) {
+  const [mode, setMode] = useState(initial);
+  const save = async (m: typeof mode) => {
+    setMode(m);
+    await fetch("/api/admin/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ metaLeadMode: m }) });
+  };
+  const opts = [
+    { id: "qualificado" as const, t: "Só depois de qualificar (recomendado)", d: "O Lead vai para o Meta quando escolhe a qualificação no CRM. Boa → Lead + LeadQualificada; Média → Lead; Má / Sem contacto → nada. O anúncio aprende a trazer pessoas reais." },
+    { id: "imediato" as const, t: "Logo que enviam o formulário", d: "Cada pedido novo conta como Lead no momento. Mais volume para o Meta aprender, mas inclui curiosos e números falsos. A qualificação continua a enviar LeadQualificada." },
+  ];
+  return (
+    <div className="rounded-2xl border border-line bg-white p-5">
+      <h2 className="text-lg font-bold">Quando enviar o Lead ao Meta</h2>
+      <div className="mt-3 space-y-2">
+        {opts.map((o) => (
+          <label key={o.id} className={`flex cursor-pointer gap-3 rounded-xl border p-3 ${mode === o.id ? "border-brand bg-brand-soft" : "border-line"}`}>
+            <input type="radio" name="metaLeadMode" checked={mode === o.id} onChange={() => save(o.id)} className="mt-1" />
+            <span><span className="block font-semibold">{o.t}</span><span className="block text-[13px] text-muted">{o.d}</span></span>
+          </label>
+        ))}
+      </div>
+      <p className="mt-3 text-[12.5px] text-muted">
+        Qualifique cada lead no próprio dia: o Meta só aceita eventos até 7 dias depois e aprende mais depressa com respostas rápidas.
+      </p>
+    </div>
+  );
+}
+
 function Settings({ config }: { config: Config | null }) {
   const [test, setTest] = useState<{ ok: boolean; error?: string; to?: string } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -567,6 +647,7 @@ function Settings({ config }: { config: Config | null }) {
             <StatusRow ok={Boolean(config.siteUrl)} label="Endereço do site" detail={config.siteUrl || "NEXT_PUBLIC_SITE_URL não definido (usa o domínio da Vercel)."} />
           </div>
         </div>
+        <MetaModeCard initial={config.metaLeadMode || "qualificado"} />
         <div className="rounded-2xl border border-line bg-white p-5">
           <h2 className="text-lg font-bold">Testar email</h2>
           <p className="mt-1 text-sm text-muted">Envia um email de teste para o endereço que recebe as leads e mostra o erro, se houver.</p>
