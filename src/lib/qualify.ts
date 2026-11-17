@@ -42,7 +42,8 @@ export async function sendQualification(req: NextRequest, lead: LeadRow): Promis
         content_name: "Domaine XXV",
         content_category: lead.intent || "disponibilidade",
         lead_quality: lead.quality,
-        ...(eventName === "Schedule" ? {} : META_LEAD_VALUE),
+        // Só as boas/médias levam o valor da moradia; as más vão com valor 0 (o Meta distingue-as)
+        ...(eventName === "Lead" || eventName === "LeadQualificada" ? META_LEAD_VALUE : eventName === "Schedule" ? {} : { value: 0, currency: "EUR" }),
       },
     });
     if ("ok" in r && r.ok) sent.push(eventName);

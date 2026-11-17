@@ -539,9 +539,9 @@ function Qualification({ lead, onPick }: { lead: Lead; onPick: (q: string) => vo
         {sent.length ? (
           <span className="font-semibold text-emerald-700">✓ Enviado ao Meta: {sent.join(", ")}</span>
         ) : q && q.meta.length === 0 ? (
-          <span>Não conta no Meta (o anúncio não aprende com este tipo de pessoa).</span>
+          <span>Ainda nada vai para o Meta. Tente de novo e atualize a qualificação.</span>
         ) : (
-          <span>Boa → Meta recebe Lead + LeadQualificada · Média → só Lead · Má / Sem contacto → nada.</span>
+          <span>Boa → Lead + LeadQualificada · Média → Lead · Má → LeadMa · Número errado/spam → LeadInvalida · Não atende 3x → LeadSemResposta.</span>
         )}
       </div>
     </div>
@@ -608,7 +608,7 @@ function MetaModeCard({ initial }: { initial: "qualificado" | "imediato" }) {
     await fetch("/api/admin/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ metaLeadMode: m }) });
   };
   const opts = [
-    { id: "qualificado" as const, t: "Só depois de qualificar (recomendado)", d: "O Lead vai para o Meta quando escolhe a qualificação no CRM. Boa → Lead + LeadQualificada; Média → Lead; Má / Sem contacto → nada. O anúncio aprende a trazer pessoas reais." },
+    { id: "qualificado" as const, t: "Só depois de qualificar (recomendado)", d: "O Lead vai para o Meta quando escolhe a qualificação no CRM. Boa → Lead + LeadQualificada; Média → Lead; Má → LeadMa; inválida → LeadInvalida (sem Lead). O anúncio aprende a trazer pessoas reais." },
     { id: "imediato" as const, t: "Logo que enviam o formulário", d: "Cada pedido novo conta como Lead no momento. Mais volume para o Meta aprender, mas inclui curiosos e números falsos. A qualificação continua a enviar LeadQualificada." },
   ];
   return (

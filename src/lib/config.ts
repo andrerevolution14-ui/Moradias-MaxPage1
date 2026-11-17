@@ -252,14 +252,14 @@ export const LEAD_QUALITIES = [
   { id: "credito", group: "Média", label: "Interessado, depende do crédito", color: "#65a30d", meta: ["Lead"] },
   { id: "media", group: "Média", label: "Interessado, ainda a pensar / a comparar", color: "#84cc16", meta: ["Lead"] },
   { id: "futuro", group: "Média", label: "Só daqui a 6+ meses", color: "#a3a3a3", meta: ["Lead"] },
-  { id: "so_info", group: "Má", label: "Só curiosidade / pediu informação", color: "#f59e0b", meta: [] },
-  { id: "sem_orcamento", group: "Má", label: "Sem orçamento", color: "#f97316", meta: [] },
-  { id: "procura_outro", group: "Má", label: "Procura outra coisa (zona, tipologia, arrendar)", color: "#fb923c", meta: [] },
-  { id: "nao_pediu", group: "Má", label: "Diz que não pediu contacto", color: "#ef4444", meta: [] },
+  { id: "so_info", group: "Má", label: "Só curiosidade / pediu informação", color: "#f59e0b", meta: ["LeadMa"] },
+  { id: "sem_orcamento", group: "Má", label: "Sem orçamento", color: "#f97316", meta: ["LeadMa"] },
+  { id: "procura_outro", group: "Má", label: "Procura outra coisa (zona, tipologia, arrendar)", color: "#fb923c", meta: ["LeadMa"] },
+  { id: "nao_pediu", group: "Má", label: "Diz que não pediu contacto", color: "#ef4444", meta: ["LeadMa"] },
   { id: "nao_atende", group: "Sem contacto", label: "Não atende (tentar de novo)", color: "#64748b", meta: [] },
-  { id: "nao_atende_3", group: "Sem contacto", label: "Não atende após 3 tentativas", color: "#475569", meta: [] },
-  { id: "numero_errado", group: "Sem contacto", label: "Número errado / não existe", color: "#dc2626", meta: [] },
-  { id: "spam", group: "Sem contacto", label: "Spam / teste", color: "#991b1b", meta: [] },
+  { id: "nao_atende_3", group: "Sem contacto", label: "Não atende após 3 tentativas", color: "#475569", meta: ["LeadSemResposta"] },
+  { id: "numero_errado", group: "Sem contacto", label: "Número errado / não existe", color: "#dc2626", meta: ["LeadInvalida"] },
+  { id: "spam", group: "Sem contacto", label: "Spam / teste", color: "#991b1b", meta: ["LeadInvalida"] },
 ] as const;
 export type LeadQualityId = (typeof LEAD_QUALITIES)[number]["id"];
 export type MetaLeadMode = "qualificado" | "imediato";
