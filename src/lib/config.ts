@@ -9,7 +9,7 @@ export const PROJECT = {
   mapEmbed:
     "https://www.google.com/maps?q=R.+Ac%C3%A1cio+Sim%C3%B5es+Vieira,+3810-843+Oliveirinha&t=m&z=13&output=embed",
   tour360: "https://visita3dmoradia-vvtu.vercel.app/",
-  price: 335000,
+  price: 329000,
   downPaymentPct: 0.1,
   buildMonths: 10,
 } as const;
@@ -19,7 +19,7 @@ export const PROJECT = {
 export const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "979841341182458";
 
 /** Valor enviado com cada Lead (o mais alto do funil: o preço da moradia). Outros eventos vão sem valor. */
-export const META_LEAD_VALUE = { value: 335000, currency: "EUR" } as const;
+export const META_LEAD_VALUE = { value: 329000, currency: "EUR" } as const;
 
 export const PROMOTER = {
   name: "André Queirós",
@@ -201,17 +201,17 @@ export const FAQ = [
   ["Como funciona a compra e o crédito à construção?",
     "Adquire o lote de terreno em seu nome por escritura notarial no início. De seguida contrata a construção a preço fechado. Como é um crédito à construção, o banco liberta o financiamento por fases (tranches), apenas depois de o perito bancário confirmar cada etapa da obra."],
   ["Quanto tenho de dar de entrada?",
-    "10% do preço: 33.500 €, imputados ao valor total de 335.000 €. O contrato define as condições de devolução, incluindo se o financiamento não for aprovado."],
+    "10% do preço: 32.900 €, imputados ao valor total de 329.000 €. O contrato define as condições de devolução, incluindo se o financiamento não for aprovado."],
   ["Se o banco atrasar uma tranche, a obra para?",
     "Não depende só das datas do banco. O Grupo Freitas Renovações tem capacidade financeira própria para manter a obra perante atrasos pontuais nos desembolsos, nos termos do contrato de empreitada."],
   ["O que é a retenção de boa execução?",
-    "Uma parte do preço, cerca de 33.500 €, que só é paga na fase final prevista no contrato. Não é um valor adicional aos 335.000 €."],
+    "Uma parte do preço, cerca de 32.900 €, que só é paga na fase final prevista no contrato. Não é um valor adicional aos 329.000 €."],
   ["Posso levar um engenheiro para fiscalizar a obra?",
     "Sim. Pode nomear profissionais independentes para analisar a documentação e acompanhar a execução, com agendamento e cumprimento das regras de segurança em obra."],
   ["Posso consultar o contrato antes de reservar?",
     "Sim. O dossier técnico, as condições de aquisição e as minutas dos contratos estão disponíveis para análise antes de assinar."],
-  ["Os 335.000€ já incluem impostos?",
-    "Sim. O valor de 335.000€ já inclui o IMT e o Imposto de Selo. É o valor final chave na mão: terreno, projeto aprovado, construção e impostos de transmissão."],
+  ["Os 329.000€ já incluem impostos?",
+    "Sim. O valor de 329.000€ já inclui o IMT e o Imposto de Selo. É o valor final chave na mão: terreno, projeto aprovado, construção e impostos de transmissão."],
   ["Preciso de pagar comissões ao intermediário de crédito?",
     "Não. A consultoria financeira é gratuita para o comprador. Os intermediários de crédito são registados no Banco de Portugal e remunerados pelo banco que concede o crédito."],
   ["Posso visitar o terreno antes de decidir?",
@@ -264,7 +264,7 @@ export const LEAD_QUALITIES = [
 export type LeadQualityId = (typeof LEAD_QUALITIES)[number]["id"];
 export type MetaLeadMode = "qualificado" | "imediato";
 
-/** 335000 → "335.000 €" (formato habitual no imobiliário português) */
+/** 329000 → "329.000 €" (formato habitual no imobiliário português) */
 export function formatEUR(n: number) {
   const s = Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   return `${s} €`;

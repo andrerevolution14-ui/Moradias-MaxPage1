@@ -48,7 +48,7 @@ const STEPS = [
       "Pode pedir o registo provisório da aquisição para proteger a sua posição.",
     ],
     warn: "",
-    dx: "Entrada única de 10% (33.500 €), imputada ao preço.",
+    dx: "Entrada única de 10% (32.900 €), imputada ao preço.",
   },
   {
     t: "Escritura e crédito",
@@ -65,7 +65,7 @@ const STEPS = [
       "Peça relatórios de obra e, se quiser, contrate um engenheiro independente para fiscalizar.",
     ],
     warn: "Nunca pague à frente da obra. O dinheiro deve acompanhar o que está feito.",
-    dx: "10 meses, com penalizações por atraso e retenção final de ~33.500 €.",
+    dx: "10 meses, com penalizações por atraso e retenção final de ~32.900 €.",
   },
   {
     t: "Entrega das chaves",

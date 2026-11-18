@@ -50,7 +50,7 @@ Enquanto o domínio não estiver verificado, o Resend só entrega ao email com q
 - O Pixel `979841341182458` já está no código (é público). Não precisa de variável.
 - **`META_CAPI_ACCESS_TOKEN`**: token da API de Conversões. **Só na Vercel**, nunca no código.
 - O `Lead` é enviado **só pelo servidor** e **só quando a mensagem fica recebida** no centro de leads, uma vez por pessoa
-  (mensagens seguintes da mesma pessoa não contam). O botão não dispara nada. Vai com `value: 335000`, `currency: EUR`.
+  (mensagens seguintes da mesma pessoa não contam). O botão não dispara nada. Vai com `value: 329000`, `currency: EUR`.
 - O número do André e os de `META_EXCLUDE_PHONES` nunca contam (para testes).
 - **Consentimento (RGPD):** o Pixel e a API de Conversões só funcionam depois de a pessoa carregar em
   "Aceitar" no aviso de cookies. Quem recusa não é medido (o site e as mensagens funcionam igual).

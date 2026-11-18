@@ -21,7 +21,7 @@ const STATUS: Record<string, { label: string; cls: string }> = {
 const SUMMARY = [
   ["Reunião e visita", "Conhece o André, o lote e o projeto aprovado. Sem compromisso."],
   ["Simulação de crédito gratuita", "Estudo de viabilidade bancária: crédito até 90%, libertado por fases."],
-  ["Contrato a preço fechado", "335.000 € chave na mão, prazo de 10 meses e penalizações em contrato."],
+  ["Contrato a preço fechado", "329.000 € chave na mão, prazo de 10 meses e penalizações em contrato."],
 ];
 
 const ORDER: Record<string, number> = { vendido: 0, reservado: 1, disponivel: 2 };

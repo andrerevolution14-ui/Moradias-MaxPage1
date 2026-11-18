@@ -345,10 +345,10 @@ function BuyInPlan() {
 function Safety() {
   const items = [
     [IconKey, "O terreno fica em seu nome", "Compra o lote por escritura antes de a obra começar. Desde aí, é o proprietário do terreno."],
-    [IconDoc, "Uma única entrada de 33.500 €", "10% do preço, imputados ao valor total. Se o banco não aprovar o crédito, o sinal é devolvido na íntegra (cláusula no CPCV)."],
+    [IconDoc, "Uma única entrada de 32.900 €", "10% do preço, imputados ao valor total. Se o banco não aprovar o crédito, o sinal é devolvido na íntegra (cláusula no CPCV)."],
     [IconHammer, "Construção em aço leve (LSF)", `Estrutura em Light Steel Framing, executada pelo Grupo Freitas Renovações (alvará IMPIC n.º ${BUILDER.licence}) segundo o projeto e o caderno de encargos.`],
     [IconShield, "A obra não depende só do banco", "O crédito é libertado por fases. A construtora tem capacidade própria para manter a obra perante atrasos pontuais nos desembolsos."],
-    [IconLock, "Retenção de boa execução", "Cerca de 33.500 € do preço só são pagos na fase final prevista no contrato. Não é um custo adicional."],
+    [IconLock, "Retenção de boa execução", "Cerca de 32.900 € do preço só são pagos na fase final prevista no contrato. Não é um custo adicional."],
     [IconClock, "Prazo e penalizações em contrato", "10 meses a partir do início definido no contrato, com penalizações por atrasos imputáveis à construtora."],
     [IconCamera, "Relatório fotográfico semanal", "Recebe todas as semanas fotografias e o ponto da obra, do início à entrega da chave."],
     [IconCheck, "Fiscalização independente", "Pode levar o seu engenheiro para acompanhar a obra, com agendamento e regras de segurança."],
