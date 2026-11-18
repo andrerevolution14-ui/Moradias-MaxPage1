@@ -77,7 +77,7 @@ export default function LotsTable() {
           </tbody>
         </table>
       </div>
-      <p className="mt-2 text-[12px] text-muted">Preço chave na mão por moradia, com IMT e Imposto de Selo incluídos.</p>
+      <p className="mt-2 text-[12px] text-muted">Preço chave na mão por moradia. Com IMT e Imposto de Selo: {formatEUR(PROJECT.priceWithTaxes)}.</p>
     </div>
   );
 }

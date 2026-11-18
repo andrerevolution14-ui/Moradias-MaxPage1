@@ -54,7 +54,7 @@ export function Triangle() {
       <div className="flex gap-3 bg-[#effaf3] px-4 py-3.5">
         <IconCheck size={20} className="mt-0.5 shrink-0 text-[#1a8f4b]" />
         <p className="text-[14px] leading-snug">
-          <b>Aqui tem os três:</b> T3 com jardim de 82 m², a 8 minutos de Aveiro, por {formatEUR(PROJECT.price)} chave na mão, impostos incluídos.
+          <b>Aqui tem os três:</b> T3 com jardim de 82 m², a 8 minutos de Aveiro, por {formatEUR(PROJECT.price)} chave na mão.
         </p>
       </div>
     </div>
@@ -66,7 +66,7 @@ export function Guarantees() {
   const down = formatEUR(PROJECT.price * PROJECT.downPaymentPct);
   const items = [
     [IconShield, "Sinal devolvido", `Se o banco não aprovar o crédito, recebe os ${down} de volta. Fica escrito no CPCV.`],
-    [IconLock, "Preço fechado", `${formatEUR(PROJECT.price)} em contrato, com IMT e Imposto de Selo incluídos. Sem revisões de preço.`],
+    [IconLock, "Preço fechado", `${formatEUR(PROJECT.price)} em contrato (${formatEUR(PROJECT.priceWithTaxes)} com IMT e Imposto de Selo). Sem revisões de preço.`],
     [IconClock, "10 meses, com penalização", "Prazo fixo em contrato. Se a construtora atrasar, paga uma penalização."],
     [IconCamera, "Fotos da obra todas as semanas", "Recebe um relatório fotográfico semanal, do início à entrega da chave."],
   ] as const;

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: "Moradia T3 com jardim em Oliveirinha, Aveiro · 329.000€ | Domaine XXV",
   description:
-    "3 moradias T3 em planta a 8 minutos de Aveiro. Jardim privativo de 82 m², garagem, sótão de 34 m². 329.000€ chave na mão com IMT e Imposto de Selo incluídos. Entrada de 10%.",
+    "3 moradias T3 em planta a 8 minutos de Aveiro. Jardim privativo de 82 m², garagem, sótão de 34 m². 329.000€ chave na mão, 335.000€ com IMT e Imposto de Selo. Entrada de 10%.",
   openGraph: {
     title: "Moradia T3 com jardim a 8 min de Aveiro · 329.000€ chave na mão",
     description: "Venda em planta · Projeto aprovado · Entrega em 10 meses · Restam 2 de 3 moradias.",

@@ -10,6 +10,8 @@ export const PROJECT = {
     "https://www.google.com/maps?q=R.+Ac%C3%A1cio+Sim%C3%B5es+Vieira,+3810-843+Oliveirinha&t=m&z=13&output=embed",
   tour360: "https://visita3dmoradia-vvtu.vercel.app/",
   price: 329000,
+  /** Valor total com IMT e Imposto de Selo */
+  priceWithTaxes: 335000,
   downPaymentPct: 0.1,
   buildMonths: 10,
 } as const;
@@ -210,8 +212,8 @@ export const FAQ = [
     "Sim. Pode nomear profissionais independentes para analisar a documentação e acompanhar a execução, com agendamento e cumprimento das regras de segurança em obra."],
   ["Posso consultar o contrato antes de reservar?",
     "Sim. O dossier técnico, as condições de aquisição e as minutas dos contratos estão disponíveis para análise antes de assinar."],
-  ["Os 329.000€ já incluem impostos?",
-    "Sim. O valor de 329.000€ já inclui o IMT e o Imposto de Selo. É o valor final chave na mão: terreno, projeto aprovado, construção e impostos de transmissão."],
+  ["Quanto fica com os impostos?",
+    "O preço chave na mão é 329.000 €. Com o IMT e o Imposto de Selo, o valor total é 335.000 €: terreno, projeto aprovado, construção e impostos de transmissão."],
   ["Preciso de pagar comissões ao intermediário de crédito?",
     "Não. A consultoria financeira é gratuita para o comprador. Os intermediários de crédito são registados no Banco de Portugal e remunerados pelo banco que concede o crédito."],
   ["Posso visitar o terreno antes de decidir?",

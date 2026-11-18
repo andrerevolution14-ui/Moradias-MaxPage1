@@ -137,7 +137,7 @@ function Summary() {
       <div className="mt-4 flex flex-wrap items-end gap-x-6 gap-y-3">
         <div>
           <div className="text-[27px] font-bold leading-none tracking-[-0.02em] text-ink tabular-nums sm:text-[32px]">{formatEUR(PROJECT.price).replace(/\s*€$/, "")}</div>
-          <div className="mt-1.5 text-[13.5px] font-semibold text-brand">IMT e Imposto de Selo incluídos · chave na mão</div>
+          <div className="mt-1.5 text-[13.5px] font-semibold text-brand">Chave na mão · {formatEUR(PROJECT.priceWithTaxes)} com IMT e Imposto de Selo</div>
         </div>
         <div className="border-l border-line pl-6 text-[14px] leading-relaxed text-muted">
           Entrada de 10%: <b className="text-ink">{formatEUR(PROJECT.price * PROJECT.downPaymentPct)}</b>

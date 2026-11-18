@@ -98,8 +98,8 @@ const ALERTS = [
 ];
 
 const COSTS: [string, string, string][] = [
-  ["IMT (imposto de transmissão)", "Depende do valor e do tipo de habitação", "Incluído"],
-  ["Imposto do Selo da compra", "0,8% do valor", "Incluído"],
+  ["IMT (imposto de transmissão)", "Depende do valor e do tipo de habitação", "Incluído nos 335.000 €"],
+  ["Imposto do Selo da compra", "0,8% do valor", "Incluído nos 335.000 €"],
   ["Imposto do Selo do crédito", "0,6% do valor financiado", "Encargos previstos no contrato"],
   ["Escrituras e registos", "Algumas centenas de euros", "Encargos previstos no contrato"],
   ["Avaliação bancária e comissões", "Varia por banco", "Encargos previstos no contrato"],
